@@ -1,0 +1,72 @@
+buildscript {
+
+
+  repositories {
+    mavenCentral()
+    jcenter()
+    maven {
+      name = "forge"
+      url = "http://files.minecraftforge.net/maven"
+    }
+    maven {
+      name = "sonatype"
+      url = "https://oss.sonatype.org/content/repositories/snapshots/"
+    }
+  }
+  dependencies {
+    classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+  }
+}
+
+plugins {
+    id "com.github.hierynomus.license" version "0.13.1"
+}
+
+apply plugin: 'java'
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+group = "com.elytradev"
+archivesBaseName = "ThermionicsWorld"
+version = "MC1.11.0_ver1.0"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+minecraft {
+  version = "1.11.2-13.20.0.2226";
+  mappings = "snapshot_20170205";
+
+  runDir = "minecraft"
+
+  replaceIn 'src/main/java/com/elytradev/thermionics/world/ThermionicsWorld.java'
+  replace '@VERSION@', project.version
+}
+
+processResources {
+  // this will ensure that this task is redone when the versions change.
+  inputs.property "version", project.version
+  inputs.property "mcversion", project.minecraft.version
+
+  // replace stuff in mcmod.info, nothing else
+  from(sourceSets.main.resources.srcDirs) {
+    include 'mcmod.info'
+
+    // replace version and mcversion
+    expand 'version':project.version, 'mcversion':project.minecraft.version
+  }
+
+  // copy everything else, thats not the mcmod.info
+  from(sourceSets.main.resources.srcDirs) {
+    exclude 'mcmod.info'
+    exclude '*.xcf' //Always exclude gimp source files.
+  }
+}
+
+license {
+	exclude "**/*.json";
+	exclude "**/*.png";
+	exclude "**/*.mcmeta";
+	exclude "**/*.ogg";
+	exclude "**/*.lang";
+	exclude "/src/main/resources/**";
+}

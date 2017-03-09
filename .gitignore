@@ -1,0 +1,14 @@
+/bin/
+/build/
+/.gradle/
+/.classpath
+/.project
+/.settings/
+/*.launch
+/libs/
+/libs-disabled/
+/minecraft/
+/src/main/java/cofh/
+/src/main/java/gigaherz/
+/src/main/java/net/
+**/Thumbs.db

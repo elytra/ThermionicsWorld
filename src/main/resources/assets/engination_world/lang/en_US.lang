@@ -1,0 +1,54 @@
+#CreativeTabs
+itemGroup.thermionics_world=Thermionics World
+
+#Items
+thermionics_world.shard.copper.name=Chalcocyte Shard
+thermionics_world.shard.lead.name=Galena Shard
+thermionics_world.shard.iron.name=Magnetite Shard
+# (gold omitted because it's a native metal and won't be found in chemical compounds)
+thermionics_world.shard.uranium.name=Pitchblende Shard
+
+#Misc Blocks
+thermionics_world.basalt.0.name=Basalt
+thermionics_world.basalt.1.name=Basalt Bricks
+dust
+thermionics_world.norfairite.0.name=Norfairite
+
+#Gemrock Varieties
+thermionics_world.brickvariety.0=%1$s Gemrock
+thermionics_world.brickvariety.1=%1$s Brick
+
+#Gemrocks
+thermionics_world.gemrock.magnesite.name=Magnesite
+thermionics_world.gemrock.garnet.name=Garnet
+thermionics_world.gemrock.tanzanite.name=Tanzanite
+thermionics_world.gemrock.sapphire.name=Sapphire
+thermionics_world.gemrock.heliodor.name=Heliodor
+thermionics_world.gemrock.peridot.name=Peridot
+thermionics_world.gemrock.rosequartz.name=Rose Quartz
+thermionics_world.gemrock.hematite.name=Hematite
+thermionics_world.gemrock.opal.name=Opal
+thermionics_world.gemrock.chrysoprase.name=Chrysoprase
+thermionics_world.gemrock.amethyst.name=Amethyst
+thermionics_world.gemrock.sodalite.name=Sodalite
+thermionics_world.gemrock.pyrite.name=Pyrite
+thermionics_world.gemrock.emerald.name=Emerald
+thermionics_world.gemrock.spinel.name=Spinel
+thermionics_world.gemrock.cassiterite.name=Cassiterite
+
+#Ores - naming conventions here closely follow the forge ore dictionary conventions
+thermionics_world.ore.copper.name=Chalcocyte
+thermionics_world.ore.lead.name=Galena
+thermionics_world.ore.mercury.name=Cinnibar
+thermionics_world.ore.uranium.name=Pitchblende
+
+thermionics_world.ore.asbestos.name=Asbestos
+
+thermionics_world.gem.silicon.name=Silicon
+
+#Fluids
+thermionics_world.fluid.liquidpain.name=Liquid Pain
+thermionics_world.fluid.soylent.name=Soylent
+thermionics_world.fluid.steam.name=Steam
+
+#Sound subtitles
