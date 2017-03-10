@@ -27,6 +27,7 @@ package com.elytradev.thermionics.world.gen;
 import java.util.List;
 import java.util.Random;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
@@ -36,14 +37,17 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.chunk.IChunkGenerator;
+import net.minecraftforge.fluids.BlockFluidBase;
 
 public class ChunkProviderNeo implements IChunkGenerator {
 	public static final int HEIGHT = 256;
+	public static final int SEA_LEVEL = 64;
 	
 	protected static final IBlockState AIR = Blocks.AIR.getDefaultState();
     protected static final IBlockState NETHERRACK = Blocks.NETHERRACK.getDefaultState();
     protected static final IBlockState BEDROCK = Blocks.BEDROCK.getDefaultState();
     protected static final IBlockState STONE = Blocks.STONE.getDefaultState();
+    protected static IBlockState PAIN;
     //protected static final IBlockState LAVA = Blocks.LAVA.getDefaultState(); //Use sparingly
     //protected static final IBlockState GRAVEL = Blocks.GRAVEL.getDefaultState();
     //protected static final IBlockState SOUL_SAND = Blocks.SOUL_SAND.getDefaultState();
@@ -70,6 +74,8 @@ public class ChunkProviderNeo implements IChunkGenerator {
 		this.noiseTerrainBase = new ScaledNoiseField(random.nextLong(), 64f);
 		this.noiseTerrainFine = new ScaledNoiseField(random.nextLong(), 32f);
 		this.noiseVolumeBase = new ScaledNoiseVolume(random.nextLong(), 40f);
+		
+		PAIN = Block.getBlockFromName("thermionics_world:pain").getDefaultState().withProperty(BlockFluidBase.LEVEL, 3);
 	}
 	
 	protected void generateShape(int chunkX, int chunkZ, ChunkPrimer primer) {
@@ -98,7 +104,10 @@ public class ChunkProviderNeo implements IChunkGenerator {
 					} else {
 						if (density>0.6f) {
 							cur=STONE;
+						} else {
+							if (y<SEA_LEVEL) cur=PAIN;
 						}
+						
 					}
 					
 					primer.setBlockState(x, y, z, cur);

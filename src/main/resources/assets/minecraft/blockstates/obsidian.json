@@ -8,12 +8,12 @@
 		"y":0,
 		"uvlock":true,
 		"textures":{
-			"all":"thermionics_world:blocks/basalt/smooth"
+			"all":"thermionics_world:blocks/fluids/pain"
 		}
 	},
 	"variants":{
 		"variant":{
-			 0:{ "textures":{ "all":"thermionics_world:blocks/basalt/smooth" } },
+			 0:{ "textures":{ "all":"thermionics_world:blocks/fluids/pain" } },
 			 1:{ "textures":{ "all":"thermionics_world:blocks/basalt/smooth" } },
 			 2:{ "textures":{ "all":"thermionics_world:blocks/basalt/smooth" } },
 			 3:{ "textures":{ "all":"thermionics_world:blocks/basalt/smooth" } },

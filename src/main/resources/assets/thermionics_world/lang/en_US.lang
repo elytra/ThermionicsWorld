@@ -47,8 +47,12 @@ thermionics_world.ore.asbestos.name=Asbestos
 thermionics_world.gem.silicon.name=Silicon
 
 #Fluids
-thermionics_world.fluid.liquidpain.name=Liquid Pain
+thermionics_world.fluid.pain.name=Liquid Pain
 thermionics_world.fluid.soylent.name=Soylent
 thermionics_world.fluid.steam.name=Steam
+
+fluid.pain=Liquid Pain
+fluid.soylent=Soylent
+fluid.steam=Steam
 
 #Sound subtitles
