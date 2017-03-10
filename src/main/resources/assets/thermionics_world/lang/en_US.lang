@@ -9,8 +9,8 @@ thermionics_world.shard.iron.name=Magnetite Shard
 thermionics_world.shard.uranium.name=Pitchblende Shard
 
 #Misc Blocks
-thermionics_world.basalt.0.name=Basalt
-thermionics_world.basalt.1.name=Basalt Bricks
+tile.thermionics_world.basalt.name=Basalt
+tile.thermionics_world.basalt.0.name=Basalt
 dust
 thermionics_world.norfairite.0.name=Norfairite
 

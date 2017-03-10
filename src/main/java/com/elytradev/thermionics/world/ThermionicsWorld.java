@@ -23,18 +23,25 @@
  */
 package com.elytradev.thermionics.world;
 
+import com.elytradev.thermionics.world.block.BlockBasalt;
 import com.elytradev.thermionics.world.gen.WorldProviderNeoHell;
+import com.elytradev.thermionics.world.item.ItemBlockVarieties;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldProvider;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.registry.ExistingSubstitutionException;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry.Type;
 
 @Mod(modid = "thermionics_world", name="Thermionics|World", version="@VERSION@")
 public class ThermionicsWorld {
@@ -46,15 +53,34 @@ public class ThermionicsWorld {
 		}
 	};
 	
+	@SidedProxy(clientSide="com.elytradev.thermionics.world.ClientProxy", serverSide="com.elytradev.thermionics.world.Proxy")
+	static Proxy proxy;
+	
+	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		System.out.println("Unregistering dimension!");
+		proxy.init();
+		
+		//Nuking hell just makes it stronger
 		DimensionManager.unregisterDimension(-1);
 		DimensionType neohellType = DimensionType.register("Neo-Hell", "_neohell", -1, WorldProviderNeoHell.class, false);
 		
 		DimensionManager.registerDimension(-1, neohellType);
 		WorldProvider provider = DimensionManager.createProviderFor(-1);
 		System.out.println(provider.getDimensionType());
+		
+		//Breaking obsidian
+		try {
+			BlockBasalt basalt = new BlockBasalt();
+			ItemBlockVarieties basaltItem = new ItemBlockVarieties(basalt);
+			GameRegistry.addSubstitutionAlias("minecraft:obsidian", Type.BLOCK, basalt);
+			GameRegistry.addSubstitutionAlias("minecraft:obsidian", Type.ITEM, basaltItem);
+			
+			proxy.registerItemModel(basaltItem);
+		} catch (ExistingSubstitutionException e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 	@EventHandler

@@ -1,0 +1,35 @@
+{
+	"forge_marker":1,
+	
+	"defaults":{
+		"model":"minecraft:cube_all",
+		"transform":"forge:default-block",
+		"x":0,
+		"y":0,
+		"uvlock":true,
+		"textures":{
+			"all":"thermionics_world:blocks/basalt/smooth"
+		}
+	},
+	"variants":{
+		"variant":{
+			 0:{ "textures":{ "all":"thermionics_world:blocks/basalt/smooth" } },
+			 1:{ "textures":{ "all":"thermionics_world:blocks/basalt/smooth" } },
+			 2:{ "textures":{ "all":"thermionics_world:blocks/basalt/smooth" } },
+			 3:{ "textures":{ "all":"thermionics_world:blocks/basalt/smooth" } },
+			 4:{ "textures":{ "all":"thermionics_world:blocks/basalt/smooth" } },
+			 5:{ "textures":{ "all":"thermionics_world:blocks/basalt/smooth" } },
+			 6:{ "textures":{ "all":"thermionics_world:blocks/basalt/smooth" } },
+			 7:{ "textures":{ "all":"thermionics_world:blocks/basalt/smooth" } },
+			 8:{ "textures":{ "all":"thermionics_world:blocks/basalt/smooth" } },
+			 9:{ "textures":{ "all":"thermionics_world:blocks/basalt/smooth" } },
+			10:{ "textures":{ "all":"thermionics_world:blocks/basalt/smooth" } },
+			11:{ "textures":{ "all":"thermionics_world:blocks/basalt/smooth" } },
+			12:{ "textures":{ "all":"thermionics_world:blocks/basalt/smooth" } },
+			13:{ "textures":{ "all":"thermionics_world:blocks/basalt/smooth" } },
+			14:{ "textures":{ "all":"thermionics_world:blocks/basalt/smooth" } },
+			15:{ "textures":{ "all":"thermionics_world:blocks/basalt/smooth" } }
+		},
+		"inventory": [{}]
+	}
+}
