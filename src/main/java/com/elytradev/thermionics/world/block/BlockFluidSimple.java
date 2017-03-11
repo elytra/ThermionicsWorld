@@ -55,7 +55,7 @@ public static final int SCALDING = 322; //322 degrees kelvin is about 120 degree
 		//this.icons = icons;
 		this.quantaPerBlock = 4;
 		this.quantaPerBlockFloat = 4.0f;
-		//this.tickRate = 10; //set by density instead
+		this.tickRate = 10; //density-based tickrate winds up really high
 		
 		this.setRegistryName(name);
 		this.setUnlocalizedName("thermionics_world.fluid."+name);
