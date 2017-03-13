@@ -23,13 +23,18 @@
  */
 package com.elytradev.thermionics.world;
 
+import java.util.ArrayList;
+
 import com.elytradev.thermionics.world.block.BlockBasalt;
 import com.elytradev.thermionics.world.block.BlockFluidSimple;
+import com.elytradev.thermionics.world.block.BlockGemrock;
 import com.elytradev.thermionics.world.gen.WorldProviderNeoHell;
+import com.elytradev.thermionics.world.item.ItemBlockGemrock;
 import com.elytradev.thermionics.world.item.ItemBlockVarieties;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -90,8 +95,6 @@ public class ThermionicsWorld {
 			e.printStackTrace();
 		}
 		
-		
-		
 		//You might want to look away for a second, we produce some fluids here
 		Fluid soylentFluid = new Fluid("soylent",
 				new ResourceLocation("thermionics_world", "blocks/fluids/soylent_still"),
@@ -146,7 +149,29 @@ public class ThermionicsWorld {
 		
 		FluidRegistry.addBucketForFluid(painFluid);
 		
-		
+		ArrayList<BlockGemrock> gemrocks = new ArrayList<BlockGemrock>();
+		gemrocks.add(new BlockGemrock("magnesite",   EnumDyeColor.WHITE));
+		gemrocks.add(new BlockGemrock("garnet",      EnumDyeColor.ORANGE));
+		gemrocks.add(new BlockGemrock("tourmaline",  EnumDyeColor.MAGENTA));
+		gemrocks.add(new BlockGemrock("sapphire",    EnumDyeColor.LIGHT_BLUE));
+		gemrocks.add(new BlockGemrock("heliodor",    EnumDyeColor.YELLOW));
+		gemrocks.add(new BlockGemrock("peridot",     EnumDyeColor.LIME));
+		gemrocks.add(new BlockGemrock("rosequartz",  EnumDyeColor.PINK));
+		gemrocks.add(new BlockGemrock("hematite",    EnumDyeColor.GRAY));
+		gemrocks.add(new BlockGemrock("opal",        EnumDyeColor.SILVER));
+		gemrocks.add(new BlockGemrock("chrysoprase", EnumDyeColor.CYAN));
+		gemrocks.add(new BlockGemrock("amethyst",    EnumDyeColor.PURPLE));
+		gemrocks.add(new BlockGemrock("sodalite",    EnumDyeColor.BLUE));
+		gemrocks.add(new BlockGemrock("pyrite",      EnumDyeColor.BROWN));
+		gemrocks.add(new BlockGemrock("emerald",     EnumDyeColor.GREEN));
+		gemrocks.add(new BlockGemrock("spinel",      EnumDyeColor.RED));
+		gemrocks.add(new BlockGemrock("cassiterite", EnumDyeColor.BLACK));
+		for(BlockGemrock block : gemrocks) {
+			GameRegistry.register(block);
+			ItemBlockGemrock item = new ItemBlockGemrock(block);
+			GameRegistry.register(item);
+			proxy.registerItemModel(item);
+		}
 		
 	}
 	

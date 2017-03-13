@@ -33,8 +33,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class WorldProviderNeoHell extends WorldProvider {
 
+	public WorldProviderNeoHell() {
+		this.hasNoSky = true;
+		this.doesWaterVaporize = true;
+	}
+	
 	@Override
-	public DimensionType getDimensionType() {
+	public DimensionType getDimensionType() { 
 		return DimensionType.getById(-1);
 	}
 

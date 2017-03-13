@@ -35,10 +35,10 @@ public class ScaledNoiseField {
 	private int splorchX = 0;
 	private int splorchZ = 0;
 	
-	private int popX = 0;
-	private int popZ = 0;
+	//private int popX = 0;
+	//private int popZ = 0;
 	
-	private float[] data = new float[4];
+	//private float[] data = new float[4];
 	
 	public ScaledNoiseField(long randomSeed, float scale) {
 		this.randomSeed = randomSeed;
@@ -68,14 +68,13 @@ public class ScaledNoiseField {
 	/**
 	 * Recenters on the indicated absolute (block) coordinates
 	 */
-	public void recenter(int x, int z) {
+	public float[] recenter(int x, int z) {
 		int baseX = (int) (x/scale); if (x<0) baseX-=1;
 		int baseZ = (int) (z/scale); if (z<0) baseZ-=1;
 		
-		if (baseX==popX && baseZ==popZ) return;
+		//if (baseX==popX && baseZ==popZ) return;
 		
-		
-		if (data==null) data = new float[2 * 2];
+		float[] data = new float[2 * 2];
 		for(int zi=0; zi<2; zi++) {
 			for(int xi=0; xi<2; xi++) {
 				random.setSeed((randomSeed*31L) + hash(baseX+xi, baseZ+zi));
@@ -85,8 +84,9 @@ public class ScaledNoiseField {
 			}
 		}
 		
-		popX = baseX;
-		popZ = baseZ;
+		return data;
+		//popX = baseX;
+		//popZ = baseZ;
 	}
 	
 
@@ -142,7 +142,7 @@ public class ScaledNoiseField {
 		int baseX = x + splorchX + (int)(scale/2);
 		int baseZ = z + splorchZ + (int)(scale/2);
 		
-		recenter(baseX,baseZ);
+		float[] data = recenter(baseX,baseZ);
 		float xProgress = (baseX % scale) / scale;
 		if (baseX<0) xProgress+=1;
 		float zProgress = (baseZ % scale) / scale;

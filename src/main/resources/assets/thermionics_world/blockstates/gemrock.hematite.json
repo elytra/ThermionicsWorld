@@ -1,0 +1,35 @@
+{
+	"forge_marker":1,
+	
+	"defaults":{
+		"model":"minecraft:cube_all",
+		"transform":"forge:default-block",
+		"x":0,
+		"y":0,
+		"uvlock":true,
+		"textures":{
+			"all":"thermionics_world:blocks/gemrock/hematite/smooth"
+		}
+	},
+	"variants":{
+		"variant":{
+			 0:{ "textures":{ "all":"thermionics_world:blocks/gemrock/hematite/smooth" } },
+			 1:{ "textures":{ "all":"thermionics_world:blocks/gemrock/hematite/brick"  } },
+			 2:{ "textures":{ "all":"thermionics_world:blocks/gemrock/hematite/tile"   } },
+			 3:{ "textures":{ "all":"thermionics_world:blocks/gemrock/hematite/tiles"  } },
+			 4:{ "textures":{ "all":"thermionics_world:blocks/gemrock/hematite/square" } },
+			 5:{ "textures":{ "all":"thermionics_world:blocks/gemrock/hematite/smooth" } },
+			 6:{ "textures":{ "all":"thermionics_world:blocks/gemrock/hematite/smooth" } },
+			 7:{ "textures":{ "all":"thermionics_world:blocks/gemrock/hematite/smooth" } },
+			 8:{ "textures":{ "all":"thermionics_world:blocks/gemrock/hematite/smooth" } },
+			 9:{ "textures":{ "all":"thermionics_world:blocks/gemrock/hematite/smooth" } },
+			10:{ "textures":{ "all":"thermionics_world:blocks/gemrock/hematite/smooth" } },
+			11:{ "textures":{ "all":"thermionics_world:blocks/gemrock/hematite/smooth" } },
+			12:{ "textures":{ "all":"thermionics_world:blocks/gemrock/hematite/smooth" } },
+			13:{ "textures":{ "all":"thermionics_world:blocks/gemrock/hematite/smooth" } },
+			14:{ "textures":{ "all":"thermionics_world:blocks/gemrock/hematite/smooth" } },
+			15:{ "textures":{ "all":"thermionics_world:blocks/gemrock/hematite/smooth" } }
+		},
+		"inventory": [{}]
+	}
+}

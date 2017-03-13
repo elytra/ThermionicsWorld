@@ -34,11 +34,11 @@ public class ScaledNoiseVolume {
 	private int splorchZ = 0;
 	private int splorchY = 0;
 	
-	private int popX = 0;
-	private int popZ = 0;
-	private int popY = 0;
+	//private int popX = 0;
+	//private int popZ = 0;
+	//private int popY = 0;
 	
-	private float[] data = new float[8];
+	//private float[] data = new float[8];
 	
 	public ScaledNoiseVolume(long randomSeed, float scale) {
 		this.randomSeed = randomSeed;
@@ -63,15 +63,15 @@ public class ScaledNoiseVolume {
 	/**
 	 * Recenters on the indicated absolute (block) coordinates
 	 */
-	public void recenter(int x, int y, int z) {
+	public float[] recenter(int x, int y, int z) {
 		int baseX = (int) (x/scale);  if (x<0) baseX-=1;
 		int baseZ = (int) (z/scale);  if (z<0) baseZ-=1;
 		int baseY = (int) (y/scale);  if (y<0) baseY-=1;
 		
-		if (baseX==popX && baseZ==popZ && baseY==popY) return;
+		//if (baseX==popX && baseZ==popZ && baseY==popY) return;
 		
 		
-		if (data==null) data = new float[2 * 2 * 2];
+		float[] data = new float[2 * 2 * 2];
 		for(int zi=0; zi<2; zi++) {
 			for(int xi=0; xi<2; xi++) {
 				for(int yi=0; yi<2; yi++) {
@@ -84,22 +84,23 @@ public class ScaledNoiseVolume {
 			}
 		}
 		
-		popX = baseX;
-		popZ = baseZ;
-		popY = baseY;
+		//popX = baseX;
+		//popZ = baseZ;
+		//popY = baseY;
+		return data;
 	}
 	
 
 	/**
 	 * Gets the interpolated noise value at the indicated absolute (block) coordinates
-	 * @return a normally distributed value with mean 0 and standard deviation 1.
+	 * @return a unfiormly distributed value between 0 and 1
 	 */
 	public float get(int x, int y, int z) {
 		int baseX = x + splorchX;
 		int baseZ = z + splorchZ;
 		int baseY = y + splorchY;
 		
-		recenter(baseX,baseY,baseZ);
+		float[] data = recenter(baseX,baseY,baseZ);
 
 		float xProgress = baseX % scale / scale; if (baseX<0) xProgress+=1;
 		float zProgress = baseZ % scale / scale; if (baseZ<0) zProgress+=1;

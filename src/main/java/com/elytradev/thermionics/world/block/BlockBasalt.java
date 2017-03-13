@@ -71,14 +71,14 @@ public class BlockBasalt extends BlockObsidian {
     public int damageDropped(IBlockState state) {
         return state.getValue(VARIANT);
     }
-    
+    /*
     @Override
     @SideOnly(Side.CLIENT)
     public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list) {
         for (int i=0; i<16; i++) {
             list.add(new ItemStack(itemIn, 1, i));
         }
-    }
+    }*/
     
     @Override
     public EnumPushReaction getMobilityFlag(IBlockState state) {

@@ -29,6 +29,9 @@ import net.minecraft.init.Blocks;
 public class NeoBiome {
 	public static final IBlockState BEDROCK = Blocks.BEDROCK.getDefaultState();
 	
+	private final String name;
+	private final int id;
+	
 	float terrainHeight = 128f;
 	
 	IBlockState terrainSurfaceMaterial = Blocks.DIRT.getDefaultState();
@@ -41,15 +44,55 @@ public class NeoBiome {
 	
 	float veinHeight = 200f;
 	
+	
+	
+	public NeoBiome(String name, int id) {
+		this.name = name;
+		this.id = id;
+	}
+	
+	public NeoBiome withTerrainHeight(float height) {
+		this.terrainHeight = height;
+		return this;
+	}
+	
+	public NeoBiome withDensity(float density) {
+		this.density = density;
+		return this;
+	}
+	
+	public NeoBiome withSurfaceMaterial(IBlockState material) {
+		this.terrainSurfaceMaterial = material;
+		return this;
+	}
+	
+	public NeoBiome withTerrainFillMaterial(IBlockState material) {
+		this.terrainFillMaterial = material;
+		return this;
+	}
+	
+	public NeoBiome withDensitySurfaceMaterial(IBlockState material) {
+		this.densitySurfaceMaterial = material;
+		return this;
+	}
+	
+	public NeoBiome withDensityCoreMaterial(IBlockState material) {
+		this.densityCoreMaterial = material;
+		return this;
+	}
+	
+	public float getTerrainHeight() { return terrainHeight; }
+	public float getDensity() { return density; }
+	public float getVeinHeight() { return veinHeight; }
+	
 	/**
 	 * Gets the material to fill the very bottom of the map with
-	 * @param y
+	 * @param y 0 at the top block, -1 at the block below that, and so on
 	 * @return
 	 */
 	public IBlockState getTerrainMaterial(int y) {
-		if (y==0) return BEDROCK;
-		if (y<terrainHeight-4) return terrainFillMaterial;
-		return terrainSurfaceMaterial;
+		if (y<4) return terrainSurfaceMaterial;
+		else return terrainFillMaterial;
 	}
 	
 	/**
@@ -58,7 +101,7 @@ public class NeoBiome {
 	 * @return
 	 */
 	public IBlockState getDensityMaterial(float adjustedDensity) {
-		if (density>0.8f) return densitySurfaceMaterial;
+		if (adjustedDensity<0.10f) return densitySurfaceMaterial;
 		return densityCoreMaterial;
 	}
 }

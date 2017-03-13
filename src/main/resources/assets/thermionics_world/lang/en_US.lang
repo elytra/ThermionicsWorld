@@ -11,48 +11,53 @@ thermionics_world.shard.uranium.name=Pitchblende Shard
 #Misc Blocks
 tile.thermionics_world.basalt.name=Basalt
 tile.thermionics_world.basalt.0.name=Basalt
-dust
-thermionics_world.norfairite.0.name=Norfairite
+tile.thermionics_world.dust.name=Dust
+tile.thermionics_world.norfairite.name=Norfairite
 
 #Gemrock Varieties
 thermionics_world.brickvariety.0=%1$s Gemrock
-thermionics_world.brickvariety.1=%1$s Brick
+thermionics_world.brickvariety.1=%1$s Gembrick
+thermionics_world.brickvariety.2=%1$s Gembrick Tile
+thermionics_world.brickvariety.3=%1$s Gembrick Small Tiles
+thermionics_world.brickvariety.4=%1$s Gembrick Square
 
 #Gemrocks
-thermionics_world.gemrock.magnesite.name=Magnesite
-thermionics_world.gemrock.garnet.name=Garnet
-thermionics_world.gemrock.tanzanite.name=Tanzanite
-thermionics_world.gemrock.sapphire.name=Sapphire
-thermionics_world.gemrock.heliodor.name=Heliodor
-thermionics_world.gemrock.peridot.name=Peridot
-thermionics_world.gemrock.rosequartz.name=Rose Quartz
-thermionics_world.gemrock.hematite.name=Hematite
-thermionics_world.gemrock.opal.name=Opal
-thermionics_world.gemrock.chrysoprase.name=Chrysoprase
-thermionics_world.gemrock.amethyst.name=Amethyst
-thermionics_world.gemrock.sodalite.name=Sodalite
-thermionics_world.gemrock.pyrite.name=Pyrite
-thermionics_world.gemrock.emerald.name=Emerald
-thermionics_world.gemrock.spinel.name=Spinel
-thermionics_world.gemrock.cassiterite.name=Cassiterite
+tile.thermionics_world.gemrock.magnesite.name=Magnesite
+tile.thermionics_world.gemrock.garnet.name=Garnet
+tile.thermionics_world.gemrock.tourmaline.name=Tourmaline
+tile.thermionics_world.gemrock.sapphire.name=Sapphire
+tile.thermionics_world.gemrock.heliodor.name=Heliodor
+tile.thermionics_world.gemrock.peridot.name=Peridot
+tile.thermionics_world.gemrock.rosequartz.name=Rose Quartz
+tile.thermionics_world.gemrock.hematite.name=Hematite
+tile.thermionics_world.gemrock.opal.name=Opal
+tile.thermionics_world.gemrock.chrysoprase.name=Chrysoprase
+tile.thermionics_world.gemrock.amethyst.name=Amethyst
+tile.thermionics_world.gemrock.sodalite.name=Sodalite
+tile.thermionics_world.gemrock.pyrite.name=Pyrite
+tile.thermionics_world.gemrock.emerald.name=Emerald
+tile.thermionics_world.gemrock.spinel.name=Spinel
+tile.thermionics_world.gemrock.cassiterite.name=Cassiterite
 
 #Ores - naming conventions here closely follow the forge ore dictionary conventions
-thermionics_world.ore.copper.name=Chalcocyte
-thermionics_world.ore.lead.name=Galena
-thermionics_world.ore.mercury.name=Cinnibar
-thermionics_world.ore.uranium.name=Pitchblende
+tile.thermionics_world.ore.copper.name=Chalcocyte
+tile.thermionics_world.ore.lead.name=Galena
+tile.thermionics_world.ore.mercury.name=Cinnibar
+tile.thermionics_world.ore.uranium.name=Pitchblende
 
-thermionics_world.ore.asbestos.name=Asbestos
+tile.thermionics_world.ore.asbestos.name=Asbestos
 
 thermionics_world.gem.silicon.name=Silicon
 
 #Fluids
-thermionics_world.fluid.pain.name=Liquid Pain
-thermionics_world.fluid.soylent.name=Soylent
-thermionics_world.fluid.steam.name=Steam
+tile.thermionics_world.fluid.pain.name=Liquid Pain
+tile.thermionics_world.fluid.soylent.name=Soylent
+tile.thermionics_world.fluid.steam.name=Steam
 
 fluid.pain=Liquid Pain
 fluid.soylent=Soylent
 fluid.steam=Steam
+
+death.attack.fluid.pain=%1$s drowned in agony.
 
 #Sound subtitles

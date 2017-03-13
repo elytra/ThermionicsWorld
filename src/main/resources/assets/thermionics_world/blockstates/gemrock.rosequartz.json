@@ -1,0 +1,35 @@
+{
+	"forge_marker":1,
+	
+	"defaults":{
+		"model":"minecraft:cube_all",
+		"transform":"forge:default-block",
+		"x":0,
+		"y":0,
+		"uvlock":true,
+		"textures":{
+			"all":"thermionics_world:blocks/gemrock/rosequartz/smooth"
+		}
+	},
+	"variants":{
+		"variant":{
+			 0:{ "textures":{ "all":"thermionics_world:blocks/gemrock/rosequartz/smooth" } },
+			 1:{ "textures":{ "all":"thermionics_world:blocks/gemrock/rosequartz/brick"  } },
+			 2:{ "textures":{ "all":"thermionics_world:blocks/gemrock/rosequartz/tile"   } },
+			 3:{ "textures":{ "all":"thermionics_world:blocks/gemrock/rosequartz/tiles"  } },
+			 4:{ "textures":{ "all":"thermionics_world:blocks/gemrock/rosequartz/square" } },
+			 5:{ "textures":{ "all":"thermionics_world:blocks/gemrock/rosequartz/smooth" } },
+			 6:{ "textures":{ "all":"thermionics_world:blocks/gemrock/rosequartz/smooth" } },
+			 7:{ "textures":{ "all":"thermionics_world:blocks/gemrock/rosequartz/smooth" } },
+			 8:{ "textures":{ "all":"thermionics_world:blocks/gemrock/rosequartz/smooth" } },
+			 9:{ "textures":{ "all":"thermionics_world:blocks/gemrock/rosequartz/smooth" } },
+			10:{ "textures":{ "all":"thermionics_world:blocks/gemrock/rosequartz/smooth" } },
+			11:{ "textures":{ "all":"thermionics_world:blocks/gemrock/rosequartz/smooth" } },
+			12:{ "textures":{ "all":"thermionics_world:blocks/gemrock/rosequartz/smooth" } },
+			13:{ "textures":{ "all":"thermionics_world:blocks/gemrock/rosequartz/smooth" } },
+			14:{ "textures":{ "all":"thermionics_world:blocks/gemrock/rosequartz/smooth" } },
+			15:{ "textures":{ "all":"thermionics_world:blocks/gemrock/rosequartz/smooth" } }
+		},
+		"inventory": [{}]
+	}
+}

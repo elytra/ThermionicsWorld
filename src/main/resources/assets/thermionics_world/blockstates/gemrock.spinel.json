@@ -1,0 +1,35 @@
+{
+	"forge_marker":1,
+	
+	"defaults":{
+		"model":"minecraft:cube_all",
+		"transform":"forge:default-block",
+		"x":0,
+		"y":0,
+		"uvlock":true,
+		"textures":{
+			"all":"thermionics_world:blocks/gemrock/spinel/smooth"
+		}
+	},
+	"variants":{
+		"variant":{
+			 0:{ "textures":{ "all":"thermionics_world:blocks/gemrock/spinel/smooth" } },
+			 1:{ "textures":{ "all":"thermionics_world:blocks/gemrock/spinel/brick"  } },
+			 2:{ "textures":{ "all":"thermionics_world:blocks/gemrock/spinel/tile"   } },
+			 3:{ "textures":{ "all":"thermionics_world:blocks/gemrock/spinel/tiles"  } },
+			 4:{ "textures":{ "all":"thermionics_world:blocks/gemrock/spinel/square" } },
+			 5:{ "textures":{ "all":"thermionics_world:blocks/gemrock/spinel/smooth" } },
+			 6:{ "textures":{ "all":"thermionics_world:blocks/gemrock/spinel/smooth" } },
+			 7:{ "textures":{ "all":"thermionics_world:blocks/gemrock/spinel/smooth" } },
+			 8:{ "textures":{ "all":"thermionics_world:blocks/gemrock/spinel/smooth" } },
+			 9:{ "textures":{ "all":"thermionics_world:blocks/gemrock/spinel/smooth" } },
+			10:{ "textures":{ "all":"thermionics_world:blocks/gemrock/spinel/smooth" } },
+			11:{ "textures":{ "all":"thermionics_world:blocks/gemrock/spinel/smooth" } },
+			12:{ "textures":{ "all":"thermionics_world:blocks/gemrock/spinel/smooth" } },
+			13:{ "textures":{ "all":"thermionics_world:blocks/gemrock/spinel/smooth" } },
+			14:{ "textures":{ "all":"thermionics_world:blocks/gemrock/spinel/smooth" } },
+			15:{ "textures":{ "all":"thermionics_world:blocks/gemrock/spinel/smooth" } }
+		},
+		"inventory": [{}]
+	}
+}

@@ -1,0 +1,35 @@
+{
+	"forge_marker":1,
+	
+	"defaults":{
+		"model":"minecraft:cube_all",
+		"transform":"forge:default-block",
+		"x":0,
+		"y":0,
+		"uvlock":true,
+		"textures":{
+			"all":"thermionics_world:blocks/gemrock/chrysoprase/smooth"
+		}
+	},
+	"variants":{
+		"variant":{
+			 0:{ "textures":{ "all":"thermionics_world:blocks/gemrock/chrysoprase/smooth" } },
+			 1:{ "textures":{ "all":"thermionics_world:blocks/gemrock/chrysoprase/brick"  } },
+			 2:{ "textures":{ "all":"thermionics_world:blocks/gemrock/chrysoprase/tile"   } },
+			 3:{ "textures":{ "all":"thermionics_world:blocks/gemrock/chrysoprase/tiles"  } },
+			 4:{ "textures":{ "all":"thermionics_world:blocks/gemrock/chrysoprase/square" } },
+			 5:{ "textures":{ "all":"thermionics_world:blocks/gemrock/chrysoprase/smooth" } },
+			 6:{ "textures":{ "all":"thermionics_world:blocks/gemrock/chrysoprase/smooth" } },
+			 7:{ "textures":{ "all":"thermionics_world:blocks/gemrock/chrysoprase/smooth" } },
+			 8:{ "textures":{ "all":"thermionics_world:blocks/gemrock/chrysoprase/smooth" } },
+			 9:{ "textures":{ "all":"thermionics_world:blocks/gemrock/chrysoprase/smooth" } },
+			10:{ "textures":{ "all":"thermionics_world:blocks/gemrock/chrysoprase/smooth" } },
+			11:{ "textures":{ "all":"thermionics_world:blocks/gemrock/chrysoprase/smooth" } },
+			12:{ "textures":{ "all":"thermionics_world:blocks/gemrock/chrysoprase/smooth" } },
+			13:{ "textures":{ "all":"thermionics_world:blocks/gemrock/chrysoprase/smooth" } },
+			14:{ "textures":{ "all":"thermionics_world:blocks/gemrock/chrysoprase/smooth" } },
+			15:{ "textures":{ "all":"thermionics_world:blocks/gemrock/chrysoprase/smooth" } }
+		},
+		"inventory": [{}]
+	}
+}

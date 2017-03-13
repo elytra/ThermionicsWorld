@@ -1,0 +1,32 @@
+{
+	"forge_marker":1,
+	
+	"defaults":{
+		"model":"minecraft:cube_all",
+		"transform":"forge:default-block",
+		"x":0,
+		"y":0,
+		"uvlock":true
+	},
+	"variants":{
+		"variant":{
+			 0:{ "textures":{ "all":"thermionics_world:blocks/gemrock/amethyst/smooth" } },
+			 1:{ "textures":{ "all":"thermionics_world:blocks/gemrock/amethyst/brick"  } },
+			 2:{ "textures":{ "all":"thermionics_world:blocks/gemrock/amethyst/tile"   } },
+			 3:{ "textures":{ "all":"thermionics_world:blocks/gemrock/amethyst/tiles"  } },
+			 4:{ "textures":{ "all":"thermionics_world:blocks/gemrock/amethyst/square" } },
+			 5:{ "textures":{ "all":"thermionics_world:blocks/gemrock/amethyst/smooth" } },
+			 6:{ "textures":{ "all":"thermionics_world:blocks/gemrock/amethyst/smooth" } },
+			 7:{ "textures":{ "all":"thermionics_world:blocks/gemrock/amethyst/smooth" } },
+			 8:{ "textures":{ "all":"thermionics_world:blocks/gemrock/amethyst/smooth" } },
+			 9:{ "textures":{ "all":"thermionics_world:blocks/gemrock/amethyst/smooth" } },
+			10:{ "textures":{ "all":"thermionics_world:blocks/gemrock/amethyst/smooth" } },
+			11:{ "textures":{ "all":"thermionics_world:blocks/gemrock/amethyst/smooth" } },
+			12:{ "textures":{ "all":"thermionics_world:blocks/gemrock/amethyst/smooth" } },
+			13:{ "textures":{ "all":"thermionics_world:blocks/gemrock/amethyst/smooth" } },
+			14:{ "textures":{ "all":"thermionics_world:blocks/gemrock/amethyst/smooth" } },
+			15:{ "textures":{ "all":"thermionics_world:blocks/gemrock/amethyst/smooth" } }
+		},
+		"inventory": [{}]
+	}
+}

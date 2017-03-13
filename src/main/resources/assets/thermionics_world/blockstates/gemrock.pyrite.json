@@ -1,0 +1,35 @@
+{
+	"forge_marker":1,
+	
+	"defaults":{
+		"model":"minecraft:cube_all",
+		"transform":"forge:default-block",
+		"x":0,
+		"y":0,
+		"uvlock":true,
+		"textures":{
+			"all":"thermionics_world:blocks/gemrock/pyrite/smooth"
+		}
+	},
+	"variants":{
+		"variant":{
+			 0:{ "textures":{ "all":"thermionics_world:blocks/gemrock/pyrite/smooth" } },
+			 1:{ "textures":{ "all":"thermionics_world:blocks/gemrock/pyrite/brick"  } },
+			 2:{ "textures":{ "all":"thermionics_world:blocks/gemrock/pyrite/tile"   } },
+			 3:{ "textures":{ "all":"thermionics_world:blocks/gemrock/pyrite/tiles"  } },
+			 4:{ "textures":{ "all":"thermionics_world:blocks/gemrock/pyrite/square" } },
+			 5:{ "textures":{ "all":"thermionics_world:blocks/gemrock/pyrite/smooth" } },
+			 6:{ "textures":{ "all":"thermionics_world:blocks/gemrock/pyrite/smooth" } },
+			 7:{ "textures":{ "all":"thermionics_world:blocks/gemrock/pyrite/smooth" } },
+			 8:{ "textures":{ "all":"thermionics_world:blocks/gemrock/pyrite/smooth" } },
+			 9:{ "textures":{ "all":"thermionics_world:blocks/gemrock/pyrite/smooth" } },
+			10:{ "textures":{ "all":"thermionics_world:blocks/gemrock/pyrite/smooth" } },
+			11:{ "textures":{ "all":"thermionics_world:blocks/gemrock/pyrite/smooth" } },
+			12:{ "textures":{ "all":"thermionics_world:blocks/gemrock/pyrite/smooth" } },
+			13:{ "textures":{ "all":"thermionics_world:blocks/gemrock/pyrite/smooth" } },
+			14:{ "textures":{ "all":"thermionics_world:blocks/gemrock/pyrite/smooth" } },
+			15:{ "textures":{ "all":"thermionics_world:blocks/gemrock/pyrite/smooth" } }
+		},
+		"inventory": [{}]
+	}
+}

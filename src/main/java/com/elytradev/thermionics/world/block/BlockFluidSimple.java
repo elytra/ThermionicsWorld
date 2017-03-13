@@ -38,6 +38,7 @@ import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.BlockFluidBase;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.BlockFluidFinite;
 import net.minecraftforge.fluids.Fluid;
@@ -63,7 +64,7 @@ public static final int SCALDING = 322; //322 degrees kelvin is about 120 degree
 		this.fluidDamage = new DamageSource("fluid."+fluid.getName()).setDamageBypassesArmor().setDamageIsAbsolute();
 		if (fluid.getTemperature() > SCALDING) damageAmount = 1 + (fluid.getTemperature() - SCALDING) / 20f;
 		
-		this.setDefaultState(blockState.getBaseState());
+		this.setDefaultState(blockState.getBaseState().withProperty(BlockFluidBase.LEVEL, 3));
 	}
 	
 	public BlockFluidSimple setLiftsItems(boolean shouldLiftItems) {
