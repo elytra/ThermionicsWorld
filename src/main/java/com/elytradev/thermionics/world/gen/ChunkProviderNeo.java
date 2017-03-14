@@ -34,13 +34,11 @@ import com.elytradev.thermionics.world.gen.biome.BiomeRegistry;
 import com.elytradev.thermionics.world.gen.biome.NeoBiome;
 import com.google.common.collect.ImmutableList;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Biomes;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
@@ -122,66 +120,6 @@ public class ChunkProviderNeo implements IChunkGenerator {
 		//this.biomeSelector = new VoronoiClusterField<NeoBiome>(random.nextLong(), 16*9);
 
 		PAIN = TerrainBlocks.FLUID_PAIN.getDefaultState().withProperty(BlockFluidBase.LEVEL, 3);
-		//PAIN = Block.getBlockFromName("thermionics_world:pain").getDefaultState().withProperty(BlockFluidBase.LEVEL, 3);
-		
-		
-		//Setup biome data. First argument: Hardness, second argument: infection level
-		/*
-		biomeSelector.registerCell(new NeoBiome("bridges", 0)
-				.withSurfaceMaterial(NETHERRACK)
-				.withTerrainFillMaterial(NETHERRACK)
-				.withDensitySurfaceMaterial(NETHERRACK)
-				.withDensityCoreMaterial(SOUL_SAND)
-				, 0.25f, 0.25f);
-		
-		biomeSelector.registerCell(new NeoBiome("strata", 1)
-				.withSurfaceMaterial(TerrainBlocks.GEMROCK_PYRITE.getDefaultState())
-				.withTerrainFillMaterial(TerrainBlocks.GEMROCK_ROSE_QUARTZ.getDefaultState())
-				.withDensitySurfaceMaterial(TerrainBlocks.GEMROCK_PYRITE.getDefaultState())
-				.withDensityCoreMaterial(NETHERRACK)
-				, 0.375f, 0.25f);
-		
-		biomeSelector.registerCell(new NeoBiome("cold", 2)
-				.withSurfaceMaterial(TerrainBlocks.GEMROCK_MAGNESITE.getDefaultState())
-				.withTerrainFillMaterial(TerrainBlocks.GEMROCK_SAPPHIRE.getDefaultState())
-				.withDensitySurfaceMaterial(TerrainBlocks.GEMROCK_OPAL.getDefaultState())
-				.withDensityCoreMaterial(Blocks.PACKED_ICE.getDefaultState())
-				, 0.625f, 0.25f);
-		
-		biomeSelector.registerCell(new NeoBiome("barad_dur", 3)
-				.withSurfaceMaterial(TerrainBlocks.GEMROCK_HEMATITE.getDefaultState())
-				.withTerrainFillMaterial(NETHERRACK)
-				.withDensitySurfaceMaterial(TerrainBlocks.GEMROCK_HEMATITE.getDefaultState())
-				.withDensityCoreMaterial(Blocks.NETHERRACK.getDefaultState())
-				, 0.75f, 0.25f);
-		
-		biomeSelector.registerCell(new NeoBiome("heartsblood", 4)
-				.withSurfaceMaterial(TerrainBlocks.GEMROCK_GARNET.getDefaultState())
-				.withTerrainFillMaterial(TerrainBlocks.GEMROCK_TOURMALINE.getDefaultState())
-				.withDensitySurfaceMaterial(TerrainBlocks.GEMROCK_GARNET.getDefaultState())
-				.withDensityCoreMaterial(TerrainBlocks.GEMROCK_EMERALD.getDefaultState())
-				, 0.25f, 0.5f);
-		
-		biomeSelector.registerCell(new NeoBiome("sulfur", 5)
-				.withSurfaceMaterial(TerrainBlocks.GEMROCK_HELIODOR.getDefaultState())
-				.withTerrainFillMaterial(TerrainBlocks.GEMROCK_PERIDOT.getDefaultState())
-				.withDensitySurfaceMaterial(TerrainBlocks.GEMROCK_HELIODOR.getDefaultState())
-				.withDensityCoreMaterial(TerrainBlocks.GEMROCK_PERIDOT.getDefaultState())
-				, 0.375f, 0.5f);
-		
-		biomeSelector.registerCell(new NeoBiome("nocturne", 6)
-				.withSurfaceMaterial(TerrainBlocks.GEMROCK_CASSITERITE.getDefaultState())
-				.withTerrainFillMaterial(Blocks.GRAVEL.getDefaultState())
-				.withDensitySurfaceMaterial(TerrainBlocks.GEMROCK_CASSITERITE.getDefaultState())
-				.withDensityCoreMaterial(TerrainBlocks.GEMROCK_CASSITERITE.getDefaultState())
-				, 0.625f, 0.5f);
-		
-		biomeSelector.registerCell(new NeoBiome("doom", 7)
-				.withSurfaceMaterial(TerrainBlocks.GEMROCK_SPINEL.getDefaultState())
-				.withTerrainFillMaterial(TerrainBlocks.GEMROCK_PYRITE.getDefaultState())
-				.withDensitySurfaceMaterial(TerrainBlocks.GEMROCK_SPINEL.getDefaultState())
-				.withDensityCoreMaterial(TerrainBlocks.GEMROCK_CASSITERITE.getDefaultState())
-				, 0.75f, 0.5f);*/
 		
 	}
 

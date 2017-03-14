@@ -198,33 +198,14 @@ public class ThermionicsWorld {
 	public void renderGameOverlayEvent(RenderGameOverlayEvent.Text event) {
 		if (!Minecraft.getMinecraft().gameSettings.showDebugInfo) return;
 		
-		//if (Minecraft.getMinecraft().world.getWorldType().getWorldTypeID()!=-1) return;
+		if (Minecraft.getMinecraft().world.provider.getDimension()!=-1) return;
+		
 		
 		ArrayList<String> left = event.getLeft();
 		final int LINE_BIOME = 11;
 		if (left.size()<=LINE_BIOME || !left.get(LINE_BIOME).startsWith("Biome:")) return; //Someone's already tampered
-		
-		
-		final String[] MEMES = {
-			"Breadfish",
-			"Spicy Memes",
-			"Bolides",
-			"Fernflower",
-			"Segfault",
-			"The Slip",
-			"Cancer",
-			"Mining",
-			"Digital Storage",
-			"Multiblock Machine",
-			"The Game",
-			"Neon Genesis",
-			"Mushroom Forest",
-			"Pins and Needles"
-		};
-		
-		
 
-		//Biome biome = Minecraft.getMinecraft().world.getBiome(Minecraft.getMinecraft().player.getPosition());
+		
 		String biomeName = "MEMES(NULL)";
 		BlockPos pos = Minecraft.getMinecraft().player.getPosition();
 		Chunk chunk = Minecraft.getMinecraft().world.getChunkFromBlockCoords(pos);
@@ -236,11 +217,5 @@ public class ThermionicsWorld {
 		if (biome!=null) biomeName = biome.getBiomeName();
 		
 		left.set(LINE_BIOME, "Biome: "+biomeId+" ("+biomeName+")");
-		
-		//if (biome instanceof NeoBiome) {
-		//	int id = ((NeoBiome)biome).getId();
-		//	left.set(LINE_BIOME, "Biome: "+MEMES[id%MEMES.length]);
-		//}		
-
 	}
 }
