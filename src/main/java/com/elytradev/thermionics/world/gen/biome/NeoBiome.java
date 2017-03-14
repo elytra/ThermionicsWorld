@@ -23,14 +23,16 @@
  */
 package com.elytradev.thermionics.world.gen.biome;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.world.biome.Biome;
 
-public class NeoBiome {
+public class NeoBiome extends Biome {
 	public static final IBlockState BEDROCK = Blocks.BEDROCK.getDefaultState();
 	
-	private final String name;
-	private final int id;
+	//private final String name;
+	//private final int id;
 	
 	float terrainHeight = 128f;
 	
@@ -46,9 +48,12 @@ public class NeoBiome {
 	
 	
 	
-	public NeoBiome(String name, int id) {
-		this.name = name;
-		this.id = id;
+	public NeoBiome(Biome.BiomeProperties properties) {
+		super(properties.setRainDisabled());
+		//this.name = super.getBiomeName();
+		//this.id = id;
+		
+		
 	}
 	
 	public NeoBiome withTerrainHeight(float height) {
@@ -66,8 +71,18 @@ public class NeoBiome {
 		return this;
 	}
 	
+	public NeoBiome withSurfaceMaterial(Block material) {
+		this.terrainSurfaceMaterial = material.getDefaultState();
+		return this;
+	}
+	
 	public NeoBiome withTerrainFillMaterial(IBlockState material) {
 		this.terrainFillMaterial = material;
+		return this;
+	}
+	
+	public NeoBiome withTerrainFillMaterial(Block material) {
+		this.terrainFillMaterial = material.getDefaultState();
 		return this;
 	}
 	
@@ -76,8 +91,18 @@ public class NeoBiome {
 		return this;
 	}
 	
+	public NeoBiome withDensitySurfaceMaterial(Block material) {
+		this.densitySurfaceMaterial = material.getDefaultState();
+		return this;
+	}
+	
 	public NeoBiome withDensityCoreMaterial(IBlockState material) {
 		this.densityCoreMaterial = material;
+		return this;
+	}
+	
+	public NeoBiome withDensityCoreMaterial(Block material) {
+		this.densityCoreMaterial = material.getDefaultState();
 		return this;
 	}
 	

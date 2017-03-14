@@ -26,9 +26,11 @@ package com.elytradev.thermionics.world.gen;
 
 import java.util.List;
 import java.util.Random;
+import java.util.function.Function;
 
 import com.elytradev.thermionics.world.Benchmark;
 import com.elytradev.thermionics.world.block.TerrainBlocks;
+import com.elytradev.thermionics.world.gen.biome.BiomeRegistry;
 import com.elytradev.thermionics.world.gen.biome.NeoBiome;
 import com.google.common.collect.ImmutableList;
 
@@ -83,7 +85,7 @@ public class ChunkProviderNeo implements IChunkGenerator {
 	protected ScaledNoiseVolume noiseVolumeBase;
 	protected ScaledNoiseVolume noiseVolumeFine;
 	
-	protected VoronoiClusterField<NeoBiome> biomeSelector;
+	//protected VoronoiClusterField<NeoBiome> biomeSelector;
 
 	private final NeoHellGenerators.Glowstone lightGemGen = new NeoHellGenerators.Glowstone();
 	private final WorldGenFire fireFeature = new WorldGenFire();
@@ -110,18 +112,21 @@ public class ChunkProviderNeo implements IChunkGenerator {
 		this.world = world;
 		this.seed = seed;
 		this.random = new Random(seed);
+		
+		
 
 		this.noiseTerrainBase = new ScaledNoiseField(random.nextLong(), 64f);
 		this.noiseTerrainFine = new ScaledNoiseField(random.nextLong(), 32f);
 		this.noiseVolumeBase = new ScaledNoiseVolume(random.nextLong(), 40f);
 		this.noiseVolumeFine = new ScaledNoiseVolume(random.nextLong(), 20f);
-		this.biomeSelector = new VoronoiClusterField<NeoBiome>(random.nextLong(), 16*9);
+		//this.biomeSelector = new VoronoiClusterField<NeoBiome>(random.nextLong(), 16*9);
 
 		PAIN = TerrainBlocks.FLUID_PAIN.getDefaultState().withProperty(BlockFluidBase.LEVEL, 3);
 		//PAIN = Block.getBlockFromName("thermionics_world:pain").getDefaultState().withProperty(BlockFluidBase.LEVEL, 3);
 		
 		
 		//Setup biome data. First argument: Hardness, second argument: infection level
+		/*
 		biomeSelector.registerCell(new NeoBiome("bridges", 0)
 				.withSurfaceMaterial(NETHERRACK)
 				.withTerrainFillMaterial(NETHERRACK)
@@ -176,7 +181,7 @@ public class ChunkProviderNeo implements IChunkGenerator {
 				.withTerrainFillMaterial(TerrainBlocks.GEMROCK_PYRITE.getDefaultState())
 				.withDensitySurfaceMaterial(TerrainBlocks.GEMROCK_SPINEL.getDefaultState())
 				.withDensityCoreMaterial(TerrainBlocks.GEMROCK_CASSITERITE.getDefaultState())
-				, 0.75f, 0.5f);
+				, 0.75f, 0.5f);*/
 		
 	}
 
@@ -186,20 +191,29 @@ public class ChunkProviderNeo implements IChunkGenerator {
 				int blockX = chunkX*16+x;
 				int blockZ = chunkZ*16+z;
 				
+				float terrainHeightBase = 128f;
+				float densityScale = 1.0f;
+				Function<Integer, IBlockState> terrainMaterialFunction = (it)->Blocks.NETHERRACK.getDefaultState();
+				Function<Float, IBlockState> densityMaterialFunction = (it)->Blocks.NETHERRACK.getDefaultState();
 				
-				NeoBiome biome = biomeSelector.get(blockX, blockZ);
-				float terrainHeightBase = biome.getTerrainHeight();
+				Biome biomeVanilla = world.getBiome(new BlockPos(blockX, 0, blockZ));
+				if (biomeVanilla instanceof NeoBiome) {
+					NeoBiome biome = (NeoBiome)biomeVanilla;
+					
+					terrainHeightBase = biome.getBaseHeight();
+					densityScale = biome.getDensity();
+					terrainMaterialFunction = biome::getTerrainMaterial;
+					densityMaterialFunction = biome::getDensityMaterial;
+				}
+				
 				float terrainHeightHigh = terrainHeightBase / 4;
 				float terrainHeightLow = terrainHeightBase - terrainHeightHigh;
-				float densityScale = biome.getDensity();
-				
-				float cell = 16;
 
-				
+				float columnHeight = 16;
 
-				cell += noiseTerrainBase.getFiltered(blockX, blockZ)*terrainHeightLow;
-				cell += noiseTerrainFine.getFiltered(blockX, blockZ)*terrainHeightHigh;
-				int columnHeight = (int)cell;
+				columnHeight += noiseTerrainBase.getFiltered(blockX, blockZ)*terrainHeightLow;
+				columnHeight += noiseTerrainFine.getFiltered(blockX, blockZ)*terrainHeightHigh;
+				//int columnHeightDuplicate = (int)columnHeight;
 				
 				//columnHeight = SEA_LEVEL + 4; //TODO: REMOVE DEBUG HEIGHT
 
@@ -218,16 +232,17 @@ public class ChunkProviderNeo implements IChunkGenerator {
 					IBlockState cur = AIR;
 					if (y==0) {
 						cur = BEDROCK;
-					} else if (y<=columnHeight) {
+					} else if (y<=(int)columnHeight) {
 						if (density>0.1f) {
-							cur = biome.getTerrainMaterial(columnHeight-y);
+							
+							cur = terrainMaterialFunction.apply((int)columnHeight-y);
 						} else { //Extremely low densities carve pits and caves into terrain
 							if (y<SEA_LEVEL) cur=PAIN;
 						}
 						//cur = NETHERRACK;
 					} else {
 						if (density>0.5f) {
-							cur = biome.getDensityMaterial((density-0.5f)*2);
+							cur = densityMaterialFunction.apply((density-0.5f)*2);
 							//cur=STONE;
 						} else {
 							if (y<SEA_LEVEL) cur=PAIN;
@@ -261,15 +276,28 @@ public class ChunkProviderNeo implements IChunkGenerator {
 		//Copy biomes in from biomeProvider
 		//Biome[] abiome = this.world.getBiomeProvider().getBiomes((Biome[])null, x * 16, z * 16, 16, 16);
 		byte[] abyte = chunk.getBiomeArray();
-
-		for (int i = 0; i < abyte.length; ++i) {
-
-			abyte[i] = (byte)Biome.REGISTRY.getIDForObject(Biomes.HELL);
-			
-			//abyte[i] = (hellBiomeBase==null) ? 0 : (byte)Biome.getIdForBiome(hellBiomeBase);
-
-			//abyte[i] = (byte)Biome.getIdForBiome(abiome[i]);
+		
+		for(int zi=0; zi<16; zi++) {
+			for(int xi=0; xi<16; xi++) {
+				int baseX = x; if (baseX<0) baseX-=1; baseX*=16;
+				int baseZ = z; if (baseZ<0) baseZ-=1; baseZ*=16;
+				
+				
+				Biome vanillaBiome = world.getBiome(new BlockPos(baseX+xi, 0, baseZ+zi));
+				byte id = (byte)Biome.getIdForBiome(Biomes.HELL);
+				if (vanillaBiome instanceof NeoBiome) {
+					id = (byte)BiomeRegistry.NEO_HELL.getIDForObject((NeoBiome)vanillaBiome);
+					//id = (byte)((NeoBiome)vanillaBiome).getId();
+				}
+				abyte[zi*16+xi] = id;
+			}
 		}
+		//for (int i = 0; i < abyte.length; ++i) {
+		//	abyte[i] = (byte)Biome.REGISTRY.getIDForObject(Biomes.HELL);
+		//}
+		
+		
+		
 		
 		//None of the following things changed the fact that relighting takes up like 99% of world load time
 		//chunk.setLightPopulated(true);
@@ -423,9 +451,9 @@ public class ChunkProviderNeo implements IChunkGenerator {
 		if (pos==null) return ImmutableList.of();
 		
 		if (creatureType == EnumCreatureType.MONSTER) {
-            if (this.genNetherBridge.isInsideStructure(pos)) {
-                return this.genNetherBridge.getSpawnList();
-            }
+            //if (this.genNetherBridge.isInsideStructure(pos)) {
+            //    return this.genNetherBridge.getSpawnList();
+            //}
 
             if (this.genNetherBridge.isPositionInStructure(this.world, pos) && this.world.getBlockState(pos.down()).getBlock() == Blocks.NETHER_BRICK) {
                 return this.genNetherBridge.getSpawnList();

@@ -29,18 +29,27 @@ import com.elytradev.thermionics.world.block.BlockBasalt;
 import com.elytradev.thermionics.world.block.BlockFluidSimple;
 import com.elytradev.thermionics.world.block.BlockGemrock;
 import com.elytradev.thermionics.world.gen.WorldProviderNeoHell;
+import com.elytradev.thermionics.world.gen.biome.BiomeRegistry;
+import com.elytradev.thermionics.world.gen.biome.NeoBiome;
 import com.elytradev.thermionics.world.item.ItemBlockGemrock;
 import com.elytradev.thermionics.world.item.ItemBlockVarieties;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldProvider;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -48,9 +57,12 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.ExistingSubstitutionException;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry.Type;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @Mod(modid = "thermionics_world", name="Thermionics|World", version="@VERSION@")
 public class ThermionicsWorld {
@@ -173,10 +185,62 @@ public class ThermionicsWorld {
 			proxy.registerItemModel(item);
 		}
 		
+		MinecraftForge.EVENT_BUS.register(this);
 	}
 	
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		
+	}
+	
+	@SideOnly(Side.CLIENT)
+	@SubscribeEvent
+	public void renderGameOverlayEvent(RenderGameOverlayEvent.Text event) {
+		if (!Minecraft.getMinecraft().gameSettings.showDebugInfo) return;
+		
+		//if (Minecraft.getMinecraft().world.getWorldType().getWorldTypeID()!=-1) return;
+		
+		ArrayList<String> left = event.getLeft();
+		final int LINE_BIOME = 11;
+		if (left.size()<=LINE_BIOME || !left.get(LINE_BIOME).startsWith("Biome:")) return; //Someone's already tampered
+		
+		
+		final String[] MEMES = {
+			"Breadfish",
+			"Spicy Memes",
+			"Bolides",
+			"Fernflower",
+			"Segfault",
+			"The Slip",
+			"Cancer",
+			"Mining",
+			"Digital Storage",
+			"Multiblock Machine",
+			"The Game",
+			"Neon Genesis",
+			"Mushroom Forest",
+			"Pins and Needles"
+		};
+		
+		
+
+		//Biome biome = Minecraft.getMinecraft().world.getBiome(Minecraft.getMinecraft().player.getPosition());
+		String biomeName = "MEMES(NULL)";
+		BlockPos pos = Minecraft.getMinecraft().player.getPosition();
+		Chunk chunk = Minecraft.getMinecraft().world.getChunkFromBlockCoords(pos);
+		byte[] biomeArray = chunk.getBiomeArray();
+		int x = pos.getX() & 15;
+		int z = pos.getZ() & 15;
+		int biomeId = biomeArray[z*16+x];
+		NeoBiome biome = BiomeRegistry.NEO_HELL.getObjectById(biomeId);
+		if (biome!=null) biomeName = biome.getBiomeName();
+		
+		left.set(LINE_BIOME, "Biome: "+biomeId+" ("+biomeName+")");
+		
+		//if (biome instanceof NeoBiome) {
+		//	int id = ((NeoBiome)biome).getId();
+		//	left.set(LINE_BIOME, "Biome: "+MEMES[id%MEMES.length]);
+		//}		
+
 	}
 }

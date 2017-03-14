@@ -23,9 +23,13 @@
  */
 package com.elytradev.thermionics.world.gen;
 
+import com.elytradev.thermionics.world.gen.biome.BiomeProviderNeo;
+
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldProvider;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkGenerator;
 import net.minecraftforge.fml.relauncher.Side;
@@ -34,20 +38,23 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class WorldProviderNeoHell extends WorldProvider {
 
 	public WorldProviderNeoHell() {
+	}
+	
+	/**
+	 * Up in WorldProvider, this sets a skylight and builds the BiomeProvider
+	 */
+	protected void init() {
 		this.hasNoSky = true;
 		this.doesWaterVaporize = true;
+		
+		this.biomeProvider = new BiomeProviderNeo(this.world.getWorldInfo());
 	}
+	
 	
 	@Override
 	public DimensionType getDimensionType() { 
 		return DimensionType.getById(-1);
 	}
-
-	//@Override
-	//public void registerWorldChunkManager() {
-	//	this.reg
-	//}
-	
 	
 	
 	@Override
@@ -106,14 +113,6 @@ public class WorldProviderNeoHell extends WorldProvider {
 		return false;
 	}
 	
-	/**
-	 * Returns the dimension's name, e.g. "The End", "Nether", or "Overworld".
-	 */
-	//@Override
-	//public String getDimensionName() {
-	//	return "Nether";
-	//}
-	
 	@Override
 	public int getActualHeight() {
         return 256;
@@ -125,10 +124,15 @@ public class WorldProviderNeoHell extends WorldProvider {
 	}
 	
 	public String getDepartMessage(){
-		return "Leaving Neo-Hell";
+		return "Error: Could not leave world_nether. Returned to overworld";
     }
 	
 	public String getWelcomeMessage(){
-		return "Entering Neo-Hell";
+		return "Error: Could not teleport to world_nether. Returned to world_neo_hell.";
+	}
+	
+	@Override
+	public Biome getBiomeForCoords(BlockPos pos) {
+		return this.biomeProvider.getBiome(pos);
 	}
 }

@@ -130,6 +130,10 @@ public class VoronoiClusterField<E> {
 		//centers = null; //invalidate any cached recentering data.
 	}
 	
+	public boolean containsCell(E cell) {
+		return cells.contains(cell);
+	}
+	
 	private static class Entry<E> {
 		public E e;
 		public float a;
