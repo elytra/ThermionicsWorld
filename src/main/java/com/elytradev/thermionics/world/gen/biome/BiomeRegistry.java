@@ -68,8 +68,9 @@ public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
 			.withTerrainFillMaterial(TerrainBlocks.GEMROCK_TOURMALINE)
 			.withDensitySurfaceMaterial(TerrainBlocks.GEMROCK_GARNET)
 			.withDensityCoreMaterial(TerrainBlocks.GEMROCK_EMERALD)
+			.withWorldGenerator(new GeneratorBoneTree())
 			);
-		
+
 		NEO_HELL.register(5,
 			new NeoBiome(new Biome.BiomeProperties("sulfur")
 				.setBaseHeight(128f)

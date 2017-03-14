@@ -23,10 +23,16 @@
  */
 package com.elytradev.thermionics.world.gen.biome;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.gen.feature.WorldGenerator;
 
 public class NeoBiome extends Biome {
 	public static final IBlockState BEDROCK = Blocks.BEDROCK.getDefaultState();
@@ -46,6 +52,7 @@ public class NeoBiome extends Biome {
 	
 	float veinHeight = 200f;
 	
+	private ArrayList<WorldGenerator> generators = new ArrayList<>();
 	
 	
 	public NeoBiome(Biome.BiomeProperties properties) {
@@ -106,6 +113,11 @@ public class NeoBiome extends Biome {
 		return this;
 	}
 	
+	public NeoBiome withWorldGenerator(WorldGenerator gen) {
+		this.generators.add(gen);
+		return this;
+	}
+	
 	public float getTerrainHeight() { return terrainHeight; }
 	public float getDensity() { return density; }
 	public float getVeinHeight() { return veinHeight; }
@@ -128,5 +140,21 @@ public class NeoBiome extends Biome {
 	public IBlockState getDensityMaterial(float adjustedDensity) {
 		if (adjustedDensity<0.10f) return densitySurfaceMaterial;
 		return densityCoreMaterial;
+	}
+	
+	
+	
+	@Override
+	public void decorate(World worldIn, Random random, BlockPos pos) {
+		for(WorldGenerator generator : generators) {
+			for(int i=0; i<3; i++) {
+				BlockPos relative = new BlockPos(
+						pos.getX() + random.nextInt(16) + 8,
+						random.nextInt(128) + 64,
+						pos.getZ() + random.nextInt(16) + 8
+						);
+				generator.generate(worldIn, random, relative);
+			}
+		}
 	}
 }

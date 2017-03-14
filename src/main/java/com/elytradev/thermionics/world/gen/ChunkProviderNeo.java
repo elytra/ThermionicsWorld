@@ -370,7 +370,7 @@ public class ChunkProviderNeo implements IChunkGenerator {
 		
 		popBench.endSection("trap");
 		
-		//biome.decorate(this.world, this.random, new BlockPos(i, 0, j));
+		biome.decorate(this.world, this.random, blockpos);
 		
 		net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.terraingen.DecorateBiomeEvent.Post(this.world, this.random, blockpos));
 
