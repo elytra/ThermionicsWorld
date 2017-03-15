@@ -23,11 +23,14 @@
  */
 package com.elytradev.thermionics.world;
 
+import com.elytradev.thermionics.world.item.ItemBlockEquivalentState;
 import com.elytradev.thermionics.world.item.ItemBlockGemrock;
 import com.elytradev.thermionics.world.item.ItemBlockVarieties;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 
@@ -40,7 +43,21 @@ public class ClientProxy extends Proxy {
 	@Override
 	public void registerItemModel(Item item) {
 		ResourceLocation loc = Item.REGISTRY.getNameForObject(item);
-		if (item instanceof ItemBlockGemrock) {
+		if (item instanceof ItemBlockEquivalentState) {
+			
+			NonNullList<ItemStack> subItems = NonNullList.create();
+			item.getSubItems(item, ThermionicsWorld.TAB_THERMIONICS_WORLD, subItems);
+			for(ItemStack stack : subItems) {
+				Item stackItem = stack.getItem();
+				if (stackItem!=item) continue; //The contract of getSubItems prohibits this condition.
+				String keys = ((ItemBlockEquivalentState)item).getStateStringForItem(stack);
+				//System.out.println("Registering model for "+loc+"#"+keys+" == meta:"+stack.getItemDamage());
+				
+				ModelLoader.setCustomModelResourceLocation(stackItem, stack.getItemDamage(),
+						new ModelResourceLocation(loc, keys)
+						);
+			}
+		} else if (item instanceof ItemBlockGemrock) {
 			for(int i=0; i<16; i++) {
 				ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(loc,"variant="+i));
 			}

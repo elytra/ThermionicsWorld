@@ -21,18 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.elytradev.thermionics.world.block;
+package com.elytradev.thermionics.world.item;
 
-import java.util.ArrayList;
+import com.elytradev.thermionics.world.block.BlockMeatEdible;
+import com.elytradev.thermionics.world.block.EnumEdibleMeat;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.item.ItemStack;
 
-public class BlockGroup {
-	private ArrayList<IBlockState> elements = new ArrayList<>();
-	
-	public BlockGroup() {}
-	
-	public void add(IBlockState state) {
-		elements.add(state);
+public class ItemBlockMeatEdible extends ItemBlockEquivalentState {
+
+	public ItemBlockMeatEdible(Block block) {
+		super(block);
+		this.setRegistryName(block.getRegistryName());
+	}
+
+	@Override
+	public String getUnlocalizedName(ItemStack stack) {
+		IBlockState equivalentState = this.getStateForItem(stack);
+		EnumEdibleMeat variant = equivalentState.getValue(BlockMeatEdible.VARIANT);
+		String cookedKey = equivalentState.getValue(BlockMeatEdible.COOKED) ? "cooked" : "raw";
+		
+		return "tile.thermionics_world.meat.edible."+variant.getName()+"."+cookedKey;
 	}
 }

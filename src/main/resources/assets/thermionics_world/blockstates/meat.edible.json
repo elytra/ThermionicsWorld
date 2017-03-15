@@ -1,0 +1,60 @@
+{
+	"forge_marker":1,
+	
+	"defaults":{
+		"model":"minecraft:cube_all",
+		"transform":"forge:default-block",
+		"x":0,
+		"y":0,
+		"uvlock":true,
+		"textures":{
+			"all":"thermionics_world:blocks/meat/beef.cooked"
+		}
+	},
+	
+	"variants": {
+		"cooked=false,variant=pork": [{
+			"textures":{ "all":"thermionics_world:blocks/meat/pork.raw" }
+		}],
+		"cooked=false,variant=beef": [{
+			"textures":{ "all":"thermionics_world:blocks/meat/beef.raw" }
+		}],
+		"cooked=false,variant=chicken": [{
+			"textures":{ "all":"thermionics_world:blocks/meat/chicken.raw" }
+		}],
+		"cooked=false,variant=fish": [{
+			"textures":{ "all":"thermionics_world:blocks/meat/fish.raw" }
+		}],
+		"cooked=false,variant=salmon": [{
+			"textures":{ "all":"thermionics_world:blocks/meat/salmon.raw" }
+		}],
+		"cooked=false,variant=mutton": [{
+			"textures":{ "all":"thermionics_world:blocks/meat/mutton.raw" }
+		}],
+		"cooked=false,variant=rabbit": [{
+			"textures":{ "all":"thermionics_world:blocks/meat/rabbit.raw" }
+		}],
+		
+		"cooked=true,variant=pork": [{
+			"textures":{ "all":"thermionics_world:blocks/meat/pork.cooked" }
+		}],
+		"cooked=true,variant=beef": [{
+			"textures":{ "all":"thermionics_world:blocks/meat/beef.cooked" }
+		}],
+		"cooked=true,variant=chicken": [{
+			"textures":{ "all":"thermionics_world:blocks/meat/chicken.cooked" }
+		}],
+		"cooked=true,variant=fish": [{
+			"textures":{ "all":"thermionics_world:blocks/meat/fish.cooked" }
+		}],
+		"cooked=true,variant=salmon": [{
+			"textures":{ "all":"thermionics_world:blocks/meat/salmon.cooked" }
+		}],
+		"cooked=true,variant=mutton": [{
+			"textures":{ "all":"thermionics_world:blocks/meat/mutton.cooked" }
+		}],
+		"cooked=true,variant=rabbit": [{
+			"textures":{ "all":"thermionics_world:blocks/meat/rabbit.cooked" }
+		}]
+	}
+}

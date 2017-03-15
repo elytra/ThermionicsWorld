@@ -54,22 +54,24 @@ public class BlockBasalt extends BlockObsidian {
 	
 	@Override
 	public BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, VARIANT);
+		return new BlockStateContainer(this);//, VARIANT);
 	}
 	
 	@Override
     public IBlockState getStateFromMeta(int meta) {
-        return this.getDefaultState().withProperty(VARIANT, meta);
+        return this.getDefaultState();//.withProperty(VARIANT, meta);
     }
 
     @Override
     public int getMetaFromState(IBlockState state) {
-        return state.getValue(VARIANT);
+    	return 0;
+        //return state.getValue(VARIANT);
     }
     
     @Override
     public int damageDropped(IBlockState state) {
-        return state.getValue(VARIANT);
+    	return 0;
+        //return state.getValue(VARIANT);
     }
     /*
     @Override

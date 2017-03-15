@@ -23,39 +23,56 @@
  */
 package com.elytradev.thermionics.world.item;
 
+import java.util.Iterator;
+import java.util.Set;
+import java.util.Map.Entry;
+
 import net.minecraft.block.Block;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.translation.I18n;
+import net.minecraft.util.IStringSerializable;
 
-@SuppressWarnings("deprecation")
-public class ItemBlockGemrock extends ItemBlock {
+public class ItemBlockEquivalentState extends ItemBlock {
 
-	public ItemBlockGemrock(Block block) {
+	public ItemBlockEquivalentState(Block block) {
 		super(block);
-		this.setUnlocalizedName(block.getUnlocalizedName());
-		this.setRegistryName(block.getRegistryName());
-		this.hasSubtypes = true;
+		this.setHasSubtypes(true);
 	}
 
-	@Override
-	public String getItemStackDisplayName(ItemStack stack) {
-		String localizedRockName = I18n.translateToLocal(block.getUnlocalizedName()+".name");
-		return I18n.translateToLocalFormatted("thermionics_world.brickvariety."+stack.getItemDamage(), localizedRockName);
+	@SuppressWarnings("deprecation")
+	public IBlockState getStateForItem(ItemStack item) {
+		return block.getStateFromMeta(item.getItemDamage());
 	}
-
-	@Override
-	public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> items) {
-		for(int i=0; i<5; i++) {
-			items.add(new ItemStack(this,1,i)); //TODO: Add more varieties as textures are filled in
-		}
+	
+	public String getStateStringForItem(ItemStack item) {
+		return toVanilla(getStateForItem(item));
 	}
-
+	
 	@Override
 	public int getMetadata(int damage) {
 		return damage;
+	}
+	
+	public static String toVanilla(IBlockState state) {
+		StringBuilder result = new StringBuilder();
+		Set<Entry<IProperty<?>, Comparable<?>>> entries = state.getProperties().entrySet();
+		Iterator<Entry<IProperty<?>, Comparable<?>>> iter = entries.iterator();
+		while(iter.hasNext()) {
+			Entry<IProperty<?>, Comparable<?>> entry = iter.next();
+			result.append(entry.getKey().getName());
+			result.append('=');
+			Comparable<?> value = entry.getValue();
+			if (value instanceof IStringSerializable) {
+				result.append(((IStringSerializable)value).getName());
+			} else {
+				result.append(entry.getValue().toString());
+			}
+			
+			if (iter.hasNext()) result.append(',');
+		}
+		
+		return result.toString();
 	}
 }

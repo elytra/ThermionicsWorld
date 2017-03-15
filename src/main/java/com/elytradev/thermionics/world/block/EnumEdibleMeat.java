@@ -23,16 +23,29 @@
  */
 package com.elytradev.thermionics.world.block;
 
-import java.util.ArrayList;
+import net.minecraft.util.IStringSerializable;
 
-import net.minecraft.block.state.IBlockState;
-
-public class BlockGroup {
-	private ArrayList<IBlockState> elements = new ArrayList<>();
+public enum EnumEdibleMeat implements IStringSerializable {
+	PORK("pork"),
+	BEEF("beef"),
+	CHICKEN("chicken"),
+	FISH("fish"),
+	SALMON("salmon"),
+	MUTTON("mutton"),
+	RABBIT("rabbit");
 	
-	public BlockGroup() {}
+	private final String name;
+	EnumEdibleMeat(String name) { this.name = name; }
 	
-	public void add(IBlockState state) {
-		elements.add(state);
+	@Override
+	public String getName() {
+		return name;
+	}
+	
+	public static EnumEdibleMeat valueOf(int id) {
+		for(EnumEdibleMeat meat : values()) {
+			if (meat.ordinal()==id) return meat;
+		}
+		return BEEF; //out-of-bounds meat is Left Beef
 	}
 }

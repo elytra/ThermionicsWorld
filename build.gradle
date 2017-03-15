@@ -27,14 +27,14 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 
 group = "com.elytradev"
 archivesBaseName = "ThermionicsWorld"
-version = "MC1.11.0_ver1.0"
+version = "MC1.11.2_ver1.0"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 minecraft {
-  version = "1.11.2-13.20.0.2226";
-  mappings = "snapshot_20170205";
+  version = "1.11.2-13.20.0.2228";
+  mappings = "snapshot_20170315";
 
   runDir = "minecraft"
 

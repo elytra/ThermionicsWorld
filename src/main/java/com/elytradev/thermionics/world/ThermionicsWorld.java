@@ -24,30 +24,42 @@
 package com.elytradev.thermionics.world;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
 import com.elytradev.thermionics.world.block.BlockBasalt;
 import com.elytradev.thermionics.world.block.BlockFluidSimple;
 import com.elytradev.thermionics.world.block.BlockGemrock;
+import com.elytradev.thermionics.world.block.BlockMeatEdible;
+import com.elytradev.thermionics.world.block.EnumEdibleMeat;
+import com.elytradev.thermionics.world.block.TerrainBlocks;
 import com.elytradev.thermionics.world.gen.WorldProviderNeoHell;
 import com.elytradev.thermionics.world.gen.biome.BiomeRegistry;
 import com.elytradev.thermionics.world.gen.biome.NeoBiome;
 import com.elytradev.thermionics.world.item.ItemBlockGemrock;
+import com.elytradev.thermionics.world.item.ItemBlockMeatEdible;
 import com.elytradev.thermionics.world.item.ItemBlockVarieties;
+import com.google.common.collect.ImmutableList;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.EnumRarity;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldProvider;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
@@ -63,6 +75,9 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry.Type;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 @Mod(modid = "thermionics_world", name="Thermionics|World", version="@VERSION@")
 public class ThermionicsWorld {
@@ -72,10 +87,21 @@ public class ThermionicsWorld {
 		FluidRegistry.enableUniversalBucket();
 	}
 	
+	private static final SoundEvent SOUNDEVENT_SQUISH_STEP  = new SoundEvent(new ResourceLocation("thermionics_world","squish.step")).setRegistryName("squish.step");
+	private static final SoundEvent SOUNDEVENT_SQUISH_BREAK = new SoundEvent(new ResourceLocation("thermionics_world","squish.dig")).setRegistryName("squish.dig");
+	
+	public static final SoundType SOUNDTYPE_SQUISH = new SoundType(1.0f, 1.0f,
+			SOUNDEVENT_SQUISH_BREAK,
+			SOUNDEVENT_SQUISH_STEP,
+			SOUNDEVENT_SQUISH_BREAK,
+			SOUNDEVENT_SQUISH_BREAK,
+			SOUNDEVENT_SQUISH_STEP
+			);
+	
 	public static CreativeTabs TAB_THERMIONICS_WORLD = new CreativeTabs("thermionics_world") {
 		@Override
 		public ItemStack getTabIconItem() {
-			return new ItemStack(Blocks.NETHERRACK);
+			return new ItemStack(TerrainBlocks.GEMROCK_TOURMALINE, 1, 1);
 		}
 	};
 	
@@ -93,16 +119,15 @@ public class ThermionicsWorld {
 		
 		DimensionManager.registerDimension(-1, neohellType);
 		WorldProvider provider = DimensionManager.createProviderFor(-1);
-		System.out.println(provider.getDimensionType());
 		
 		//Breaking obsidian ironically makes it easier to collect
 		try {
 			BlockBasalt basalt = new BlockBasalt();
-			ItemBlockVarieties basaltItem = new ItemBlockVarieties(basalt);
+			//ItemBlockVarieties basaltItem = new ItemBlockVarieties(basalt);
 			GameRegistry.addSubstitutionAlias("minecraft:obsidian", Type.BLOCK, basalt);
-			GameRegistry.addSubstitutionAlias("minecraft:obsidian", Type.ITEM, basaltItem);
+			//GameRegistry.addSubstitutionAlias("minecraft:obsidian", Type.ITEM, basaltItem);
 			
-			proxy.registerItemModel(basaltItem);
+			//proxy.registerItemModel(basaltItem);
 		} catch (ExistingSubstitutionException e) {
 			e.printStackTrace();
 		}
@@ -161,6 +186,7 @@ public class ThermionicsWorld {
 		
 		FluidRegistry.addBucketForFluid(painFluid);
 		
+		//Gemrocks are not gems. But they're useful.
 		ArrayList<BlockGemrock> gemrocks = new ArrayList<BlockGemrock>();
 		gemrocks.add(new BlockGemrock("magnesite",   EnumDyeColor.WHITE));
 		gemrocks.add(new BlockGemrock("garnet",      EnumDyeColor.ORANGE));
@@ -185,12 +211,160 @@ public class ThermionicsWorld {
 			proxy.registerItemModel(item);
 		}
 		
+		
+		//We're back in weird territory here, with Several Kinds of Meat
+		GameRegistry.register(SOUNDEVENT_SQUISH_STEP);
+		GameRegistry.register(SOUNDEVENT_SQUISH_BREAK);
+		
+		
+		Block edibleMeat = new BlockMeatEdible();
+		GameRegistry.register(edibleMeat);
+		ItemBlockMeatEdible edibleMeatBlockItem = new ItemBlockMeatEdible(edibleMeat);
+		GameRegistry.register(edibleMeatBlockItem);
+		proxy.registerItemModel(edibleMeatBlockItem);
+		
+		ImmutableList<ItemStack> rawMeats = ImmutableList.of(
+				new ItemStack(Items.PORKCHOP),
+				new ItemStack(Items.BEEF),
+				new ItemStack(Items.CHICKEN),
+				new ItemStack(Items.FISH,1,0),
+				new ItemStack(Items.FISH,1,1),
+				new ItemStack(Items.MUTTON),
+				new ItemStack(Items.RABBIT)
+				);
+		
+		ImmutableList<ItemStack> cookedMeats = ImmutableList.of(
+				new ItemStack(Items.COOKED_PORKCHOP),
+				new ItemStack(Items.COOKED_BEEF),
+				new ItemStack(Items.COOKED_CHICKEN),
+				new ItemStack(Items.COOKED_FISH,1,0),
+				new ItemStack(Items.COOKED_FISH,1,1),
+				new ItemStack(Items.COOKED_MUTTON),
+				new ItemStack(Items.COOKED_RABBIT)
+				);
+		
+		ImmutableList<ItemStack> rawMeatBlocks = ImmutableList.of(
+				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.PORK,    false)),
+				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.BEEF,    false)),
+				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.CHICKEN, false)),
+				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.FISH,    false)),
+				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.SALMON,  false)),
+				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.MUTTON,  false)),
+				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.RABBIT,  false))
+				);
+		
+		ImmutableList<ItemStack> cookedMeatBlocks = ImmutableList.of(
+				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.PORK,    true)),
+				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.BEEF,    true)),
+				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.CHICKEN, true)),
+				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.FISH,    true)),
+				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.SALMON,  true)),
+				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.MUTTON,  true)),
+				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.RABBIT,  true))
+				);
+		
+		//Category registrations (and some HarvestCraft-style registrations to keep compatibiltiy high)
+		forEachItem(oreDict("listAllRawMeat"), rawMeats);           forEachItem(oreDict("listAllmeatraw"), rawMeats);
+		forEachItem(oreDict("listAllCookedMeat"), cookedMeats);     forEachItem(oreDict("listAllmeatcooked"), cookedMeats);
+		forEachItem(oreDict("listAllMeat"), rawMeats, cookedMeats);
+		
+		forEachItem(oreDict("listAllBlockRawMeat"), rawMeatBlocks);
+		forEachItem(oreDict("listAllBlockCookedMeat"), cookedMeatBlocks);
+		forEachItem(oreDict("listAllBlockMeat"), rawMeatBlocks, cookedMeatBlocks);
+		
+		//These are the most specific (and probably the most useful) entries.
+		OreDictionary.registerOre("blockRawPorkchop", new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.PORK,    false)));
+		OreDictionary.registerOre("blockRawBeef",     new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.BEEF,    false)));
+		OreDictionary.registerOre("blockRawChicken",  new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.CHICKEN, false)));
+		OreDictionary.registerOre("blockRawFish",     new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.FISH,    false)));
+		OreDictionary.registerOre("blockRawSalmon",   new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.SALMON,  false)));
+		OreDictionary.registerOre("blockRawMutton",   new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.MUTTON,  false)));
+		OreDictionary.registerOre("blockRawRabbit",   new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.RABBIT,  false)));
+		
+		OreDictionary.registerOre("blockCookedPorkchop", new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.PORK,    true)));
+		OreDictionary.registerOre("blockCookedBeef",     new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.BEEF,    true)));
+		OreDictionary.registerOre("blockCookedChicken",  new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.CHICKEN, true)));
+		OreDictionary.registerOre("blockCookedFish",     new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.FISH,    true)));
+		OreDictionary.registerOre("blockCookedSalmon",   new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.SALMON,  true)));
+		OreDictionary.registerOre("blockCookedMutton",   new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.MUTTON,  true)));
+		OreDictionary.registerOre("blockCookedRabbit",   new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.RABBIT,  true)));
+
 		MinecraftForge.EVENT_BUS.register(this);
+		
+		System.out.println("END PREINIT");
+	}
+	
+	public static Consumer<ItemStack> oreDict(String ore) {
+		return it->OreDictionary.registerOre(ore, it);
+	}
+	
+	public static void forEachItem(Consumer<ItemStack> consumer, ItemStack... items) {
+		for(ItemStack stack : items) {
+			consumer.accept(stack);
+		}
+	}
+	
+	@SafeVarargs
+	public static void forEachItem(Consumer<ItemStack> consumer, List<ItemStack>... lists) {
+		for(List<ItemStack> list : lists) {
+			for(ItemStack stack : list) {
+				consumer.accept(stack);
+			}
+		}
 	}
 	
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
+		System.out.println("BEGIN INIT");
 		
+		//Craft meat into blocks
+		/*
+		addMeatCompressionRecipe(EnumEdibleMeat.PORK,    false, "porkchop");
+		addMeatCompressionRecipe(EnumEdibleMeat.BEEF,    false, "raw_beef");
+		addMeatCompressionRecipe(EnumEdibleMeat.CHICKEN, false, "chicken");
+		addMeatCompressionRecipe(EnumEdibleMeat.FISH,    false, new ItemStack(Items.FISH,1,0));
+		addMeatCompressionRecipe(EnumEdibleMeat.SALMON,  false, new ItemStack(Items.FISH,1,1));
+		addMeatCompressionRecipe(EnumEdibleMeat.MUTTON,  false, "mutton");
+		addMeatCompressionRecipe(EnumEdibleMeat.RABBIT,  false, "rabbit");
+		
+		addMeatCompressionRecipe(EnumEdibleMeat.PORK,    true,  "cooked_porkchop");
+		addMeatCompressionRecipe(EnumEdibleMeat.BEEF,    true,  "cooked_beef");
+		addMeatCompressionRecipe(EnumEdibleMeat.CHICKEN, true,  "cooked_chicken");
+		addMeatCompressionRecipe(EnumEdibleMeat.FISH,    true,  new ItemStack(Items.COOKED_FISH,1,0));
+		addMeatCompressionRecipe(EnumEdibleMeat.SALMON,  true,  new ItemStack(Items.COOKED_FISH,1,1));
+		addMeatCompressionRecipe(EnumEdibleMeat.MUTTON,  true,  "cooked_mutton");
+		addMeatCompressionRecipe(EnumEdibleMeat.RABBIT,  true,  "cooked_rabbit");
+		
+		//Uncraft blocks into meat
+		addMeatUncraftingRecipe(EnumEdibleMeat.PORK,     false, new ItemStack(Items.PORKCHOP, 9));
+		addMeatUncraftingRecipe(EnumEdibleMeat.BEEF,     false, new ItemStack(Items.BEEF,     9));
+		addMeatUncraftingRecipe(EnumEdibleMeat.CHICKEN,  false, new ItemStack(Items.CHICKEN,  9));
+		addMeatUncraftingRecipe(EnumEdibleMeat.FISH,     false, new ItemStack(Items.FISH,     9, 0));
+		addMeatUncraftingRecipe(EnumEdibleMeat.SALMON,   false, new ItemStack(Items.FISH,     9, 1));
+		addMeatUncraftingRecipe(EnumEdibleMeat.MUTTON,   false, new ItemStack(Items.MUTTON,   9));
+		addMeatUncraftingRecipe(EnumEdibleMeat.RABBIT,   false, new ItemStack(Items.RABBIT,   9));*/
+		
+		
+		
+		//Hellmeat is very juicy meat. But if you just need to get rid of the juice, you could always... cook it?
+		//NonNullList<ItemStack> rottenFleshBlocks = OreDictionary.getOres("blockRottenFlesh");
+		//if (!rottenFleshBlocks.isEmpty()) {
+		//	FurnaceRecipes.instance().addSmelting(ItemBlock.getItemFromBlock(TerrainBlocks.MEAT_FLESH), rottenFleshBlocks.get(0), 0);
+		//}
+	}
+	
+	public void addMeatCompressionRecipe(EnumEdibleMeat meat, boolean cooked, Object ingredient) {
+		GameRegistry.addRecipe(new ShapedOreRecipe(
+				new ItemStack(TerrainBlocks.MEAT_EDIBLE, 1, BlockMeatEdible.getMetaFromValue(meat, cooked)),
+				"xxx", "xxx", "xxx", 'x', ingredient
+				));
+	}
+	
+	public void addMeatUncraftingRecipe(EnumEdibleMeat meat, boolean cooked, ItemStack result) {
+		GameRegistry.addRecipe(new ShapelessOreRecipe(
+				result,
+				new ItemStack(TerrainBlocks.MEAT_EDIBLE, 1, BlockMeatEdible.getMetaFromValue(meat, cooked))
+				));
 	}
 	
 	@SideOnly(Side.CLIENT)

@@ -14,6 +14,29 @@ tile.thermionics_world.basalt.0.name=Basalt
 tile.thermionics_world.dust.name=Dust
 tile.thermionics_world.norfairite.name=Norfairite
 
+#Various Kinds of Meat
+tile.thermionics_world.meat.edible.pork.raw.name=Raw Pork Block
+tile.thermionics_world.meat.edible.beef.raw.name=Raw Beef Block
+tile.thermionics_world.meat.edible.chicken.raw.name=Raw Chicken Block
+tile.thermionics_world.meat.edible.fish.raw.name=Raw Fish Block
+tile.thermionics_world.meat.edible.salmon.raw.name=Raw Salmon Block
+tile.thermionics_world.meat.edible.mutton.raw.name=Raw Mutton Block
+tile.thermionics_world.meat.edible.rabbit.raw.name=Raw Rabbit-Meat Block
+
+tile.thermionics_world.meat.edible.pork.cooked.name=Cooked Pork Block
+tile.thermionics_world.meat.edible.beef.cooked.name=Cooked Beef Block
+tile.thermionics_world.meat.edible.chicken.cooked.name=Cooked Chicken Block
+tile.thermionics_world.meat.edible.fish.cooked.name=Cooked Fish Block
+tile.thermionics_world.meat.edible.salmon.cooked.name=Cooked Salmon Block
+tile.thermionics_world.meat.edible.mutton.cooked.name=Cooked Mutton Block
+tile.thermionics_world.meat.edible.rabbit.cooked.name=Cooked Rabbit Block
+
+#Less-Appetizing Kinds of Meat
+
+tile.thermionics_world.meat.flesh.juicy.name=Juicy Flesh Block
+tile.thermionics_world.meat.flesh.rotten.name=Rotten Flesh Block
+tile.thermionics_world.meat.flesh.left.name=Left Beef Block
+
 #Gemrock Varieties
 thermionics_world.brickvariety.0=%1$s Gemrock
 thermionics_world.brickvariety.1=%1$s Gembrick

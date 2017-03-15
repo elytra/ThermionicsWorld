@@ -1,0 +1,26 @@
+{
+	"squish.step": {
+		"category": "block",
+		"sounds": [
+			{
+				"name": "thermionics_world:squish/step0",
+				"stream": false
+			},
+			{
+				"name": "thermionics_world:squish/step1",
+				"stream": false
+			},
+			{
+				"name": "thermionics_world:squish/step2",
+				"stream": false
+			}
+		]
+	},
+	"squish.dig": {
+		"category": "block",
+		"sounds": [{
+			"name": "thermionics_world:squish/dig",
+			"stream": false
+		}]
+	}
+}
