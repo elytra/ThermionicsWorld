@@ -30,6 +30,7 @@ import java.util.function.Consumer;
 import com.elytradev.thermionics.world.block.BlockBasalt;
 import com.elytradev.thermionics.world.block.BlockFluidSimple;
 import com.elytradev.thermionics.world.block.BlockGemrock;
+import com.elytradev.thermionics.world.block.BlockMeat;
 import com.elytradev.thermionics.world.block.BlockMeatEdible;
 import com.elytradev.thermionics.world.block.EnumEdibleMeat;
 import com.elytradev.thermionics.world.block.TerrainBlocks;
@@ -42,7 +43,9 @@ import com.elytradev.thermionics.world.item.ItemBlockVarieties;
 import com.google.common.collect.ImmutableList;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockCrops;
 import net.minecraft.block.SoundType;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
@@ -62,6 +65,7 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -69,6 +73,7 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.ExistingSubstitutionException;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -391,5 +396,17 @@ public class ThermionicsWorld {
 		if (biome!=null) biomeName = biome.getBiomeName();
 		
 		left.set(LINE_BIOME, "Biome: "+biomeId+" ("+biomeName+")");
+	}
+	
+	@SubscribeEvent
+	public void cropGrowEvent(BlockEvent.CropGrowEvent.Pre event) {
+		IBlockState cropState = event.getState();
+		Block land = event.getWorld().getBlockState(event.getPos().down()).getBlock();
+		if (land instanceof BlockMeat) {
+			//vanilla ticks give a 1 in 10 chance. We're forcing it on a 1 in 4, with the remaining 3 potentially ALSO
+			//growing at the normal 10%. So this should be pretty fast.
+			int growthChance = (int)(Math.random()*4);
+			if (growthChance==0) event.setResult(Event.Result.ALLOW);
+		}
 	}
 }
