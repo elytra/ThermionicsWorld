@@ -28,6 +28,9 @@ import com.elytradev.thermionics.world.block.TerrainBlocks;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.registry.RegistryNamespaced;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
 	public static BiomeRegistry NEO_HELL = new BiomeRegistry();
@@ -66,7 +69,8 @@ public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
 			.withSurfaceMaterial(TerrainBlocks.GEMROCK_MAGNESITE)
 			.withTerrainFillMaterial(TerrainBlocks.GEMROCK_SAPPHIRE)
 			.withDensitySurfaceMaterial(TerrainBlocks.GEMROCK_OPAL)
-			.withDensityCoreMaterial(Blocks.PACKED_ICE)
+			.withDensityCoreMaterial(Blocks.PACKED_ICE),
+			BiomeDictionary.Type.NETHER, BiomeDictionary.Type.COLD
 			);
 		
 		NEO_HELL.register(3,
@@ -91,7 +95,8 @@ public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
 			.withTerrainFillMaterial(TerrainBlocks.GEMROCK_TOURMALINE)
 			.withDensitySurfaceMaterial(TerrainBlocks.GEMROCK_GARNET)
 			.withDensityCoreMaterial(TerrainBlocks.GEMROCK_EMERALD)
-			.withWorldGenerator(new GeneratorBoneTree())
+			.withWorldGenerator(new GeneratorBoneTree()),
+			BiomeDictionary.Type.NETHER, BiomeDictionary.Type.HOT, BiomeDictionary.Type.WET
 			);
 
 		NEO_HELL.register(5,
@@ -115,7 +120,8 @@ public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
 			.withSurfaceMaterial(TerrainBlocks.GEMROCK_CASSITERITE)
 			.withTerrainFillMaterial(Blocks.OBSIDIAN)
 			.withDensitySurfaceMaterial(TerrainBlocks.GEMROCK_CASSITERITE)
-			.withDensityCoreMaterial(TerrainBlocks.GEMROCK_CASSITERITE)
+			.withDensityCoreMaterial(TerrainBlocks.GEMROCK_CASSITERITE),
+			BiomeDictionary.Type.NETHER, BiomeDictionary.Type.DEAD, BiomeDictionary.Type.SPOOKY
 			);
 		
 		NEO_HELL.register(7,
@@ -127,13 +133,22 @@ public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
 			.withSurfaceMaterial(TerrainBlocks.GEMROCK_SPINEL)
 			.withTerrainFillMaterial(TerrainBlocks.GEMROCK_PYRITE)
 			.withDensitySurfaceMaterial(TerrainBlocks.GEMROCK_SPINEL)
-			.withDensityCoreMaterial(TerrainBlocks.GEMROCK_CASSITERITE)
+			.withDensityCoreMaterial(TerrainBlocks.GEMROCK_CASSITERITE),
+			BiomeDictionary.Type.NETHER, BiomeDictionary.Type.DRY
 			);
 	}
 	
 	
 	
+	public void register(int id, NeoBiome biome, BiomeDictionary.Type... dictionaryTypes) {
+		this.register(id, biome.getBiomeName(), biome);
+		GameRegistry.register(biome);
+		BiomeDictionary.addTypes(biome, dictionaryTypes);
+	}
+	
 	public void register(int id, NeoBiome biome) {
 		this.register(id, biome.getBiomeName(), biome);
+		GameRegistry.register(biome);
+		BiomeDictionary.addTypes(biome, BiomeDictionary.Type.NETHER);
 	}
 }

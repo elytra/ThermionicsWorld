@@ -57,6 +57,7 @@ public class NeoBiome extends Biome {
 	
 	public NeoBiome(Biome.BiomeProperties properties) {
 		super(properties.setRainDisabled());
+		this.setRegistryName(super.getBiomeName());
 		//this.name = super.getBiomeName();
 		//this.id = id;
 		
