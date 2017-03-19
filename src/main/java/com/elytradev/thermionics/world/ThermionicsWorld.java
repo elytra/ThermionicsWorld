@@ -126,6 +126,7 @@ public class ThermionicsWorld {
 		WorldProvider provider = DimensionManager.createProviderFor(-1);
 		
 		//Breaking obsidian ironically makes it easier to collect
+		/*
 		try {
 			BlockBasalt basalt = new BlockBasalt();
 			//ItemBlockVarieties basaltItem = new ItemBlockVarieties(basalt);
@@ -135,7 +136,12 @@ public class ThermionicsWorld {
 			//proxy.registerItemModel(basaltItem);
 		} catch (ExistingSubstitutionException e) {
 			e.printStackTrace();
-		}
+		}*/
+		//Turns out this REALLY BROKE obsidian, way more than intended. So instead, until substitutionAlias becomes more stable:
+		Blocks.OBSIDIAN.setUnlocalizedName("thermionics_world.basalt");
+		Blocks.OBSIDIAN.setHardness(2.5f);
+		Blocks.OBSIDIAN.setHarvestLevel("pickaxe",2);
+		
 		
 		//You might want to look away for a second, we produce some fluids here
 		Fluid soylentFluid = new Fluid("soylent",
