@@ -29,13 +29,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldProvider;
+import net.minecraft.world.WorldProviderHell;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkGenerator;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class WorldProviderNeoHell extends WorldProvider {
+public class WorldProviderNeoHell extends WorldProviderHell {
 
 	public WorldProviderNeoHell() {
 	}
@@ -43,7 +44,7 @@ public class WorldProviderNeoHell extends WorldProvider {
 	/**
 	 * Up in WorldProvider, this sets a skylight and builds the BiomeProvider
 	 */
-	protected void init() {
+	public void init() {
 		this.hasNoSky = true;
 		this.doesWaterVaporize = true;
 		
@@ -104,8 +105,8 @@ public class WorldProviderNeoHell extends WorldProvider {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean doesXZShowFog(int x, int z) {
-		return false;
-		//return true;
+		//return false;
+		return true;
 	}
 
 	@Override
