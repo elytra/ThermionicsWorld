@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import com.elytradev.thermionics.world.block.BlockBasalt;
 import com.elytradev.thermionics.world.block.BlockFluidSimple;
 import com.elytradev.thermionics.world.block.BlockGemrock;
 import com.elytradev.thermionics.world.block.BlockMeat;
@@ -39,11 +38,10 @@ import com.elytradev.thermionics.world.gen.biome.BiomeRegistry;
 import com.elytradev.thermionics.world.gen.biome.NeoBiome;
 import com.elytradev.thermionics.world.item.ItemBlockGemrock;
 import com.elytradev.thermionics.world.item.ItemBlockMeatEdible;
-import com.elytradev.thermionics.world.item.ItemBlockVarieties;
+import com.elytradev.thermionics.world.item.TWItems;
 import com.google.common.collect.ImmutableList;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockCrops;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -52,10 +50,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.EnumRarity;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -75,9 +71,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.ExistingSubstitutionException;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry.Type;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
@@ -123,6 +117,7 @@ public class ThermionicsWorld {
 		DimensionType neohellType = DimensionType.register("Neo-Hell", "_neohell", -1, WorldProviderNeoHell.class, false);
 		
 		DimensionManager.registerDimension(-1, neohellType);
+		@SuppressWarnings("unused")
 		WorldProvider provider = DimensionManager.createProviderFor(-1);
 		
 		//Breaking obsidian ironically makes it easier to collect
@@ -234,7 +229,7 @@ public class ThermionicsWorld {
 		GameRegistry.register(edibleMeatBlockItem);
 		proxy.registerItemModel(edibleMeatBlockItem);
 		
-		ImmutableList<ItemStack> rawMeats = ImmutableList.of(
+		TWItems.GROUP_MEAT_RAW = ImmutableList.of(
 				new ItemStack(Items.PORKCHOP),
 				new ItemStack(Items.BEEF),
 				new ItemStack(Items.CHICKEN),
@@ -244,7 +239,7 @@ public class ThermionicsWorld {
 				new ItemStack(Items.RABBIT)
 				);
 		
-		ImmutableList<ItemStack> cookedMeats = ImmutableList.of(
+		TWItems.GROUP_MEAT_COOKED = ImmutableList.of(
 				new ItemStack(Items.COOKED_PORKCHOP),
 				new ItemStack(Items.COOKED_BEEF),
 				new ItemStack(Items.COOKED_CHICKEN),
@@ -254,7 +249,7 @@ public class ThermionicsWorld {
 				new ItemStack(Items.COOKED_RABBIT)
 				);
 		
-		ImmutableList<ItemStack> rawMeatBlocks = ImmutableList.of(
+		TWItems.GROUP_BLOCK_MEAT_RAW = ImmutableList.of(
 				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.PORK,    false)),
 				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.BEEF,    false)),
 				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.CHICKEN, false)),
@@ -264,7 +259,7 @@ public class ThermionicsWorld {
 				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.RABBIT,  false))
 				);
 		
-		ImmutableList<ItemStack> cookedMeatBlocks = ImmutableList.of(
+		TWItems.GROUP_BLOCK_MEAT_COOKED = ImmutableList.of(
 				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.PORK,    true)),
 				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.BEEF,    true)),
 				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.CHICKEN, true)),
@@ -275,13 +270,13 @@ public class ThermionicsWorld {
 				);
 		
 		//Category registrations (and some HarvestCraft-style registrations to keep compatibiltiy high)
-		forEachItem(oreDict("listAllRawMeat"), rawMeats);           forEachItem(oreDict("listAllmeatraw"), rawMeats);
-		forEachItem(oreDict("listAllCookedMeat"), cookedMeats);     forEachItem(oreDict("listAllmeatcooked"), cookedMeats);
-		forEachItem(oreDict("listAllMeat"), rawMeats, cookedMeats);
+		forEachItem(oreDict("listAllRawMeat"),    TWItems.GROUP_MEAT_RAW);    forEachItem(oreDict("listAllmeatraw"),    TWItems.GROUP_MEAT_RAW);
+		forEachItem(oreDict("listAllCookedMeat"), TWItems.GROUP_MEAT_COOKED); forEachItem(oreDict("listAllmeatcooked"), TWItems.GROUP_MEAT_COOKED);
+		forEachItem(oreDict("listAllMeat"),       TWItems.GROUP_MEAT_RAW, TWItems.GROUP_MEAT_COOKED);
 		
-		forEachItem(oreDict("listAllBlockRawMeat"), rawMeatBlocks);
-		forEachItem(oreDict("listAllBlockCookedMeat"), cookedMeatBlocks);
-		forEachItem(oreDict("listAllBlockMeat"), rawMeatBlocks, cookedMeatBlocks);
+		forEachItem(oreDict("listAllBlockRawMeat"),    TWItems.GROUP_BLOCK_MEAT_RAW);
+		forEachItem(oreDict("listAllBlockCookedMeat"), TWItems.GROUP_BLOCK_MEAT_COOKED);
+		forEachItem(oreDict("listAllBlockMeat"),       TWItems.GROUP_BLOCK_MEAT_RAW, TWItems.GROUP_BLOCK_MEAT_COOKED);
 		
 		//These are the most specific (and probably the most useful) entries.
 		OreDictionary.registerOre("blockRawPorkchop", new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.PORK,    false)));
@@ -326,25 +321,24 @@ public class ThermionicsWorld {
 	
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-		System.out.println("BEGIN INIT");
+		//System.out.println("BEGIN INIT");
 		
 		//Craft meat into blocks
-		/*
-		addMeatCompressionRecipe(EnumEdibleMeat.PORK,    false, "porkchop");
-		addMeatCompressionRecipe(EnumEdibleMeat.BEEF,    false, "raw_beef");
-		addMeatCompressionRecipe(EnumEdibleMeat.CHICKEN, false, "chicken");
+		addMeatCompressionRecipe(EnumEdibleMeat.PORK,    false, new ItemStack(Items.PORKCHOP));
+		addMeatCompressionRecipe(EnumEdibleMeat.BEEF,    false, new ItemStack(Items.BEEF));
+		addMeatCompressionRecipe(EnumEdibleMeat.CHICKEN, false, new ItemStack(Items.CHICKEN));
 		addMeatCompressionRecipe(EnumEdibleMeat.FISH,    false, new ItemStack(Items.FISH,1,0));
 		addMeatCompressionRecipe(EnumEdibleMeat.SALMON,  false, new ItemStack(Items.FISH,1,1));
-		addMeatCompressionRecipe(EnumEdibleMeat.MUTTON,  false, "mutton");
-		addMeatCompressionRecipe(EnumEdibleMeat.RABBIT,  false, "rabbit");
+		addMeatCompressionRecipe(EnumEdibleMeat.MUTTON,  false, new ItemStack(Items.MUTTON));
+		addMeatCompressionRecipe(EnumEdibleMeat.RABBIT,  false, new ItemStack(Items.RABBIT));
 		
-		addMeatCompressionRecipe(EnumEdibleMeat.PORK,    true,  "cooked_porkchop");
-		addMeatCompressionRecipe(EnumEdibleMeat.BEEF,    true,  "cooked_beef");
-		addMeatCompressionRecipe(EnumEdibleMeat.CHICKEN, true,  "cooked_chicken");
+		addMeatCompressionRecipe(EnumEdibleMeat.PORK,    true,  new ItemStack(Items.COOKED_PORKCHOP));
+		addMeatCompressionRecipe(EnumEdibleMeat.BEEF,    true,  new ItemStack(Items.COOKED_BEEF));
+		addMeatCompressionRecipe(EnumEdibleMeat.CHICKEN, true,  new ItemStack(Items.COOKED_CHICKEN));
 		addMeatCompressionRecipe(EnumEdibleMeat.FISH,    true,  new ItemStack(Items.COOKED_FISH,1,0));
 		addMeatCompressionRecipe(EnumEdibleMeat.SALMON,  true,  new ItemStack(Items.COOKED_FISH,1,1));
-		addMeatCompressionRecipe(EnumEdibleMeat.MUTTON,  true,  "cooked_mutton");
-		addMeatCompressionRecipe(EnumEdibleMeat.RABBIT,  true,  "cooked_rabbit");
+		addMeatCompressionRecipe(EnumEdibleMeat.MUTTON,  true,  new ItemStack(Items.COOKED_MUTTON));
+		addMeatCompressionRecipe(EnumEdibleMeat.RABBIT,  true,  new ItemStack(Items.COOKED_RABBIT));
 		
 		//Uncraft blocks into meat
 		addMeatUncraftingRecipe(EnumEdibleMeat.PORK,     false, new ItemStack(Items.PORKCHOP, 9));
@@ -353,8 +347,23 @@ public class ThermionicsWorld {
 		addMeatUncraftingRecipe(EnumEdibleMeat.FISH,     false, new ItemStack(Items.FISH,     9, 0));
 		addMeatUncraftingRecipe(EnumEdibleMeat.SALMON,   false, new ItemStack(Items.FISH,     9, 1));
 		addMeatUncraftingRecipe(EnumEdibleMeat.MUTTON,   false, new ItemStack(Items.MUTTON,   9));
-		addMeatUncraftingRecipe(EnumEdibleMeat.RABBIT,   false, new ItemStack(Items.RABBIT,   9));*/
+		addMeatUncraftingRecipe(EnumEdibleMeat.RABBIT,   false, new ItemStack(Items.RABBIT,   9));
 		
+		addMeatUncraftingRecipe(EnumEdibleMeat.PORK,     true,  new ItemStack(Items.COOKED_PORKCHOP, 9));
+		addMeatUncraftingRecipe(EnumEdibleMeat.BEEF,     true,  new ItemStack(Items.COOKED_BEEF,     9));
+		addMeatUncraftingRecipe(EnumEdibleMeat.CHICKEN,  true,  new ItemStack(Items.COOKED_CHICKEN,  9));
+		addMeatUncraftingRecipe(EnumEdibleMeat.FISH,     true,  new ItemStack(Items.COOKED_FISH,     9, 0));
+		addMeatUncraftingRecipe(EnumEdibleMeat.SALMON,   true,  new ItemStack(Items.COOKED_FISH,     9, 1));
+		addMeatUncraftingRecipe(EnumEdibleMeat.MUTTON,   true,  new ItemStack(Items.COOKED_MUTTON,   9));
+		addMeatUncraftingRecipe(EnumEdibleMeat.RABBIT,   true,  new ItemStack(Items.COOKED_RABBIT,   9));
+		
+		//Smelt raw meat blocks into cooked meat blocks
+		for(EnumEdibleMeat meat : EnumEdibleMeat.values()) {
+			FurnaceRecipes.instance().addSmeltingRecipe(
+					TWItems.meat(meat, false),
+					TWItems.meat(meat, true),
+					0.0f);
+		}
 		
 		
 		//Hellmeat is very juicy meat. But if you just need to get rid of the juice, you could always... cook it?
@@ -377,6 +386,8 @@ public class ThermionicsWorld {
 				new ItemStack(TerrainBlocks.MEAT_EDIBLE, 1, BlockMeatEdible.getMetaFromValue(meat, cooked))
 				));
 	}
+	
+	
 	
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
