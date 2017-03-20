@@ -16,6 +16,7 @@ public class TWItems {
 	public static List<ItemStack> GROUP_MEAT_COOKED = null;
 	public static List<ItemStack> GROUP_BLOCK_MEAT_RAW = null;
 	public static List<ItemStack> GROUP_BLOCK_MEAT_COOKED = null;
+	public static List<ItemStack> GROUP_GEMROCK = null;
 	
 	/*Static item accessors. Take the constants at the bottom, apply metadata magic, and produce useful ItemStacks!*/
 	

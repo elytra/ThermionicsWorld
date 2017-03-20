@@ -23,6 +23,8 @@
  */
 package com.elytradev.thermionics.world.block;
 
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
@@ -33,6 +35,8 @@ public class TerrainBlocks {
 	public static final BlockFluidSimple FLUID_PAIN = null;
 	@ObjectHolder("soylent")
 	public static final BlockFluidSimple FLUID_SOYLENT = null;
+	
+	public static List<BlockGemrock> GROUP_GEMROCK = null;
 	
 	@ObjectHolder("gemrock.magnesite")
 	public static final BlockGemrock GEMROCK_MAGNESITE = null;

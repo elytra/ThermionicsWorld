@@ -50,8 +50,10 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.EnumRarity;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -193,29 +195,39 @@ public class ThermionicsWorld {
 		FluidRegistry.addBucketForFluid(painFluid);
 		
 		//Gemrocks are not gems. But they're useful.
-		ArrayList<BlockGemrock> gemrocks = new ArrayList<BlockGemrock>();
-		gemrocks.add(new BlockGemrock("magnesite",   EnumDyeColor.WHITE));
-		gemrocks.add(new BlockGemrock("garnet",      EnumDyeColor.ORANGE));
-		gemrocks.add(new BlockGemrock("tourmaline",  EnumDyeColor.MAGENTA));
-		gemrocks.add(new BlockGemrock("sapphire",    EnumDyeColor.LIGHT_BLUE));
-		gemrocks.add(new BlockGemrock("heliodor",    EnumDyeColor.YELLOW));
-		gemrocks.add(new BlockGemrock("peridot",     EnumDyeColor.LIME));
-		gemrocks.add(new BlockGemrock("rosequartz",  EnumDyeColor.PINK));
-		gemrocks.add(new BlockGemrock("hematite",    EnumDyeColor.GRAY));
-		gemrocks.add(new BlockGemrock("opal",        EnumDyeColor.SILVER));
-		gemrocks.add(new BlockGemrock("chrysoprase", EnumDyeColor.CYAN));
-		gemrocks.add(new BlockGemrock("amethyst",    EnumDyeColor.PURPLE));
-		gemrocks.add(new BlockGemrock("sodalite",    EnumDyeColor.BLUE));
-		gemrocks.add(new BlockGemrock("pyrite",      EnumDyeColor.BROWN));
-		gemrocks.add(new BlockGemrock("emerald",     EnumDyeColor.GREEN));
-		gemrocks.add(new BlockGemrock("spinel",      EnumDyeColor.RED));
-		gemrocks.add(new BlockGemrock("cassiterite", EnumDyeColor.BLACK));
+		ImmutableList<BlockGemrock> gemrocks = ImmutableList.of(
+				new BlockGemrock("magnesite",   EnumDyeColor.WHITE),
+				new BlockGemrock("garnet",      EnumDyeColor.ORANGE),
+				new BlockGemrock("tourmaline",  EnumDyeColor.MAGENTA),
+				new BlockGemrock("sapphire",    EnumDyeColor.LIGHT_BLUE),
+				new BlockGemrock("heliodor",    EnumDyeColor.YELLOW),
+				new BlockGemrock("peridot",     EnumDyeColor.LIME),
+				new BlockGemrock("rosequartz",  EnumDyeColor.PINK),
+				new BlockGemrock("hematite",    EnumDyeColor.GRAY),
+				new BlockGemrock("opal",        EnumDyeColor.SILVER),
+				new BlockGemrock("chrysoprase", EnumDyeColor.CYAN),
+				new BlockGemrock("amethyst",    EnumDyeColor.PURPLE),
+				new BlockGemrock("sodalite",    EnumDyeColor.BLUE),
+				new BlockGemrock("pyrite",      EnumDyeColor.BROWN),
+				new BlockGemrock("emerald",     EnumDyeColor.GREEN),
+				new BlockGemrock("spinel",      EnumDyeColor.RED),
+				new BlockGemrock("cassiterite", EnumDyeColor.BLACK));
+		
 		for(BlockGemrock block : gemrocks) {
 			GameRegistry.register(block);
 			ItemBlockGemrock item = new ItemBlockGemrock(block);
 			GameRegistry.register(item);
 			proxy.registerItemModel(item);
 		}
+		
+		ImmutableList.Builder<ItemStack> gemrockBuilder = ImmutableList.builder();
+		ImmutableList.Builder<BlockGemrock> gemrockBlockBuilder = ImmutableList.builder();
+		for(BlockGemrock block : gemrocks) {
+			gemrockBlockBuilder.add(block);
+			gemrockBuilder.add(new ItemStack(block));
+		}
+		TWItems.GROUP_GEMROCK = gemrockBuilder.build();
+		TerrainBlocks.GROUP_GEMROCK = gemrockBlockBuilder.build();
 		
 		
 		//We're back in weird territory here, with Several Kinds of Meat
@@ -270,13 +282,13 @@ public class ThermionicsWorld {
 				);
 		
 		//Category registrations (and some HarvestCraft-style registrations to keep compatibiltiy high)
-		forEachItem(oreDict("listAllRawMeat"),    TWItems.GROUP_MEAT_RAW);    forEachItem(oreDict("listAllmeatraw"),    TWItems.GROUP_MEAT_RAW);
-		forEachItem(oreDict("listAllCookedMeat"), TWItems.GROUP_MEAT_COOKED); forEachItem(oreDict("listAllmeatcooked"), TWItems.GROUP_MEAT_COOKED);
-		forEachItem(oreDict("listAllMeat"),       TWItems.GROUP_MEAT_RAW, TWItems.GROUP_MEAT_COOKED);
+		forEach(oreDict("listAllRawMeat"),    TWItems.GROUP_MEAT_RAW);    forEach(oreDict("listAllmeatraw"),    TWItems.GROUP_MEAT_RAW);
+		forEach(oreDict("listAllCookedMeat"), TWItems.GROUP_MEAT_COOKED); forEach(oreDict("listAllmeatcooked"), TWItems.GROUP_MEAT_COOKED);
+		forEach(oreDict("listAllMeat"),       TWItems.GROUP_MEAT_RAW, TWItems.GROUP_MEAT_COOKED);
 		
-		forEachItem(oreDict("listAllBlockRawMeat"),    TWItems.GROUP_BLOCK_MEAT_RAW);
-		forEachItem(oreDict("listAllBlockCookedMeat"), TWItems.GROUP_BLOCK_MEAT_COOKED);
-		forEachItem(oreDict("listAllBlockMeat"),       TWItems.GROUP_BLOCK_MEAT_RAW, TWItems.GROUP_BLOCK_MEAT_COOKED);
+		forEach(oreDict("listAllBlockRawMeat"),    TWItems.GROUP_BLOCK_MEAT_RAW);
+		forEach(oreDict("listAllBlockCookedMeat"), TWItems.GROUP_BLOCK_MEAT_COOKED);
+		forEach(oreDict("listAllBlockMeat"),       TWItems.GROUP_BLOCK_MEAT_RAW, TWItems.GROUP_BLOCK_MEAT_COOKED);
 		
 		//These are the most specific (and probably the most useful) entries.
 		OreDictionary.registerOre("blockRawPorkchop", new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.PORK,    false)));
@@ -311,13 +323,28 @@ public class ThermionicsWorld {
 	}
 	
 	@SafeVarargs
+	public static <T> void forEach(Consumer<T> consumer, T... ts) {
+		for(T t : ts) { consumer.accept(t); }
+	}
+	
+	@SafeVarargs
+	public static <T> void forEach(Consumer<T> consumer, List<T>... lists) {
+		for(List<T> list : lists) {
+			for(T t : list) {
+				consumer.accept(t);
+			}
+		}
+	}
+	
+	/*
+	@SafeVarargs
 	public static void forEachItem(Consumer<ItemStack> consumer, List<ItemStack>... lists) {
 		for(List<ItemStack> list : lists) {
 			for(ItemStack stack : list) {
 				consumer.accept(stack);
 			}
 		}
-	}
+	}*/
 	
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
@@ -371,23 +398,47 @@ public class ThermionicsWorld {
 		//if (!rottenFleshBlocks.isEmpty()) {
 		//	FurnaceRecipes.instance().addSmelting(ItemBlock.getItemFromBlock(TerrainBlocks.MEAT_FLESH), rottenFleshBlocks.get(0), 0);
 		//}
+		
+		for(BlockGemrock block : TerrainBlocks.GROUP_GEMROCK) addBrickRecipes(block);
 	}
 	
-	public void addMeatCompressionRecipe(EnumEdibleMeat meat, boolean cooked, Object ingredient) {
+	public static void addMeatCompressionRecipe(EnumEdibleMeat meat, boolean cooked, Object ingredient) {
 		GameRegistry.addRecipe(new ShapedOreRecipe(
 				new ItemStack(TerrainBlocks.MEAT_EDIBLE, 1, BlockMeatEdible.getMetaFromValue(meat, cooked)),
 				"xxx", "xxx", "xxx", 'x', ingredient
 				));
 	}
 	
-	public void addMeatUncraftingRecipe(EnumEdibleMeat meat, boolean cooked, ItemStack result) {
+	public static void addMeatUncraftingRecipe(EnumEdibleMeat meat, boolean cooked, ItemStack result) {
 		GameRegistry.addRecipe(new ShapelessOreRecipe(
 				result,
 				new ItemStack(TerrainBlocks.MEAT_EDIBLE, 1, BlockMeatEdible.getMetaFromValue(meat, cooked))
 				));
 	}
 	
-	
+	public static void addBrickRecipes(BlockGemrock gem) {
+		GameRegistry.addRecipe(new ShapedOreRecipe(
+				new ItemStack(gem, 4, 1),
+				"xx", "xx", 'x', new ItemStack(gem,1,0)
+				));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(
+				new ItemStack(gem, 1, 2),
+				new ItemStack(gem, 1, 1)
+				));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(
+				new ItemStack(gem, 1, 3),
+				new ItemStack(gem, 1, 2)
+				));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(
+				new ItemStack(gem, 1, 4),
+				new ItemStack(gem, 1, 3)
+				));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(
+				new ItemStack(gem, 1, 1),
+				new ItemStack(gem, 1, 4)
+				));
+		
+	}
 	
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
