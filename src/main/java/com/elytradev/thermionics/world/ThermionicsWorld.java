@@ -418,6 +418,13 @@ public class ThermionicsWorld {
 		//}
 		
 		for(BlockGemrock block : TerrainBlocks.GROUP_GEMROCK) addBrickRecipes(block);
+		
+		//Norfairite can be dyed. This is surprisingly hard to get right.
+		for(EnumDyeColor dye : EnumDyeColor.values()) {
+			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(TerrainBlocks.NORFAIRITE_CLEAR,1,dye.getMetadata()),
+					new ItemStack(Items.DYE,1,dye.getDyeDamage()),
+					new ItemStack(TerrainBlocks.NORFAIRITE_CLEAR,1,OreDictionary.WILDCARD_VALUE)));
+		}
 	}
 	
 	public static void addMeatCompressionRecipe(EnumEdibleMeat meat, boolean cooked, Object ingredient) {
