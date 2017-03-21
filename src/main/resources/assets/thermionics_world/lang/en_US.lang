@@ -12,7 +12,7 @@ thermionics_world.shard.uranium.name=Pitchblende Shard
 tile.thermionics_world.basalt.name=Basalt
 tile.thermionics_world.basalt.0.name=Basalt
 tile.thermionics_world.dust.name=Dust
-tile.thermionics_world.norfairite.name=Norfairite
+tile.thermionics_world.norfairite.clear.name=%1$s Clear Norfairite
 
 #Various Kinds of Meat
 tile.thermionics_world.meat.edible.pork.raw.name=Raw Pork Block
@@ -43,6 +43,24 @@ thermionics_world.brickvariety.1=%1$s Gembrick
 thermionics_world.brickvariety.2=%1$s Gembrick Tile
 thermionics_world.brickvariety.3=%1$s Gembrick Small Tiles
 thermionics_world.brickvariety.4=%1$s Gembrick Square
+
+#Colors
+color.white=White
+color.orange=Orange
+color.yellow=Yellow
+color.magenta=Magenta
+color.lightBlue=Light Blue
+color.lime=Lime
+color.pink=Pink
+color.gray=Gray
+color.silver=Silver
+color.cyan=Cyan
+color.purple=Purple
+color.blue=Blue
+color.brown=Brown
+color.green=Green
+color.red=Red
+color.black=Black
 
 #Gemrocks
 tile.thermionics_world.gemrock.magnesite.name=Magnesite

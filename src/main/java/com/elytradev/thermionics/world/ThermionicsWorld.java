@@ -27,15 +27,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import com.elytradev.thermionics.world.block.BlockShrubBone;
 import com.elytradev.thermionics.world.block.BlockFluidSimple;
 import com.elytradev.thermionics.world.block.BlockGemrock;
 import com.elytradev.thermionics.world.block.BlockMeat;
 import com.elytradev.thermionics.world.block.BlockMeatEdible;
+import com.elytradev.thermionics.world.block.BlockNorfairite;
 import com.elytradev.thermionics.world.block.EnumEdibleMeat;
 import com.elytradev.thermionics.world.block.TerrainBlocks;
 import com.elytradev.thermionics.world.gen.WorldProviderNeoHell;
 import com.elytradev.thermionics.world.gen.biome.BiomeRegistry;
 import com.elytradev.thermionics.world.gen.biome.NeoBiome;
+import com.elytradev.thermionics.world.item.ItemBlockColored;
+import com.elytradev.thermionics.world.item.ItemBlockEquivalentState;
 import com.elytradev.thermionics.world.item.ItemBlockGemrock;
 import com.elytradev.thermionics.world.item.ItemBlockMeatEdible;
 import com.elytradev.thermionics.world.item.TWItems;
@@ -280,6 +284,20 @@ public class ThermionicsWorld {
 				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.MUTTON,  true)),
 				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.RABBIT,  true))
 				);
+		
+		//What are you saying? Bones aren't shrubs?!? Nonsense!
+		BlockShrubBone boneShrub = new BlockShrubBone();
+		GameRegistry.register(boneShrub);
+		ItemBlockEquivalentState boneShrubItem = new ItemBlockEquivalentState(boneShrub);
+		GameRegistry.register(boneShrubItem);
+		proxy.registerItemModel(boneShrubItem);
+		
+		//Bubble mountain ain't gonna attack itself.
+		BlockNorfairite norfairClear = new BlockNorfairite("clear");
+		GameRegistry.register(norfairClear);
+		ItemBlockColored norfairClearItem = new ItemBlockColored(norfairClear);
+		GameRegistry.register(norfairClearItem);
+		proxy.registerItemModel(norfairClearItem);
 		
 		//Category registrations (and some HarvestCraft-style registrations to keep compatibiltiy high)
 		forEach(oreDict("listAllRawMeat"),    TWItems.GROUP_MEAT_RAW);    forEach(oreDict("listAllmeatraw"),    TWItems.GROUP_MEAT_RAW);

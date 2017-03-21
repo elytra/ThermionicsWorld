@@ -24,7 +24,10 @@
 package com.elytradev.thermionics.world.gen;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
+
+import javax.annotation.Nullable;
 
 import com.google.common.base.Predicate;
 
@@ -35,7 +38,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.WorldGenMinable;
 import net.minecraft.world.gen.feature.WorldGenerator;
 
 public class NeoHellGenerators {
@@ -259,5 +261,51 @@ public class NeoHellGenerators {
 			return false;
 		}
 		
+	}
+
+	@Nullable
+	public static BlockPos findSurface(World world, BlockPos start) {
+		BlockPos pos = start;
+		while (pos.getY()>world.getSeaLevel()) {
+			if (NeoHellGenerators.isSurface(world, pos)) return pos;
+			pos = pos.down();
+		}
+		
+		return null;
+	}
+
+	public static boolean isSurface(World world, BlockPos pos) {
+		return world.isAirBlock(pos) &&
+				world.isBlockFullCube(pos.down());
+	}
+
+	public static void cylinderAround(BlockPos pos, float radius, List<BlockPos> toFill) {
+		int intradius = (int)radius;
+		float r2 = radius*radius;
+		if ((float)intradius!=radius) intradius++;
+		for(int z=-intradius; z<=intradius; z++) {
+			for(int x=-intradius; x<=intradius; x++) {
+				float d2 = (x*x) + (z*z);
+				if (d2<=r2) {
+					toFill.add(new BlockPos(pos.add(x, 0, z)));
+				}
+			}
+		}
+	}
+	
+	public static void sphereAround(BlockPos pos, float radius, List<BlockPos> toFill) {
+		int intradius = (int)radius;
+		float r2 = radius*radius;
+		if ((float)intradius!=radius) intradius++;
+		for(int y=-intradius; y<=intradius; y++) {
+			for(int z=-intradius; z<=intradius; z++) {
+				for(int x=-intradius; x<=intradius; x++) {
+					float d2 = (x*x) + (z*z) + (y*y);
+					if (d2<=r2) {
+						toFill.add(new BlockPos(pos.add(x, y, z)));
+					}
+				}
+			}
+		}
 	}
 }

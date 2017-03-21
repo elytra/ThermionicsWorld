@@ -74,4 +74,8 @@ public class TerrainBlocks {
 	public static final BlockMeat MEAT_EDIBLE = null;
 	@ObjectHolder("meat.flesh")
 	public static final BlockMeat MEAT_FLESH = null;
+	@ObjectHolder("shrub.bone")
+	public static final BlockShrubBone SHRUB_BONE = null;
+	@ObjectHolder("norfairite.clear")
+	public static final BlockNorfairite NORFAIRITE_CLEAR = null;
 }

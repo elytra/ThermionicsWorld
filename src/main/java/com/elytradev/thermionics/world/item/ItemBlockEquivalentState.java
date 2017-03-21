@@ -38,6 +38,7 @@ public class ItemBlockEquivalentState extends ItemBlock {
 
 	public ItemBlockEquivalentState(Block block) {
 		super(block);
+		this.setRegistryName(block.getRegistryName());
 		this.setHasSubtypes(true);
 	}
 

@@ -25,7 +25,7 @@ package com.elytradev.thermionics.world.gen.biome;
 
 import java.util.Random;
 
-import javax.annotation.Nullable;
+import com.elytradev.thermionics.world.gen.NeoHellGenerators;
 
 import net.minecraft.block.BlockRotatedPillar;
 import net.minecraft.block.state.IBlockState;
@@ -39,12 +39,12 @@ public class GeneratorBoneTree extends WorldGenerator {
 	
 	@Override
 	public boolean generate(World world, Random rand, BlockPos position) {
-		BlockPos pos = findSurface(world, position);
+		BlockPos pos = NeoHellGenerators.findSurface(world, position);
 		if (pos==null) {
-			System.out.println("Failed to generate at "+position);
+			//System.out.println("Failed to generate at "+position);
 			return false;
 		} else {
-			System.out.println("Generating at "+pos);
+			//System.out.println("Generating at "+pos);
 		}
 		
 		int height = rand.nextInt(4) + 7;
@@ -82,23 +82,6 @@ public class GeneratorBoneTree extends WorldGenerator {
 		
 		return true;
 	}
-	
-	@Nullable
-	public static BlockPos findSurface(World world, BlockPos start) {
-		BlockPos pos = start;
-		while (pos.getY()>world.getSeaLevel()) {
-			if (isSurface(world, pos)) return pos;
-			pos = pos.down();
-		}
-		
-		return null;
-	}
-	
-	public static boolean isSurface(World world, BlockPos pos) {
-		return world.isAirBlock(pos) &&
-				world.isBlockFullCube(pos.down());
-	}
-	
 	
 	public static enum EnumAxis {
 		X(1,0,0),

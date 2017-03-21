@@ -1,0 +1,31 @@
+{
+	"forge_marker":1,
+	
+	"defaults":{
+		"model":"minecraft:cube_all",
+		"transform":"forge:default-block",
+		"x":0,
+		"y":0,
+		"uvlock":true
+	},
+	"variants":{
+		"color":{
+			"white":     { "textures":{ "all":"thermionics_world:blocks/norfairite/clear.white"     } },
+			"orange":    { "textures":{ "all":"thermionics_world:blocks/norfairite/clear.orange"    } },
+			"magenta":   { "textures":{ "all":"thermionics_world:blocks/norfairite/clear.magenta"   } },
+			"light_blue":{ "textures":{ "all":"thermionics_world:blocks/norfairite/clear.lightblue" } },
+			"yellow":    { "textures":{ "all":"thermionics_world:blocks/norfairite/clear.yellow"    } },
+			"lime":      { "textures":{ "all":"thermionics_world:blocks/norfairite/clear.lime"      } },
+			"pink":      { "textures":{ "all":"thermionics_world:blocks/norfairite/clear.pink"      } },
+			"gray":      { "textures":{ "all":"thermionics_world:blocks/norfairite/clear.gray"      } },
+			"silver":    { "textures":{ "all":"thermionics_world:blocks/norfairite/clear.lightgray" } },
+			"cyan":      { "textures":{ "all":"thermionics_world:blocks/norfairite/clear.cyan"      } },
+			"purple":    { "textures":{ "all":"thermionics_world:blocks/norfairite/clear.purple"    } },
+			"blue":      { "textures":{ "all":"thermionics_world:blocks/norfairite/clear.blue"      } },
+			"brown":     { "textures":{ "all":"thermionics_world:blocks/norfairite/clear.brown"     } },
+			"green":     { "textures":{ "all":"thermionics_world:blocks/norfairite/clear.green"     } },
+			"red":       { "textures":{ "all":"thermionics_world:blocks/norfairite/clear.red"       } },
+			"black":     { "textures":{ "all":"thermionics_world:blocks/norfairite/clear.black"     } }
+		}
+	}
+}

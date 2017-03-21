@@ -29,7 +29,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.registry.RegistryNamespaced;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
@@ -58,6 +57,7 @@ public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
 			.withTerrainFillMaterial(TerrainBlocks.GEMROCK_ROSE_QUARTZ)
 			.withDensitySurfaceMaterial(TerrainBlocks.GEMROCK_PYRITE)
 			.withDensityCoreMaterial(Blocks.NETHERRACK)
+			.withWorldGenerator(new GeneratorNorfairiteBush())
 			);
 		
 		NEO_HELL.register(2,
@@ -95,7 +95,8 @@ public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
 			.withTerrainFillMaterial(TerrainBlocks.GEMROCK_TOURMALINE)
 			.withDensitySurfaceMaterial(TerrainBlocks.GEMROCK_GARNET)
 			.withDensityCoreMaterial(TerrainBlocks.GEMROCK_EMERALD)
-			.withWorldGenerator(new GeneratorBoneTree()),
+			.withWorldGenerator(new GeneratorBoneTree())
+			.withWorldGenerator(new GeneratorBoneShrub()),
 			BiomeDictionary.Type.NETHER, BiomeDictionary.Type.HOT, BiomeDictionary.Type.WET
 			);
 
@@ -109,6 +110,7 @@ public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
 			.withTerrainFillMaterial(TerrainBlocks.GEMROCK_PERIDOT)
 			.withDensitySurfaceMaterial(TerrainBlocks.GEMROCK_HELIODOR)
 			.withDensityCoreMaterial(TerrainBlocks.GEMROCK_PERIDOT)
+			.withWorldGenerator(new GeneratorSulfurVent())
 			);
 		
 		NEO_HELL.register(6,
@@ -118,9 +120,10 @@ public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
 				.setRainfall(0.5f)
 			)
 			.withSurfaceMaterial(TerrainBlocks.GEMROCK_CASSITERITE)
-			.withTerrainFillMaterial(Blocks.OBSIDIAN)
+			.withTerrainFillMaterial(TerrainBlocks.GEMROCK_CHRYSOPRASE)
 			.withDensitySurfaceMaterial(TerrainBlocks.GEMROCK_CASSITERITE)
-			.withDensityCoreMaterial(TerrainBlocks.GEMROCK_CASSITERITE),
+			.withDensityCoreMaterial(TerrainBlocks.GEMROCK_CASSITERITE)
+			.withWorldGenerator(new GeneratorMagmaSpike()),
 			BiomeDictionary.Type.NETHER, BiomeDictionary.Type.DEAD, BiomeDictionary.Type.SPOOKY
 			);
 		

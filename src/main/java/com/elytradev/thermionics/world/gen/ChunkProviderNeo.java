@@ -376,7 +376,7 @@ public class ChunkProviderNeo implements IChunkGenerator {
 
 		BlockFalling.fallInstantly = false;
 		popBench.endFrame();
-		if (popBench.getTotalTime()>200) popBench.printDebug(); //we're done doing comprehensive profiling, but alert us to issues bigger than 200msec
+		//if (popBench.getTotalTime()>200) popBench.printDebug(); //we're done doing comprehensive profiling, but alert us to issues bigger than 200msec
 		
 	}
 

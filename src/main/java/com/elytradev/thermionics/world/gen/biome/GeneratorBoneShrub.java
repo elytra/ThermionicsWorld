@@ -21,28 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.elytradev.thermionics.world.item;
+package com.elytradev.thermionics.world.gen.biome;
 
-import com.elytradev.thermionics.world.block.BlockMeatEdible;
-import com.elytradev.thermionics.world.block.EnumEdibleMeat;
+import java.util.Random;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.item.ItemStack;
+import com.elytradev.thermionics.world.block.BlockShrubBone;
+import com.elytradev.thermionics.world.block.TerrainBlocks;
+import com.elytradev.thermionics.world.gen.NeoHellGenerators;
 
-public class ItemBlockMeatEdible extends ItemBlockEquivalentState {
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraft.world.gen.feature.WorldGenerator;
 
-	public ItemBlockMeatEdible(Block block) {
-		super(block);
-		//this.setRegistryName(block.getRegistryName());
-	}
+public class GeneratorBoneShrub extends WorldGenerator {
 
 	@Override
-	public String getUnlocalizedName(ItemStack stack) {
-		IBlockState equivalentState = this.getStateForItem(stack);
-		EnumEdibleMeat variant = equivalentState.getValue(BlockMeatEdible.VARIANT);
-		String cookedKey = equivalentState.getValue(BlockMeatEdible.COOKED) ? "cooked" : "raw";
+	public boolean generate(World worldIn, Random rand, BlockPos position) {
+		BlockPos surface = NeoHellGenerators.findSurface(worldIn, position);
 		
-		return "tile.thermionics_world.meat.edible."+variant.getName()+"."+cookedKey;
+		if (surface==null) return false;
+		worldIn.setBlockState(surface,
+				TerrainBlocks.SHRUB_BONE.getDefaultState()
+				.withProperty(BlockShrubBone.VARIANT,
+						BlockShrubBone.BoneType.values()[ rand.nextInt(BlockShrubBone.BoneType.values().length) ]));
+		
+		return true;
 	}
+
 }
