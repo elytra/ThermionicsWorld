@@ -143,6 +143,9 @@ public class ThermionicsWorld {
 		Blocks.OBSIDIAN.setHardness(2.5f);
 		Blocks.OBSIDIAN.setHarvestLevel("pickaxe",2);
 		
+		//Ender Chest and Enchantment Table should have the same hardness as raw Basalt
+		Blocks.ENDER_CHEST.setHardness(2.5f);
+		Blocks.ENCHANTING_TABLE.setHardness(2.5f);
 		
 		//You might want to look away for a second, we produce some fluids here
 		Fluid soylentFluid = new Fluid("soylent",
