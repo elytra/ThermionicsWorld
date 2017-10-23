@@ -23,15 +23,13 @@
  */
 package com.elytradev.thermionics.world.block;
 
-import java.util.Random;
-
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -83,14 +81,16 @@ public class BlockMeatEdible extends BlockMeat {
 	}
 	
 	@Override
-	public void getSubBlocks(Item item, CreativeTabs tab, NonNullList<ItemStack> items) {
+	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
+		if (tab!=this.getCreativeTabToDisplayOn()) return;
+		
 		//raw first
 		for(int i=0; i<EnumEdibleMeat.values().length; i++) {
-			items.add(new ItemStack(item, 1, i));
+			list.add(new ItemStack(ItemBlock.getItemFromBlock(this), 1, i));
 		}
 		//then cooked
 		for(int i=0; i<EnumEdibleMeat.values().length; i++) {
-			items.add(new ItemStack(item, 1, i | 0x8));
+			list.add(new ItemStack(ItemBlock.getItemFromBlock(this), 1, i | 0x8));
 		}
 	}
 }

@@ -29,7 +29,7 @@ import java.util.Random;
 import java.util.function.Function;
 
 import com.elytradev.thermionics.world.Benchmark;
-import com.elytradev.thermionics.world.block.TerrainBlocks;
+import com.elytradev.thermionics.world.block.TWBlocks;
 import com.elytradev.thermionics.world.gen.biome.BiomeRegistry;
 import com.elytradev.thermionics.world.gen.biome.NeoBiome;
 import com.google.common.collect.ImmutableList;
@@ -45,7 +45,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
-import net.minecraft.world.chunk.IChunkGenerator;
+import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraft.world.gen.feature.WorldGenBush;
 import net.minecraft.world.gen.feature.WorldGenFire;
 import net.minecraft.world.gen.feature.WorldGenMinable;
@@ -93,7 +93,7 @@ public class ChunkProviderNeo implements IChunkGenerator {
 	private final WorldGenBush redMushroomFeature = new WorldGenBush(Blocks.RED_MUSHROOM);
 	private final WorldGenerator quartzGen = new WorldGenMinable(Blocks.QUARTZ_ORE.getDefaultState(), 14, (it)->it.isFullBlock());
 	private final WorldGenerator magmaGen = new WorldGenMinable(Blocks.MAGMA.getDefaultState(), 33, (it)->it.isFullBlock());
-	private final NeoHellGenerators.LavaTrap lavaTrapGen = new NeoHellGenerators.LavaTrap(TerrainBlocks.FLUID_PAIN.getDefaultState());
+	private final NeoHellGenerators.LavaTrap lavaTrapGen = new NeoHellGenerators.LavaTrap(TWBlocks.FLUID_PAIN.getDefaultState());
 	
 	//Old ChunkProviderHell stuff
 	//double[] buffer;
@@ -119,7 +119,7 @@ public class ChunkProviderNeo implements IChunkGenerator {
 		this.noiseVolumeFine = new ScaledNoiseVolume(random.nextLong(), 20f);
 		//this.biomeSelector = new VoronoiClusterField<NeoBiome>(random.nextLong(), 16*9);
 
-		PAIN = TerrainBlocks.FLUID_PAIN.getDefaultState().withProperty(BlockFluidBase.LEVEL, 3);
+		PAIN = TWBlocks.FLUID_PAIN.getDefaultState().withProperty(BlockFluidBase.LEVEL, 3);
 		
 	}
 
@@ -196,7 +196,7 @@ public class ChunkProviderNeo implements IChunkGenerator {
 
 
 	@Override
-	public Chunk provideChunk(int x, int z) {
+	public Chunk generateChunk(int x, int z) {
 		
 		this.random.setSeed((long)x * 341873128712L + (long)z * 132897987541L);
 		ChunkPrimer chunkprimer = new ChunkPrimer();
@@ -405,14 +405,28 @@ public class ChunkProviderNeo implements IChunkGenerator {
 		//return biome.getSpawnableList(creatureType);
 	}
 
-	@Override
-	public BlockPos getStrongholdGen(World worldIn, String structureName, BlockPos position, boolean p_180513_4_) {
+	//@Override
+	//public BlockPos getStrongholdGen(World worldIn, String structureName, BlockPos position, boolean p_180513_4_) {
+		
 		//return "Fortress".equals(structureName) && this.genNetherBridge != null ? this.genNetherBridge.getClosestStrongholdPos(worldIn, position, p_180513_4_) : null;
-		return null;
-	}
+	//	return null;
+	//}
 
 	@Override
 	public void recreateStructures(Chunk chunkIn, int x, int z) {
 		//this.genNetherBridge.generate(this.world, x, z, (ChunkPrimer)null);
+	}
+
+	@Override
+	public BlockPos getNearestStructurePos(World worldIn, String structureName, BlockPos position,
+			boolean findUnexplored) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isInsideStructure(World worldIn, String structureName, BlockPos pos) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

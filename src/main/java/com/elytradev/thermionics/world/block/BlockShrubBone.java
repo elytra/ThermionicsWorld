@@ -38,7 +38,7 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.NonNullList;
@@ -99,17 +99,18 @@ public class BlockShrubBone extends Block {
 	}
 	
 	@Override
-	public void getSubBlocks(Item item, CreativeTabs tab, NonNullList<ItemStack> list) {
+	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
 		HashSet<Integer> validMetas = new HashSet<Integer>();
 		for(IBlockState state : blockState.getValidStates()) {
 			validMetas.add(getMetaFromState(state));
 		}
 		
 		for(int meta : validMetas) {
-			list.add(new ItemStack(item,1,meta));
+			list.add(new ItemStack(ItemBlock.getItemFromBlock(this), 1, meta));
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
 		super.getDrops(world, pos, state, fortune);

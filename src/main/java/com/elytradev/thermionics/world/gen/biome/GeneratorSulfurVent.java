@@ -26,7 +26,7 @@ package com.elytradev.thermionics.world.gen.biome;
 import java.util.ArrayList;
 import java.util.Random;
 
-import com.elytradev.thermionics.world.block.TerrainBlocks;
+import com.elytradev.thermionics.world.block.TWBlocks;
 import com.elytradev.thermionics.world.gen.ChunkProviderNeo;
 import com.elytradev.thermionics.world.gen.NeoHellGenerators;
 
@@ -53,7 +53,7 @@ public class GeneratorSulfurVent extends WorldGenerator {
 		
 		for(BlockPos pos : buffer) {
 			if (pos.getY()<ChunkProviderNeo.SEA_LEVEL) {
-				worldIn.setBlockState(pos, TerrainBlocks.FLUID_PAIN.getDefaultState());
+				worldIn.setBlockState(pos, TWBlocks.FLUID_PAIN.getDefaultState());
 			} else {
 				worldIn.setBlockToAir(pos); //TODO: randomy spawn sulfurgas pockets
 			}

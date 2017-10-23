@@ -27,31 +27,39 @@ import java.util.Random;
 
 import javax.annotation.Nonnull;
 
+import com.elytradev.thermionics.world.ThermionicsWorld;
+
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.material.MaterialLiquid;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityGhast;
 import net.minecraft.entity.monster.EntityMagmaCube;
 import net.minecraft.entity.monster.EntityPigZombie;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.BlockFluidBase;
-import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.BlockFluidFinite;
 import net.minecraftforge.fluids.Fluid;
 
 public class BlockFluidSimple extends BlockFluidFinite {
-public static final int SCALDING = 322; //322 degrees kelvin is about 120 degrees fahrenheit; scalding temperature.
+	
+	public static final int SCALDING = 322; //322 degrees kelvin is about 120 degrees fahrenheit; scalding temperature.
 	
 	private DamageSource fluidDamage;
 	private boolean liftsItems = false;
 	private float damageAmount = 0.0f;
 	
 	public BlockFluidSimple(Fluid fluid, String name) {
-		super(fluid, Material.WATER);
+		super(fluid,
+				//ThermionicsWorld.MATERIAL_PAIN);
+				Material.WATER);
 		//this.opaque = true;
 		//this.icons = icons;
 		this.quantaPerBlock = 4;
@@ -103,6 +111,18 @@ public static final int SCALDING = 322; //322 degrees kelvin is about 120 degree
 				entity.motionY += 0.08 + 0.02;
 			}
 			return;
+		} else {
+			//slows everything else down
+			
+			if (entity instanceof EntityPlayer) {
+				//Do the slowdown clientside-only
+				if (world.isRemote) {
+					applyFluidPhysics(entity);
+				}
+			} else {
+				applyFluidPhysics(entity);
+			}
+			
 		}
 		
 		if (world.isRemote) return;
@@ -113,5 +133,15 @@ public static final int SCALDING = 322; //322 degrees kelvin is about 120 degree
 			entity.attackEntityFrom(fluidDamage, 1.0f);
 			entity.velocityChanged = false;
 		}
+	}
+	
+	public void applyFluidPhysics(Entity entity) {
+		entity.onGround = true;
+		entity.fallDistance = 0;
+		if (entity.motionY < -0.11d) {
+			entity.motionY += 0.1d;
+		}// else if (entity.motionY > 0.41d){
+		//	entity.motionY -= 0.1d;
+		//}
 	}
 }

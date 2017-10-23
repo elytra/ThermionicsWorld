@@ -25,7 +25,6 @@ package com.elytradev.thermionics.world.item;
 
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
@@ -48,7 +47,7 @@ public class ItemBlockGemrock extends ItemBlock {
 	}
 
 	@Override
-	public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> items) {
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
 		for(int i=0; i<5; i++) {
 			items.add(new ItemStack(this,1,i)); //TODO: Add more varieties as textures are filled in
 		}

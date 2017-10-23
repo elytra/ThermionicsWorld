@@ -14,7 +14,7 @@ buildscript {
     }
   }
   dependencies {
-    classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+    classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
   }
 }
 
@@ -27,19 +27,19 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 
 group = "com.elytradev"
 archivesBaseName = "ThermionicsWorld"
-version = "MC1.11.2_ver1.0"
+version = "MC1.12.1_ver1.0"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 minecraft {
-  version = "1.11.2-13.20.0.2228";
-  mappings = "snapshot_20170315";
+	version = '1.12.1-14.22.0.2446'
+	mappings = 'snapshot_20170817'
 
-  runDir = "minecraft"
+	runDir = "minecraft"
 
-  replaceIn 'src/main/java/com/elytradev/thermionics/world/ThermionicsWorld.java'
-  replace '@VERSION@', project.version
+	replaceIn 'src/main/java/com/elytradev/thermionics/world/ThermionicsWorld.java'
+	replace '@VERSION@', project.version
 }
 
 processResources {

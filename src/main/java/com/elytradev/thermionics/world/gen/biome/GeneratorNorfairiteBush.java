@@ -26,7 +26,7 @@ package com.elytradev.thermionics.world.gen.biome;
 import java.util.ArrayList;
 import java.util.Random;
 
-import com.elytradev.thermionics.world.block.TerrainBlocks;
+import com.elytradev.thermionics.world.block.TWBlocks;
 import com.elytradev.thermionics.world.gen.NeoHellGenerators;
 
 import net.minecraft.block.BlockColored;
@@ -43,7 +43,7 @@ public class GeneratorNorfairiteBush extends WorldGenerator {
 		BlockPos cur = NeoHellGenerators.findSurface(worldIn, position);
 		if (cur==null) return false;
 		
-		IBlockState norfairite = TerrainBlocks.NORFAIRITE_CLEAR.getDefaultState().withProperty(BlockColored.COLOR, EnumDyeColor.GREEN);
+		IBlockState norfairite = TWBlocks.NORFAIRITE_CLEAR.getDefaultState().withProperty(BlockColored.COLOR, EnumDyeColor.GREEN);
 		
 		ArrayList<BlockPos> bushArea = new ArrayList<BlockPos>();
 		NeoHellGenerators.sphereAround(cur.up(), 1.5f + rand.nextFloat(), bushArea);

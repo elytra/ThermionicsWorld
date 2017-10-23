@@ -23,18 +23,19 @@
  */
 package com.elytradev.thermionics.world.gen.biome;
 
-import com.elytradev.thermionics.world.block.TerrainBlocks;
+import com.elytradev.thermionics.world.block.TWBlocks;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.util.registry.RegistryNamespaced;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
 	public static BiomeRegistry NEO_HELL = new BiomeRegistry();
 	
-	static {
+	public void init() {
 		NEO_HELL.register(0,
 			new NeoBiome(new Biome.BiomeProperties("bridges")
 				.setBaseHeight(128f)
@@ -45,6 +46,7 @@ public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
 			.withTerrainFillMaterial(Blocks.NETHERRACK)
 			.withDensitySurfaceMaterial(Blocks.NETHERRACK)
 			.withDensityCoreMaterial(Blocks.SOUL_SAND)
+			.withTypes(BiomeDictionary.Type.NETHER)
 			);
 		
 		NEO_HELL.register(1,
@@ -53,11 +55,12 @@ public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
 				.setTemperature(0.375f)
 				.setRainfall(0.25f)
 			)
-			.withSurfaceMaterial(TerrainBlocks.GEMROCK_PYRITE)
-			.withTerrainFillMaterial(TerrainBlocks.GEMROCK_ROSE_QUARTZ)
-			.withDensitySurfaceMaterial(TerrainBlocks.GEMROCK_PYRITE)
+			.withSurfaceMaterial(TWBlocks.GEMROCK_PYRITE)
+			.withTerrainFillMaterial(TWBlocks.GEMROCK_ROSE_QUARTZ)
+			.withDensitySurfaceMaterial(TWBlocks.GEMROCK_PYRITE)
 			.withDensityCoreMaterial(Blocks.NETHERRACK)
 			.withWorldGenerator(new GeneratorNorfairiteBush())
+			.withTypes(BiomeDictionary.Type.NETHER)
 			);
 		
 		NEO_HELL.register(2,
@@ -66,11 +69,11 @@ public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
 				.setTemperature(0.625f)
 				.setRainfall(0.25f)
 			)
-			.withSurfaceMaterial(TerrainBlocks.GEMROCK_MAGNESITE)
-			.withTerrainFillMaterial(TerrainBlocks.GEMROCK_SAPPHIRE)
-			.withDensitySurfaceMaterial(TerrainBlocks.GEMROCK_OPAL)
-			.withDensityCoreMaterial(Blocks.PACKED_ICE),
-			BiomeDictionary.Type.NETHER, BiomeDictionary.Type.COLD
+			.withSurfaceMaterial(TWBlocks.GEMROCK_MAGNESITE)
+			.withTerrainFillMaterial(TWBlocks.GEMROCK_SAPPHIRE)
+			.withDensitySurfaceMaterial(TWBlocks.GEMROCK_OPAL)
+			.withDensityCoreMaterial(Blocks.PACKED_ICE)
+			.withTypes(BiomeDictionary.Type.NETHER, BiomeDictionary.Type.COLD)
 			);
 		
 		NEO_HELL.register(3,
@@ -79,10 +82,11 @@ public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
 				.setTemperature(0.75f)
 				.setRainfall(0.25f)
 			)
-			.withSurfaceMaterial(TerrainBlocks.GEMROCK_HEMATITE)
+			.withSurfaceMaterial(TWBlocks.GEMROCK_HEMATITE)
 			.withTerrainFillMaterial(Blocks.NETHERRACK)
-			.withDensitySurfaceMaterial(TerrainBlocks.GEMROCK_HEMATITE)
+			.withDensitySurfaceMaterial(TWBlocks.GEMROCK_HEMATITE)
 			.withDensityCoreMaterial(Blocks.NETHERRACK)
+			.withTypes(BiomeDictionary.Type.NETHER)
 			);
 		
 		NEO_HELL.register(4,
@@ -91,13 +95,13 @@ public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
 				.setTemperature(0.25f)
 				.setRainfall(0.5f)
 			)
-			.withSurfaceMaterial(TerrainBlocks.GEMROCK_GARNET)
-			.withTerrainFillMaterial(TerrainBlocks.GEMROCK_TOURMALINE)
-			.withDensitySurfaceMaterial(TerrainBlocks.GEMROCK_GARNET)
-			.withDensityCoreMaterial(TerrainBlocks.GEMROCK_EMERALD)
+			.withSurfaceMaterial(TWBlocks.GEMROCK_GARNET)
+			.withTerrainFillMaterial(TWBlocks.GEMROCK_TOURMALINE)
+			.withDensitySurfaceMaterial(TWBlocks.GEMROCK_GARNET)
+			.withDensityCoreMaterial(TWBlocks.GEMROCK_EMERALD)
 			.withWorldGenerator(new GeneratorBoneTree())
-			.withWorldGenerator(new GeneratorBoneShrub()),
-			BiomeDictionary.Type.NETHER, BiomeDictionary.Type.HOT, BiomeDictionary.Type.WET
+			.withWorldGenerator(new GeneratorBoneShrub())
+			.withTypes(BiomeDictionary.Type.NETHER, BiomeDictionary.Type.HOT, BiomeDictionary.Type.WET)
 			);
 
 		NEO_HELL.register(5,
@@ -106,11 +110,12 @@ public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
 				.setTemperature(0.375f)
 				.setRainfall(0.5f)
 			)
-			.withSurfaceMaterial(TerrainBlocks.GEMROCK_HELIODOR)
-			.withTerrainFillMaterial(TerrainBlocks.GEMROCK_PERIDOT)
-			.withDensitySurfaceMaterial(TerrainBlocks.GEMROCK_HELIODOR)
-			.withDensityCoreMaterial(TerrainBlocks.GEMROCK_PERIDOT)
+			.withSurfaceMaterial(TWBlocks.GEMROCK_HELIODOR)
+			.withTerrainFillMaterial(TWBlocks.GEMROCK_PERIDOT)
+			.withDensitySurfaceMaterial(TWBlocks.GEMROCK_HELIODOR)
+			.withDensityCoreMaterial(TWBlocks.GEMROCK_PERIDOT)
 			.withWorldGenerator(new GeneratorSulfurVent())
+			.withTypes(BiomeDictionary.Type.NETHER)
 			);
 		
 		NEO_HELL.register(6,
@@ -119,12 +124,12 @@ public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
 				.setTemperature(0.625f)
 				.setRainfall(0.5f)
 			)
-			.withSurfaceMaterial(TerrainBlocks.GEMROCK_CASSITERITE)
-			.withTerrainFillMaterial(TerrainBlocks.GEMROCK_CHRYSOPRASE)
-			.withDensitySurfaceMaterial(TerrainBlocks.GEMROCK_CASSITERITE)
-			.withDensityCoreMaterial(TerrainBlocks.GEMROCK_CASSITERITE)
-			.withWorldGenerator(new GeneratorMagmaSpike()),
-			BiomeDictionary.Type.NETHER, BiomeDictionary.Type.DEAD, BiomeDictionary.Type.SPOOKY
+			.withSurfaceMaterial(TWBlocks.GEMROCK_CASSITERITE)
+			.withTerrainFillMaterial(TWBlocks.GEMROCK_CHRYSOPRASE)
+			.withDensitySurfaceMaterial(TWBlocks.GEMROCK_CASSITERITE)
+			.withDensityCoreMaterial(TWBlocks.GEMROCK_CASSITERITE)
+			.withWorldGenerator(new GeneratorMagmaSpike())
+			.withTypes(BiomeDictionary.Type.NETHER, BiomeDictionary.Type.DEAD, BiomeDictionary.Type.SPOOKY)
 			);
 		
 		NEO_HELL.register(7,
@@ -133,25 +138,26 @@ public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
 				.setTemperature(0.75f)
 				.setRainfall(0.5f)
 			)
-			.withSurfaceMaterial(TerrainBlocks.GEMROCK_SPINEL)
-			.withTerrainFillMaterial(TerrainBlocks.GEMROCK_PYRITE)
-			.withDensitySurfaceMaterial(TerrainBlocks.GEMROCK_SPINEL)
-			.withDensityCoreMaterial(TerrainBlocks.GEMROCK_CASSITERITE),
-			BiomeDictionary.Type.NETHER, BiomeDictionary.Type.DRY
+			.withSurfaceMaterial(TWBlocks.GEMROCK_SPINEL)
+			.withTerrainFillMaterial(TWBlocks.GEMROCK_PYRITE)
+			.withDensitySurfaceMaterial(TWBlocks.GEMROCK_SPINEL)
+			.withDensityCoreMaterial(TWBlocks.GEMROCK_CASSITERITE)
+			.withTypes(BiomeDictionary.Type.NETHER, BiomeDictionary.Type.DRY)
 			);
-	}
-	
-	
-	
-	public void register(int id, NeoBiome biome, BiomeDictionary.Type... dictionaryTypes) {
-		this.register(id, biome.getBiomeName(), biome);
-		GameRegistry.register(biome);
-		BiomeDictionary.addTypes(biome, dictionaryTypes);
 	}
 	
 	public void register(int id, NeoBiome biome) {
 		this.register(id, biome.getBiomeName(), biome);
-		GameRegistry.register(biome);
-		BiomeDictionary.addTypes(biome, BiomeDictionary.Type.NETHER);
+	}
+	
+	@SubscribeEvent
+	public static void registerBiomes(RegistryEvent.Register<Biome> event) {
+		NEO_HELL.registryObjects.values().forEach((it)->{
+			System.out.println("Registering "+it.getRegistryName());
+			event.getRegistry().register(it);
+			for(BiomeDictionary.Type type : it.getTypes()) {
+				BiomeDictionary.addTypes(it, type);
+			}
+		});
 	}
 }

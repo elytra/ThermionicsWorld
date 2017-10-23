@@ -32,7 +32,7 @@ import net.minecraft.world.WorldProvider;
 import net.minecraft.world.WorldProviderHell;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.IChunkGenerator;
+import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -45,7 +45,7 @@ public class WorldProviderNeoHell extends WorldProviderHell {
 	 * Up in WorldProvider, this sets a skylight and builds the BiomeProvider
 	 */
 	public void init() {
-		this.hasNoSky = true;
+		this.hasSkyLight = false;
 		this.doesWaterVaporize = true;
 		
 		this.biomeProvider = new BiomeProviderNeo(this.world.getWorldInfo());

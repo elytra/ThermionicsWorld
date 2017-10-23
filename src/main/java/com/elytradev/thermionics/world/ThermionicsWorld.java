@@ -34,7 +34,7 @@ import com.elytradev.thermionics.world.block.BlockMeat;
 import com.elytradev.thermionics.world.block.BlockMeatEdible;
 import com.elytradev.thermionics.world.block.BlockNorfairite;
 import com.elytradev.thermionics.world.block.EnumEdibleMeat;
-import com.elytradev.thermionics.world.block.TerrainBlocks;
+import com.elytradev.thermionics.world.block.TWBlocks;
 import com.elytradev.thermionics.world.gen.WorldProviderNeoHell;
 import com.elytradev.thermionics.world.gen.biome.BiomeRegistry;
 import com.elytradev.thermionics.world.gen.biome.NeoBiome;
@@ -46,10 +46,15 @@ import com.elytradev.thermionics.world.item.TWItems;
 import com.google.common.collect.ImmutableList;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockColored;
 import net.minecraft.block.SoundType;
+import net.minecraft.block.material.MapColor;
+import net.minecraft.block.material.MaterialLiquid;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
@@ -57,16 +62,24 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.item.crafting.ShapelessRecipes;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DimensionType;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.living.LivingFallEvent;
+import net.minecraftforge.event.entity.player.PlayerFlyableFallEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -74,6 +87,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -83,6 +97,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+import net.minecraftforge.registries.IForgeRegistry;
 
 @Mod(modid = "thermionics_world", name="Thermionics|World", version="@VERSION@")
 public class ThermionicsWorld {
@@ -106,7 +121,7 @@ public class ThermionicsWorld {
 	public static CreativeTabs TAB_THERMIONICS_WORLD = new CreativeTabs("thermionics_world") {
 		@Override
 		public ItemStack getTabIconItem() {
-			return new ItemStack(TerrainBlocks.GEMROCK_TOURMALINE, 1, 1);
+			return new ItemStack(TWBlocks.GEMROCK_TOURMALINE, 1, 1);
 		}
 	};
 	
@@ -126,19 +141,15 @@ public class ThermionicsWorld {
 		@SuppressWarnings("unused")
 		WorldProvider provider = DimensionManager.createProviderFor(-1);
 		
-		//Breaking obsidian ironically makes it easier to collect
-		/*
-		try {
-			BlockBasalt basalt = new BlockBasalt();
-			//ItemBlockVarieties basaltItem = new ItemBlockVarieties(basalt);
-			GameRegistry.addSubstitutionAlias("minecraft:obsidian", Type.BLOCK, basalt);
-			//GameRegistry.addSubstitutionAlias("minecraft:obsidian", Type.ITEM, basaltItem);
-			
-			//proxy.registerItemModel(basaltItem);
-		} catch (ExistingSubstitutionException e) {
-			e.printStackTrace();
-		}*/
-		//Turns out this REALLY BROKE obsidian, way more than intended. So instead, until substitutionAlias becomes more stable:
+		/* Obsidian is a glossy, vitreous rock, useful because when struck it easily forms conchoidal fractures,
+		 * meaning you can hit it with an ordinary rock, and it shatters, making a super-sharp edge you can use for an
+		 * axe head or a knife blade. It's frequently found
+		 * just lying around volcanic islands. None of this describes what we see in Minecraft when we look at an
+		 * obsidian block or the way we use that block.
+		 * 
+		 * 
+		 * 
+		 */
 		Blocks.OBSIDIAN.setUnlocalizedName("thermionics_world.basalt");
 		Blocks.OBSIDIAN.setHardness(2.5f);
 		Blocks.OBSIDIAN.setHarvestLevel("pickaxe",2);
@@ -146,87 +157,14 @@ public class ThermionicsWorld {
 		//Ender Chest and Enchantment Table should have the same hardness as raw Basalt
 		Blocks.ENDER_CHEST.setHardness(2.5f);
 		Blocks.ENCHANTING_TABLE.setHardness(2.5f);
+
+		MinecraftForge.EVENT_BUS.register(this);
+		MinecraftForge.EVENT_BUS.register(proxy);
+		MinecraftForge.EVENT_BUS.register(TWBlocks.class);
+		MinecraftForge.EVENT_BUS.register(TWItems.class);
+		MinecraftForge.EVENT_BUS.register(BiomeRegistry.class);
 		
-		//You might want to look away for a second, we produce some fluids here
-		Fluid soylentFluid = new Fluid("soylent",
-				new ResourceLocation("thermionics_world", "blocks/fluids/soylent_still"),
-				new ResourceLocation("thermionics_world", "blocks/fluids/soylent_flowing"))
-				.setDensity(1500)
-				.setLuminosity(13)
-				.setRarity(EnumRarity.COMMON)
-				.setTemperature(295)
-				.setViscosity(1000);
-		FluidRegistry.registerFluid(soylentFluid);
-		
-		
-		BlockFluidSimple blockFluidSoylent = new BlockFluidSimple(soylentFluid, "soylent");
-		GameRegistry.register(blockFluidSoylent);
-		soylentFluid.setBlock(blockFluidSoylent);
-		
-		FluidRegistry.addBucketForFluid(soylentFluid);
-		
-		
-		Fluid painFluid = new Fluid("pain",
-				new ResourceLocation("thermionics_world", "blocks/fluids/pain"),
-				new ResourceLocation("thermionics_world", "blocks/fluids/pain"))
-				.setDensity(2000)
-				.setLuminosity(15)
-				.setRarity(EnumRarity.COMMON)
-				/* 600 degrees kelvin is a "mere" 620 degrees fahrenheit. Even for the smartest thermopile block that
-				 * never existed in modded minecraft, this would be very weak power in comparison to lava, which is
-				 * 1300K, and yet scalding is way down at 322K/120F, so this fluid? This is a deadly fluid, causing
-				 * first-degree burns on contact.
-				 * 
-				 * The fact that pain is hotter than the air temperature in neo-hell was a mystery for more than a year
-				 * after it was discovered. The breakthrough happened with a sudden, unexplained migration of wolf
-				 * spiders, which allowed researchers to "safely" study the dimension's temperature conditions more
-				 * closely. It turns out that there are subtle air convection patterns which give rise to phenomena
-				 * like the well-studied sulfurous vents. Convections suggest that not everywhere in neo-hell is the
-				 * same temperature. In fact, from careful measurements, we estimate that there must be yet-undiscovered
-				 * infernos of 1000K or more!
-				 * 
-				 * If you discover such a location, *do not approach*. Neo-hell has much higher levels of radioactive
-				 * isotopes than the nether or the overworld, so it's likely that infernos are caused by subcritical
-				 * fission. No currently-available protective gear can provide any kind of safety in such a region.
-				 * Further, blazes thermoregulate, often favoring warmer zones, so it's likely also crawling with deadly
-				 * monsters.
-				 */
-				.setTemperature(600)
-				.setViscosity(1000);
-		FluidRegistry.registerFluid(painFluid);
-		
-		BlockFluidSimple blockFluidPain = new BlockFluidSimple(painFluid, "pain");
-		GameRegistry.register(blockFluidPain);
-		painFluid.setBlock(blockFluidPain);
-		
-		FluidRegistry.addBucketForFluid(painFluid);
-		
-		//Gemrocks are not gems. But they're useful.
-		ImmutableList<BlockGemrock> gemrocks = ImmutableList.of(
-				new BlockGemrock("magnesite",   EnumDyeColor.WHITE),
-				new BlockGemrock("garnet",      EnumDyeColor.ORANGE),
-				new BlockGemrock("tourmaline",  EnumDyeColor.MAGENTA),
-				new BlockGemrock("sapphire",    EnumDyeColor.LIGHT_BLUE),
-				new BlockGemrock("heliodor",    EnumDyeColor.YELLOW),
-				new BlockGemrock("peridot",     EnumDyeColor.LIME),
-				new BlockGemrock("rosequartz",  EnumDyeColor.PINK),
-				new BlockGemrock("hematite",    EnumDyeColor.GRAY),
-				new BlockGemrock("opal",        EnumDyeColor.SILVER),
-				new BlockGemrock("chrysoprase", EnumDyeColor.CYAN),
-				new BlockGemrock("amethyst",    EnumDyeColor.PURPLE),
-				new BlockGemrock("sodalite",    EnumDyeColor.BLUE),
-				new BlockGemrock("pyrite",      EnumDyeColor.BROWN),
-				new BlockGemrock("emerald",     EnumDyeColor.GREEN),
-				new BlockGemrock("spinel",      EnumDyeColor.RED),
-				new BlockGemrock("cassiterite", EnumDyeColor.BLACK));
-		
-		for(BlockGemrock block : gemrocks) {
-			GameRegistry.register(block);
-			ItemBlockGemrock item = new ItemBlockGemrock(block);
-			GameRegistry.register(item);
-			proxy.registerItemModel(item);
-		}
-		
+		/*
 		ImmutableList.Builder<ItemStack> gemrockBuilder = ImmutableList.builder();
 		ImmutableList.Builder<BlockGemrock> gemrockBlockBuilder = ImmutableList.builder();
 		for(BlockGemrock block : gemrocks) {
@@ -234,20 +172,16 @@ public class ThermionicsWorld {
 			gemrockBuilder.add(new ItemStack(block));
 		}
 		TWItems.GROUP_GEMROCK = gemrockBuilder.build();
-		TerrainBlocks.GROUP_GEMROCK = gemrockBlockBuilder.build();
-		
+		TWBlocks.GROUP_GEMROCK = gemrockBlockBuilder.build();
+		*/
 		
 		//We're back in weird territory here, with Several Kinds of Meat
-		GameRegistry.register(SOUNDEVENT_SQUISH_STEP);
-		GameRegistry.register(SOUNDEVENT_SQUISH_BREAK);
 		
 		
-		Block edibleMeat = new BlockMeatEdible();
-		GameRegistry.register(edibleMeat);
-		ItemBlockMeatEdible edibleMeatBlockItem = new ItemBlockMeatEdible(edibleMeat);
-		GameRegistry.register(edibleMeatBlockItem);
-		proxy.registerItemModel(edibleMeatBlockItem);
 		
+
+		//ItemBlockMeatEdible edibleMeatBlockItem = new ItemBlockMeatEdible(edibleMeat);
+		/*
 		TWItems.GROUP_MEAT_RAW = ImmutableList.of(
 				new ItemStack(Items.PORKCHOP),
 				new ItemStack(Items.BEEF),
@@ -286,23 +220,11 @@ public class ThermionicsWorld {
 				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.SALMON,  true)),
 				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.MUTTON,  true)),
 				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.RABBIT,  true))
-				);
-		
-		//What are you saying? Bones aren't shrubs?!? Nonsense!
-		BlockShrubBone boneShrub = new BlockShrubBone();
-		GameRegistry.register(boneShrub);
-		ItemBlockEquivalentState boneShrubItem = new ItemBlockEquivalentState(boneShrub);
-		GameRegistry.register(boneShrubItem);
-		proxy.registerItemModel(boneShrubItem);
-		
-		//Bubble mountain ain't gonna attack itself.
-		BlockNorfairite norfairClear = new BlockNorfairite("clear");
-		GameRegistry.register(norfairClear);
-		ItemBlockColored norfairClearItem = new ItemBlockColored(norfairClear);
-		GameRegistry.register(norfairClearItem);
-		proxy.registerItemModel(norfairClearItem);
+				);*/
 		
 		//Category registrations (and some HarvestCraft-style registrations to keep compatibiltiy high)
+		/*
+		TWItems.GROUP_MEAT_RAW.forEach(it->OreDictionary.registerOre("listAllRawMeat", it));
 		forEach(oreDict("listAllRawMeat"),    TWItems.GROUP_MEAT_RAW);    forEach(oreDict("listAllmeatraw"),    TWItems.GROUP_MEAT_RAW);
 		forEach(oreDict("listAllCookedMeat"), TWItems.GROUP_MEAT_COOKED); forEach(oreDict("listAllmeatcooked"), TWItems.GROUP_MEAT_COOKED);
 		forEach(oreDict("listAllMeat"),       TWItems.GROUP_MEAT_RAW, TWItems.GROUP_MEAT_COOKED);
@@ -327,10 +249,16 @@ public class ThermionicsWorld {
 		OreDictionary.registerOre("blockCookedSalmon",   new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.SALMON,  true)));
 		OreDictionary.registerOre("blockCookedMutton",   new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.MUTTON,  true)));
 		OreDictionary.registerOre("blockCookedRabbit",   new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.RABBIT,  true)));
-
-		MinecraftForge.EVENT_BUS.register(this);
+		*/
+		
 		
 		System.out.println("END PREINIT");
+	}
+	
+	@SubscribeEvent
+	public void onRegisterSounds(RegistryEvent.Register<SoundEvent> evt) {
+		evt.getRegistry().register(SOUNDEVENT_SQUISH_STEP);
+		evt.getRegistry().register(SOUNDEVENT_SQUISH_BREAK);
 	}
 	
 	public static Consumer<ItemStack> oreDict(String ore) {
@@ -342,7 +270,7 @@ public class ThermionicsWorld {
 			consumer.accept(stack);
 		}
 	}
-	
+	/*
 	@SafeVarargs
 	public static <T> void forEach(Consumer<T> consumer, T... ts) {
 		for(T t : ts) { consumer.accept(t); }
@@ -355,7 +283,7 @@ public class ThermionicsWorld {
 				consumer.accept(t);
 			}
 		}
-	}
+	}*/
 	
 	/*
 	@SafeVarargs
@@ -366,44 +294,81 @@ public class ThermionicsWorld {
 			}
 		}
 	}*/
+	/*
+	@SubscribeEvent
+	public void onEntityFall(LivingFallEvent evt) {
+		handleFallingEntity(evt.getEntityLiving());
+	}
 	
-	@EventHandler
-	public void init(FMLInitializationEvent event) {
+	@SubscribeEvent
+	public void onFlyableFall(PlayerFlyableFallEvent evt) {
+		handleFallingEntity(evt.getEntityPlayer());
+	}
+	
+	public void handleFallingEntity(EntityLivingBase entity) {
+		if (entity==null) return;
+		World world = entity.getEntityWorld();
+		BlockPos pos = entity.getPosition();
+		IBlockState blockAtEntity = world.getBlockState(pos);
+		if (blockAtEntity==null || blockAtEntity.getBlock()==null) return;
+		
+		if (blockAtEntity.getBlock()==TerrainBlocks.FLUID_PAIN) {
+			if (entity instanceof EntityPlayer) {
+				System.out.println("Slowing down entity motion:"+entity.motionY);
+			}
+			
+			if (entity.motionY<-0.1d) entity.motionY += 0.1d;
+			
+			if (entity instanceof EntityPlayer) {
+				System.out.println("After slowdown:"+entity.motionY);
+			}
+		}
+	}*/
+	//@EventHandler
+	//public void init(FMLInitializationEvent event) {
+		//BiomeRegistry.NEO_HELL.init();
+	//}
+	
+	//@EventHandler
+	//public void init(FMLInitializationEvent event) {
 		//System.out.println("BEGIN INIT");
+	@SubscribeEvent
+	public void registerRecipes(RegistryEvent.Register<IRecipe> evt) {	
+		IForgeRegistry<IRecipe> r = evt.getRegistry();
 		
 		//Craft meat into blocks
-		addMeatCompressionRecipe(EnumEdibleMeat.PORK,    false, new ItemStack(Items.PORKCHOP));
-		addMeatCompressionRecipe(EnumEdibleMeat.BEEF,    false, new ItemStack(Items.BEEF));
-		addMeatCompressionRecipe(EnumEdibleMeat.CHICKEN, false, new ItemStack(Items.CHICKEN));
-		addMeatCompressionRecipe(EnumEdibleMeat.FISH,    false, new ItemStack(Items.FISH,1,0));
-		addMeatCompressionRecipe(EnumEdibleMeat.SALMON,  false, new ItemStack(Items.FISH,1,1));
-		addMeatCompressionRecipe(EnumEdibleMeat.MUTTON,  false, new ItemStack(Items.MUTTON));
-		addMeatCompressionRecipe(EnumEdibleMeat.RABBIT,  false, new ItemStack(Items.RABBIT));
+		addMeatCompressionRecipe(r, EnumEdibleMeat.PORK,    false, new ItemStack(Items.PORKCHOP));
+		addMeatCompressionRecipe(r, EnumEdibleMeat.BEEF,    false, new ItemStack(Items.BEEF));
+		addMeatCompressionRecipe(r, EnumEdibleMeat.CHICKEN, false, new ItemStack(Items.CHICKEN));
+		addMeatCompressionRecipe(r, EnumEdibleMeat.FISH,    false, new ItemStack(Items.FISH,1,0));
+		addMeatCompressionRecipe(r, EnumEdibleMeat.SALMON,  false, new ItemStack(Items.FISH,1,1));
+		addMeatCompressionRecipe(r, EnumEdibleMeat.MUTTON,  false, new ItemStack(Items.MUTTON));
+		addMeatCompressionRecipe(r, EnumEdibleMeat.RABBIT,  false, new ItemStack(Items.RABBIT));
 		
-		addMeatCompressionRecipe(EnumEdibleMeat.PORK,    true,  new ItemStack(Items.COOKED_PORKCHOP));
-		addMeatCompressionRecipe(EnumEdibleMeat.BEEF,    true,  new ItemStack(Items.COOKED_BEEF));
-		addMeatCompressionRecipe(EnumEdibleMeat.CHICKEN, true,  new ItemStack(Items.COOKED_CHICKEN));
-		addMeatCompressionRecipe(EnumEdibleMeat.FISH,    true,  new ItemStack(Items.COOKED_FISH,1,0));
-		addMeatCompressionRecipe(EnumEdibleMeat.SALMON,  true,  new ItemStack(Items.COOKED_FISH,1,1));
-		addMeatCompressionRecipe(EnumEdibleMeat.MUTTON,  true,  new ItemStack(Items.COOKED_MUTTON));
-		addMeatCompressionRecipe(EnumEdibleMeat.RABBIT,  true,  new ItemStack(Items.COOKED_RABBIT));
+		addMeatCompressionRecipe(r, EnumEdibleMeat.PORK,    true,  new ItemStack(Items.COOKED_PORKCHOP));
+		addMeatCompressionRecipe(r, EnumEdibleMeat.BEEF,    true,  new ItemStack(Items.COOKED_BEEF));
+		addMeatCompressionRecipe(r, EnumEdibleMeat.CHICKEN, true,  new ItemStack(Items.COOKED_CHICKEN));
+		addMeatCompressionRecipe(r, EnumEdibleMeat.FISH,    true,  new ItemStack(Items.COOKED_FISH,1,0));
+		addMeatCompressionRecipe(r, EnumEdibleMeat.SALMON,  true,  new ItemStack(Items.COOKED_FISH,1,1));
+		addMeatCompressionRecipe(r, EnumEdibleMeat.MUTTON,  true,  new ItemStack(Items.COOKED_MUTTON));
+		addMeatCompressionRecipe(r, EnumEdibleMeat.RABBIT,  true,  new ItemStack(Items.COOKED_RABBIT));
 		
 		//Uncraft blocks into meat
-		addMeatUncraftingRecipe(EnumEdibleMeat.PORK,     false, new ItemStack(Items.PORKCHOP, 9));
-		addMeatUncraftingRecipe(EnumEdibleMeat.BEEF,     false, new ItemStack(Items.BEEF,     9));
-		addMeatUncraftingRecipe(EnumEdibleMeat.CHICKEN,  false, new ItemStack(Items.CHICKEN,  9));
-		addMeatUncraftingRecipe(EnumEdibleMeat.FISH,     false, new ItemStack(Items.FISH,     9, 0));
-		addMeatUncraftingRecipe(EnumEdibleMeat.SALMON,   false, new ItemStack(Items.FISH,     9, 1));
-		addMeatUncraftingRecipe(EnumEdibleMeat.MUTTON,   false, new ItemStack(Items.MUTTON,   9));
-		addMeatUncraftingRecipe(EnumEdibleMeat.RABBIT,   false, new ItemStack(Items.RABBIT,   9));
+		addMeatUncraftingRecipe(r, EnumEdibleMeat.PORK,     false, new ItemStack(Items.PORKCHOP, 9));
+		addMeatUncraftingRecipe(r, EnumEdibleMeat.BEEF,     false, new ItemStack(Items.BEEF,     9));
+		addMeatUncraftingRecipe(r, EnumEdibleMeat.CHICKEN,  false, new ItemStack(Items.CHICKEN,  9));
+		addMeatUncraftingRecipe(r, EnumEdibleMeat.FISH,     false, new ItemStack(Items.FISH,     9, 0));
+		addMeatUncraftingRecipe(r, EnumEdibleMeat.SALMON,   false, new ItemStack(Items.FISH,     9, 1));
+		addMeatUncraftingRecipe(r, EnumEdibleMeat.MUTTON,   false, new ItemStack(Items.MUTTON,   9));
+		addMeatUncraftingRecipe(r, EnumEdibleMeat.RABBIT,   false, new ItemStack(Items.RABBIT,   9));
 		
-		addMeatUncraftingRecipe(EnumEdibleMeat.PORK,     true,  new ItemStack(Items.COOKED_PORKCHOP, 9));
-		addMeatUncraftingRecipe(EnumEdibleMeat.BEEF,     true,  new ItemStack(Items.COOKED_BEEF,     9));
-		addMeatUncraftingRecipe(EnumEdibleMeat.CHICKEN,  true,  new ItemStack(Items.COOKED_CHICKEN,  9));
-		addMeatUncraftingRecipe(EnumEdibleMeat.FISH,     true,  new ItemStack(Items.COOKED_FISH,     9, 0));
-		addMeatUncraftingRecipe(EnumEdibleMeat.SALMON,   true,  new ItemStack(Items.COOKED_FISH,     9, 1));
-		addMeatUncraftingRecipe(EnumEdibleMeat.MUTTON,   true,  new ItemStack(Items.COOKED_MUTTON,   9));
-		addMeatUncraftingRecipe(EnumEdibleMeat.RABBIT,   true,  new ItemStack(Items.COOKED_RABBIT,   9));
+		addMeatUncraftingRecipe(r, EnumEdibleMeat.PORK,     true,  new ItemStack(Items.COOKED_PORKCHOP, 9));
+		addMeatUncraftingRecipe(r, EnumEdibleMeat.BEEF,     true,  new ItemStack(Items.COOKED_BEEF,     9));
+		addMeatUncraftingRecipe(r, EnumEdibleMeat.CHICKEN,  true,  new ItemStack(Items.COOKED_CHICKEN,  9));
+		addMeatUncraftingRecipe(r, EnumEdibleMeat.FISH,     true,  new ItemStack(Items.COOKED_FISH,     9, 0));
+		addMeatUncraftingRecipe(r, EnumEdibleMeat.SALMON,   true,  new ItemStack(Items.COOKED_FISH,     9, 1));
+		addMeatUncraftingRecipe(r, EnumEdibleMeat.MUTTON,   true,  new ItemStack(Items.COOKED_MUTTON,   9));
+		addMeatUncraftingRecipe(r, EnumEdibleMeat.RABBIT,   true,  new ItemStack(Items.COOKED_RABBIT,   9));
 		
 		//Smelt raw meat blocks into cooked meat blocks
 		for(EnumEdibleMeat meat : EnumEdibleMeat.values()) {
@@ -420,52 +385,76 @@ public class ThermionicsWorld {
 		//	FurnaceRecipes.instance().addSmelting(ItemBlock.getItemFromBlock(TerrainBlocks.MEAT_FLESH), rottenFleshBlocks.get(0), 0);
 		//}
 		
-		for(BlockGemrock block : TerrainBlocks.GROUP_GEMROCK) addBrickRecipes(block);
+		for(BlockGemrock block : TWBlocks.GROUP_GEMROCK) addBrickRecipes(r, block);
 		
 		//Norfairite can be dyed. This is surprisingly hard to get right.
+		addDyeRecipes(r, TWBlocks.NORFAIRITE_CLEAR);
+	}
+	
+	public static void addDyeRecipes(IForgeRegistry<IRecipe> registry, BlockColored block) {
+		ResourceLocation group = new ResourceLocation("thermionics_world", "dye");
 		for(EnumDyeColor dye : EnumDyeColor.values()) {
-			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(TerrainBlocks.NORFAIRITE_CLEAR,1,dye.getMetadata()),
+			ShapelessOreRecipe recipe =
+					new ShapelessOreRecipe(group, new ItemStack(TWBlocks.NORFAIRITE_CLEAR,1,dye.getMetadata()),
 					new ItemStack(Items.DYE,1,dye.getDyeDamage()),
-					new ItemStack(TerrainBlocks.NORFAIRITE_CLEAR,1,OreDictionary.WILDCARD_VALUE)));
+					new ItemStack(TWBlocks.NORFAIRITE_CLEAR,1,OreDictionary.WILDCARD_VALUE));
+			recipe.setRegistryName(new ResourceLocation("thermionics_world", block.getRegistryName().getResourcePath()+"_DyeTo_"+dye.getUnlocalizedName()) );
+			registry.register(recipe);
 		}
 	}
 	
-	public static void addMeatCompressionRecipe(EnumEdibleMeat meat, boolean cooked, Object ingredient) {
-		GameRegistry.addRecipe(new ShapedOreRecipe(
-				new ItemStack(TerrainBlocks.MEAT_EDIBLE, 1, BlockMeatEdible.getMetaFromValue(meat, cooked)),
-				"xxx", "xxx", "xxx", 'x', ingredient
-				));
+	public static void addMeatCompressionRecipe(IForgeRegistry<IRecipe> registry, EnumEdibleMeat meat, boolean cooked, ItemStack ingredient) {
+		ResourceLocation group = new ResourceLocation("thermionics_world", "compress.meat");
+		Ingredient input = Ingredient.fromStacks(ingredient);
+		ShapedRecipes recipe = 
+				new ShapedRecipes(group.toString(), 3, 3,
+				NonNullList.withSize(3*3, input),
+				new ItemStack(TWBlocks.MEAT_EDIBLE, 1, BlockMeatEdible.getMetaFromValue(meat, cooked)) );
+		recipe.setRegistryName(new ResourceLocation("thermionics_world", meat.getName()+"_CompressToBlock"));
+		registry.register(recipe);
 	}
 	
-	public static void addMeatUncraftingRecipe(EnumEdibleMeat meat, boolean cooked, ItemStack result) {
-		GameRegistry.addRecipe(new ShapelessOreRecipe(
+	public static void addMeatUncraftingRecipe(IForgeRegistry<IRecipe> registry, EnumEdibleMeat meat, boolean cooked, ItemStack result) {
+		ResourceLocation group = new ResourceLocation("thermionics_world", "uncompress.meat");
+		ShapelessOreRecipe recipe = new ShapelessOreRecipe(group,
 				result,
-				new ItemStack(TerrainBlocks.MEAT_EDIBLE, 1, BlockMeatEdible.getMetaFromValue(meat, cooked))
-				));
+				new ItemStack(TWBlocks.MEAT_EDIBLE, 1, BlockMeatEdible.getMetaFromValue(meat, cooked)) );
+		recipe.setRegistryName(new ResourceLocation("thermionics_world", meat.getName()+"_DecompressFromBlock"));
+		registry.register(recipe);
 	}
 	
-	public static void addBrickRecipes(BlockGemrock gem) {
-		GameRegistry.addRecipe(new ShapedOreRecipe(
+	public static void addBrickRecipes(IForgeRegistry<IRecipe> registry, BlockGemrock gem) {
+		ResourceLocation group = new ResourceLocation("thermionics_world", "gemrock.chisel");
+		ShapedOreRecipe a = new ShapedOreRecipe(group,
 				new ItemStack(gem, 4, 1),
 				"xx", "xx", 'x', new ItemStack(gem,1,0)
-				));
-		GameRegistry.addRecipe(new ShapelessOreRecipe(
+				);
+		a.setRegistryName(new ResourceLocation("thermionics_world", "gemrock.chisel.intoBrick"));
+		registry.register(a);
+		
+		registry.register(recipe("gemrock.chisel",
 				new ItemStack(gem, 1, 2),
 				new ItemStack(gem, 1, 1)
 				));
-		GameRegistry.addRecipe(new ShapelessOreRecipe(
+		registry.register(recipe("gemrock.chisel",
 				new ItemStack(gem, 1, 3),
 				new ItemStack(gem, 1, 2)
 				));
-		GameRegistry.addRecipe(new ShapelessOreRecipe(
+		registry.register(recipe("gemrock.chisel",
 				new ItemStack(gem, 1, 4),
 				new ItemStack(gem, 1, 3)
 				));
-		GameRegistry.addRecipe(new ShapelessOreRecipe(
+		registry.register(recipe("gemrock.chisel",
 				new ItemStack(gem, 1, 1),
 				new ItemStack(gem, 1, 4)
 				));
 		
+	}
+	
+	public static IRecipe recipe(String group, ItemStack result, ItemStack ingredient) {
+		ShapelessOreRecipe recipe = new ShapelessOreRecipe(new ResourceLocation("thermionics_world",group), result, ingredient);
+		recipe.setRegistryName("thermionics_world", ingredient.getItem().getRegistryName().getResourcePath()+"_to_"+result.getUnlocalizedName());
+		return recipe;
 	}
 	
 	@SideOnly(Side.CLIENT)

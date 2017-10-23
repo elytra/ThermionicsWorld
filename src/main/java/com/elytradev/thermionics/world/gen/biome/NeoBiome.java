@@ -24,7 +24,9 @@
 package com.elytradev.thermionics.world.gen.biome;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -33,6 +35,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.WorldGenerator;
+import net.minecraftforge.common.BiomeDictionary;
 
 public class NeoBiome extends Biome {
 	public static final IBlockState BEDROCK = Blocks.BEDROCK.getDefaultState();
@@ -53,7 +56,7 @@ public class NeoBiome extends Biome {
 	float veinHeight = 200f;
 	
 	private ArrayList<WorldGenerator> generators = new ArrayList<>();
-	
+	private HashSet<BiomeDictionary.Type> types = new HashSet<>();
 	
 	public NeoBiome(Biome.BiomeProperties properties) {
 		super(properties.setRainDisabled());
@@ -117,6 +120,15 @@ public class NeoBiome extends Biome {
 	public NeoBiome withWorldGenerator(WorldGenerator gen) {
 		this.generators.add(gen);
 		return this;
+	}
+	
+	public NeoBiome withTypes(BiomeDictionary.Type... types) {
+		for(BiomeDictionary.Type type : types) this.types.add(type);
+		return this;
+	}
+	
+	public Set<BiomeDictionary.Type> getTypes() {
+		return types;
 	}
 	
 	public float getTerrainHeight() { return terrainHeight; }

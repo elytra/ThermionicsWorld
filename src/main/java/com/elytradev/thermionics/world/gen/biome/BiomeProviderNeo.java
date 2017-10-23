@@ -29,7 +29,7 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import com.elytradev.thermionics.world.block.TerrainBlocks;
+import com.elytradev.thermionics.world.block.TWBlocks;
 import com.elytradev.thermionics.world.gen.VoronoiClusterField;
 import com.google.common.collect.ImmutableList;
 

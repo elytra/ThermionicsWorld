@@ -26,13 +26,16 @@ package com.elytradev.thermionics.world;
 import com.elytradev.thermionics.world.item.ItemBlockEquivalentState;
 import com.elytradev.thermionics.world.item.ItemBlockGemrock;
 import com.elytradev.thermionics.world.item.ItemBlockVarieties;
+import com.elytradev.thermionics.world.item.TWItems;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 
 public class ClientProxy extends Proxy {
@@ -40,13 +43,21 @@ public class ClientProxy extends Proxy {
 	@Override
 	public void init() {}
 	
+	@SubscribeEvent
+	public void onRegisterModel(ModelRegistryEvent event) {
+		for(Item i : TWItems.itemsForModels()) {
+			registerItemModel(i);
+		}
+	}
+	
+	
 	@Override
 	public void registerItemModel(Item item) {
 		ResourceLocation loc = Item.REGISTRY.getNameForObject(item);
 		if (item instanceof ItemBlockEquivalentState) {
 			
 			NonNullList<ItemStack> subItems = NonNullList.create();
-			item.getSubItems(item, ThermionicsWorld.TAB_THERMIONICS_WORLD, subItems);
+			item.getSubItems(ThermionicsWorld.TAB_THERMIONICS_WORLD, subItems);
 			for(ItemStack stack : subItems) {
 				Item stackItem = stack.getItem();
 				if (stackItem!=item) continue; //The contract of getSubItems prohibits this condition.

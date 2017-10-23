@@ -26,13 +26,14 @@ package com.elytradev.thermionics.world.block;
 import com.elytradev.thermionics.world.ThermionicsWorld;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.EnumDyeColor;
-import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -44,7 +45,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockGemrock extends Block {
 	public BlockGemrock(String name, EnumDyeColor dyeColor) {
-		super(Material.ROCK, dyeColor.getMapColor());
+		super(Material.ROCK, MapColor.getBlockColor(dyeColor));
 		
 		this.setRegistryName("gemrock."+name);
 		this.setUnlocalizedName("thermionics_world.gemrock."+name);
@@ -80,9 +81,11 @@ public class BlockGemrock extends Block {
     
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list) {
+    public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
+    	if (tab!=this.getCreativeTabToDisplayOn()) return;
+    	
         for (int i=0; i<16; i++) {
-            list.add(new ItemStack(itemIn, 1, i));
+            list.add(new ItemStack(ItemBlock.getItemFromBlock(this), 1, i));
         }
     }
     

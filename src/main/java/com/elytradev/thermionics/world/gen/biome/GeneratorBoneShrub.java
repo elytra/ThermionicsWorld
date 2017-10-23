@@ -26,7 +26,7 @@ package com.elytradev.thermionics.world.gen.biome;
 import java.util.Random;
 
 import com.elytradev.thermionics.world.block.BlockShrubBone;
-import com.elytradev.thermionics.world.block.TerrainBlocks;
+import com.elytradev.thermionics.world.block.TWBlocks;
 import com.elytradev.thermionics.world.gen.NeoHellGenerators;
 
 import net.minecraft.util.math.BlockPos;
@@ -41,7 +41,7 @@ public class GeneratorBoneShrub extends WorldGenerator {
 		
 		if (surface==null) return false;
 		worldIn.setBlockState(surface,
-				TerrainBlocks.SHRUB_BONE.getDefaultState()
+				TWBlocks.SHRUB_BONE.getDefaultState()
 				.withProperty(BlockShrubBone.VARIANT,
 						BlockShrubBone.BoneType.values()[ rand.nextInt(BlockShrubBone.BoneType.values().length) ]));
 		
