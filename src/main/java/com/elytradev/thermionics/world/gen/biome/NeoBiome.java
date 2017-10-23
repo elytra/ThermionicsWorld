@@ -43,6 +43,8 @@ public class NeoBiome extends Biome {
 	//private final String name;
 	//private final int id;
 	
+	private String name;
+	
 	float terrainHeight = 128f;
 	
 	IBlockState terrainSurfaceMaterial = Blocks.DIRT.getDefaultState();
@@ -58,13 +60,10 @@ public class NeoBiome extends Biome {
 	private ArrayList<WorldGenerator> generators = new ArrayList<>();
 	private HashSet<BiomeDictionary.Type> types = new HashSet<>();
 	
-	public NeoBiome(Biome.BiomeProperties properties) {
+	public NeoBiome(String name, Biome.BiomeProperties properties) {
 		super(properties.setRainDisabled());
-		this.setRegistryName(super.getBiomeName());
-		//this.name = super.getBiomeName();
-		//this.id = id;
-		
-		
+		this.setRegistryName(name);
+		this.name = name;
 	}
 	
 	public NeoBiome withTerrainHeight(float height) {
@@ -169,5 +168,10 @@ public class NeoBiome extends Biome {
 				generator.generate(worldIn, random, relative);
 			}
 		}
+	}
+
+	/** Gets the biome name - available on the server, unlike getBiomeName */
+	public String name() {
+		return name;
 	}
 }

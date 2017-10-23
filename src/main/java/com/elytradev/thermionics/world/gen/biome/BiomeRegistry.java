@@ -37,7 +37,7 @@ public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
 	
 	public void init() {
 		NEO_HELL.register(0,
-			new NeoBiome(new Biome.BiomeProperties("bridges")
+			new NeoBiome("bridges", new Biome.BiomeProperties("bridges")
 				.setBaseHeight(128f)
 				.setTemperature(0.25f)
 				.setRainfall(0.25f)
@@ -50,7 +50,7 @@ public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
 			);
 		
 		NEO_HELL.register(1,
-			new NeoBiome(new Biome.BiomeProperties("strata")
+			new NeoBiome("strata", new Biome.BiomeProperties("strata")
 				.setBaseHeight(128f)
 				.setTemperature(0.375f)
 				.setRainfall(0.25f)
@@ -64,7 +64,7 @@ public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
 			);
 		
 		NEO_HELL.register(2,
-			new NeoBiome(new Biome.BiomeProperties("cold")
+			new NeoBiome("cold", new Biome.BiomeProperties("cold")
 				.setBaseHeight(128f)
 				.setTemperature(0.625f)
 				.setRainfall(0.25f)
@@ -77,7 +77,7 @@ public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
 			);
 		
 		NEO_HELL.register(3,
-			new NeoBiome(new Biome.BiomeProperties("barad_dur")
+			new NeoBiome("barad_dur", new Biome.BiomeProperties("barad_dur")
 				.setBaseHeight(128f)
 				.setTemperature(0.75f)
 				.setRainfall(0.25f)
@@ -90,7 +90,7 @@ public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
 			);
 		
 		NEO_HELL.register(4,
-			new NeoBiome(new Biome.BiomeProperties("heartsblood")
+			new NeoBiome("heartsblood", new Biome.BiomeProperties("heartsblood")
 				.setBaseHeight(128f)
 				.setTemperature(0.25f)
 				.setRainfall(0.5f)
@@ -105,7 +105,7 @@ public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
 			);
 
 		NEO_HELL.register(5,
-			new NeoBiome(new Biome.BiomeProperties("sulfur")
+			new NeoBiome("sulfur", new Biome.BiomeProperties("sulfur")
 				.setBaseHeight(128f)
 				.setTemperature(0.375f)
 				.setRainfall(0.5f)
@@ -119,7 +119,7 @@ public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
 			);
 		
 		NEO_HELL.register(6,
-			new NeoBiome(new Biome.BiomeProperties("nocturne")
+			new NeoBiome("nocturne", new Biome.BiomeProperties("nocturne")
 				.setBaseHeight(128f)
 				.setTemperature(0.625f)
 				.setRainfall(0.5f)
@@ -133,7 +133,7 @@ public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
 			);
 		
 		NEO_HELL.register(7,
-			new NeoBiome(new Biome.BiomeProperties("doom")
+			new NeoBiome("doom", new Biome.BiomeProperties("doom")
 				.setBaseHeight(128f)
 				.setTemperature(0.75f)
 				.setRainfall(0.5f)
@@ -147,7 +147,7 @@ public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
 	}
 	
 	public void register(int id, NeoBiome biome) {
-		this.register(id, biome.getBiomeName(), biome);
+		this.register(id, biome.name(), biome);
 	}
 	
 	@SubscribeEvent
