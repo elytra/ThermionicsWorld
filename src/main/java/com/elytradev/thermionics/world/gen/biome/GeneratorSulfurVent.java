@@ -43,7 +43,7 @@ public class GeneratorSulfurVent extends WorldGenerator {
 		cur = cur.up(4); //punch through a certain amount of incline, too.
 		
 		ArrayList<BlockPos> buffer = new ArrayList<BlockPos>();
-		int depth = 20 + rand.nextInt(20);
+		//int depth = 20 + rand.nextInt(20);
 		for(int i=0; i<30; i++) {
 			float radius = 3f + rand.nextFloat()*4;
 			

@@ -59,7 +59,7 @@ public class ChunkProviderNeo implements IChunkGenerator {
 	public static final int DENSITY_SCALING_START = 200;
 	public static final int DENSITY_SCALING_LENGTH = HEIGHT - DENSITY_SCALING_START;
 	
-	private static final long MILLIS_PER_NANO = 1_000_000L;
+	//private static final long MILLIS_PER_NANO = 1_000_000L;
 	
 
 	protected static final IBlockState AIR = Blocks.AIR.getDefaultState();

@@ -26,7 +26,6 @@ package com.elytradev.thermionics.world.block;
 import java.util.List;
 
 import com.elytradev.thermionics.world.gen.biome.BiomeRegistry;
-import com.elytradev.thermionics.world.item.ItemBlockGemrock;
 import com.elytradev.thermionics.world.item.TWItems;
 import com.google.common.collect.ImmutableList;
 
@@ -113,7 +112,7 @@ public class TWBlocks {
 				 */
 				.setTemperature(600)
 				.setViscosity(1000);
-		FLUID_PAIN = fluidBlock(r, painFluid);
+		FLUID_PAIN = fluidBlock(r, painFluid).setLiftsItems(true);
 		
 		
 		//Gemrocks are not gems. But they're useful.

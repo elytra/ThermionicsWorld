@@ -27,26 +27,23 @@ import java.util.Random;
 
 import javax.annotation.Nonnull;
 
-import com.elytradev.thermionics.world.ThermionicsWorld;
-
-import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.material.MaterialLiquid;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityGhast;
 import net.minecraft.entity.monster.EntityMagmaCube;
 import net.minecraft.entity.monster.EntityPigZombie;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.BlockFluidBase;
 import net.minecraftforge.fluids.BlockFluidFinite;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockFluidSimple extends BlockFluidFinite {
 	
@@ -54,7 +51,7 @@ public class BlockFluidSimple extends BlockFluidFinite {
 	
 	private DamageSource fluidDamage;
 	private boolean liftsItems = false;
-	private float damageAmount = 0.0f;
+	//private float damageAmount = 0.0f;
 	
 	public BlockFluidSimple(Fluid fluid, String name) {
 		super(fluid,
@@ -70,9 +67,15 @@ public class BlockFluidSimple extends BlockFluidFinite {
 		this.setUnlocalizedName("thermionics_world.fluid."+name);
 		
 		this.fluidDamage = new DamageSource("fluid."+fluid.getName()).setDamageBypassesArmor().setDamageIsAbsolute();
-		if (fluid.getTemperature() > SCALDING) damageAmount = 1 + (fluid.getTemperature() - SCALDING) / 20f;
+		//if (fluid.getTemperature() > SCALDING) damageAmount = 1 + (fluid.getTemperature() - SCALDING) / 20f;
 		
 		this.setDefaultState(blockState.getBaseState().withProperty(BlockFluidBase.LEVEL, 3));
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public Vec3d getFogColor(World world, BlockPos pos, IBlockState state, Entity entity, Vec3d originalColor, float partialTicks) {
+		return new Vec3d(0.4, 0.03, 0.1);
 	}
 	
 	public BlockFluidSimple setLiftsItems(boolean shouldLiftItems) {
@@ -112,8 +115,8 @@ public class BlockFluidSimple extends BlockFluidFinite {
 			}
 			return;
 		} else {
-			//slows everything else down
-			
+			//slows everything else down - disables because atm it messes with upwards swimming and creative flight
+			/*
 			if (entity instanceof EntityPlayer) {
 				//Do the slowdown clientside-only
 				if (world.isRemote) {
@@ -121,15 +124,11 @@ public class BlockFluidSimple extends BlockFluidFinite {
 				}
 			} else {
 				applyFluidPhysics(entity);
-			}
-			
+			}*/
 		}
 		
 		if (world.isRemote) return;
 		if (fluidDamage!=null && !entity.isRiding()) {
-			//if (entity instanceof EntityLivingBase) {
-			//	((EntityLivingBase)entity).da
-			//}
 			entity.attackEntityFrom(fluidDamage, 1.0f);
 			entity.velocityChanged = false;
 		}

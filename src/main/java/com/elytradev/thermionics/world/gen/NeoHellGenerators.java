@@ -29,8 +29,6 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import com.google.common.base.Predicate;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -135,7 +133,7 @@ public class NeoHellGenerators {
 	}
 	
 	public static class Quartz extends WorldGenerator {
-		private static final Predicate<IBlockState> REPLACEABLE = it->it.isFullCube();
+		//private static final Predicate<IBlockState> REPLACEABLE = it->it.isFullCube();
 		
 		private final IBlockState oreBlock;
 	    private final int numberOfBlocks;

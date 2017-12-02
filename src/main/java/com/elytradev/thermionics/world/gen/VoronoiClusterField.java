@@ -111,8 +111,8 @@ public class VoronoiClusterField<E> {
 	
 	
 	public E get(int x, int z) {
-		float cx = rescale(x, scale);
-		float cz = rescale(z, scale);
+		//float cx = rescale(x, scale);
+		//float cz = rescale(z, scale);
 		
 		Epicenter<E>[] centers = recenterOn(x, z);
 		float bestDist = Float.MAX_VALUE;

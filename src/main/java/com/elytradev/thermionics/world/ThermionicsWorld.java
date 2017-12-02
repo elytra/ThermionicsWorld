@@ -24,74 +24,50 @@
 package com.elytradev.thermionics.world;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
 
-import com.elytradev.thermionics.world.block.BlockShrubBone;
-import com.elytradev.thermionics.world.block.BlockFluidSimple;
 import com.elytradev.thermionics.world.block.BlockGemrock;
 import com.elytradev.thermionics.world.block.BlockMeat;
 import com.elytradev.thermionics.world.block.BlockMeatEdible;
-import com.elytradev.thermionics.world.block.BlockNorfairite;
 import com.elytradev.thermionics.world.block.EnumEdibleMeat;
 import com.elytradev.thermionics.world.block.TWBlocks;
 import com.elytradev.thermionics.world.gen.WorldProviderNeoHell;
 import com.elytradev.thermionics.world.gen.biome.BiomeRegistry;
 import com.elytradev.thermionics.world.gen.biome.NeoBiome;
-import com.elytradev.thermionics.world.item.ItemBlockColored;
-import com.elytradev.thermionics.world.item.ItemBlockEquivalentState;
-import com.elytradev.thermionics.world.item.ItemBlockGemrock;
-import com.elytradev.thermionics.world.item.ItemBlockMeatEdible;
 import com.elytradev.thermionics.world.item.TWItems;
-import com.google.common.collect.ImmutableList;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockColored;
 import net.minecraft.block.SoundType;
-import net.minecraft.block.material.MapColor;
-import net.minecraft.block.material.MaterialLiquid;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
-import net.minecraft.item.EnumRarity;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapedRecipes;
-import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DimensionType;
-import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.entity.living.LivingFallEvent;
-import net.minecraftforge.event.entity.player.PlayerFlyableFallEvent;
 import net.minecraftforge.event.world.BlockEvent;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
@@ -485,7 +461,7 @@ public class ThermionicsWorld {
 	
 	@SubscribeEvent
 	public void cropGrowEvent(BlockEvent.CropGrowEvent.Pre event) {
-		IBlockState cropState = event.getState();
+		//IBlockState cropState = event.getState();
 		Block land = event.getWorld().getBlockState(event.getPos().down()).getBlock();
 		if (land instanceof BlockMeat) {
 			//vanilla ticks give a 1 in 10 chance. We're forcing it on a 1 in 4, with the remaining 3 potentially ALSO
