@@ -32,14 +32,16 @@ import net.minecraft.block.BlockColored;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.EnumDyeColor;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockNorfairite extends BlockColored {
+public class BlockNorfairite extends BlockColored implements IItemNamer {
 	public BlockNorfairite(String variety) {
 		super(Material.GLASS);
 		this.setRegistryName("norfairite."+variety);
@@ -106,5 +108,18 @@ public class BlockNorfairite extends BlockColored {
 	@Override
 	public boolean isOpaqueCube(IBlockState state) {
 		return false;
+	}
+	
+	@Override
+	public String getUnlocalizedName(ItemStack stack) {
+		return this.getUnlocalizedName();
+	}
+	
+	@SuppressWarnings("deprecation")
+	@Override
+	public String getLocalizedName(ItemStack stack) {
+		EnumDyeColor color = this.getStateFromMeta(stack.getItemDamage()).getValue(BlockColored.COLOR);
+		String localColor = I18n.translateToLocal("color."+color.getUnlocalizedName());
+		return I18n.translateToLocalFormatted(getUnlocalizedName()+".name", localColor);
 	}
 }

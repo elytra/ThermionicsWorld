@@ -23,19 +23,28 @@
  */
 package com.elytradev.thermionics.world.block;
 
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
 
 public enum EnumEdibleMeat implements IStringSerializable {
-	PORK("pork"),
-	BEEF("beef"),
-	CHICKEN("chicken"),
-	FISH("fish"),
-	SALMON("salmon"),
-	MUTTON("mutton"),
-	RABBIT("rabbit");
+	PORK    ("pork",    new ItemStack(Items.PORKCHOP), new ItemStack(Items.COOKED_PORKCHOP)),
+	BEEF    ("beef",    new ItemStack(Items.BEEF),     new ItemStack(Items.COOKED_BEEF)),
+	CHICKEN ("chicken", new ItemStack(Items.CHICKEN),  new ItemStack(Items.COOKED_CHICKEN)),
+	FISH    ("fish",    new ItemStack(Items.FISH,1,0), new ItemStack(Items.COOKED_FISH,1,0)),
+	SALMON  ("salmon",  new ItemStack(Items.FISH,1,1), new ItemStack(Items.COOKED_FISH,1,1)),
+	MUTTON  ("mutton",  new ItemStack(Items.MUTTON),   new ItemStack(Items.COOKED_MUTTON)),
+	RABBIT  ("rabbit",  new ItemStack(Items.RABBIT),   new ItemStack(Items.COOKED_RABBIT));
 	
 	private final String name;
-	EnumEdibleMeat(String name) { this.name = name; }
+	private final ItemStack rawItem ;
+	private final ItemStack cookedItem;
+	
+	EnumEdibleMeat(String name, ItemStack raw, ItemStack cooked) {
+		this.name = name;
+		this.rawItem = raw;
+		this.cookedItem = cooked;
+	}
 	
 	@Override
 	public String getName() {
@@ -47,5 +56,13 @@ public enum EnumEdibleMeat implements IStringSerializable {
 			if (meat.ordinal()==id) return meat;
 		}
 		return BEEF; //out-of-bounds meat is Left Beef
+	}
+	
+	public ItemStack getRawItem() {
+		return rawItem;
+	}
+	
+	public ItemStack getCookedItem() {
+		return cookedItem;
 	}
 }

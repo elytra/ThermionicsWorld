@@ -246,72 +246,11 @@ public class ThermionicsWorld {
 			consumer.accept(stack);
 		}
 	}
-	/*
-	@SafeVarargs
-	public static <T> void forEach(Consumer<T> consumer, T... ts) {
-		for(T t : ts) { consumer.accept(t); }
-	}
 	
-	@SafeVarargs
-	public static <T> void forEach(Consumer<T> consumer, List<T>... lists) {
-		for(List<T> list : lists) {
-			for(T t : list) {
-				consumer.accept(t);
-			}
-		}
-	}*/
-	
-	/*
-	@SafeVarargs
-	public static void forEachItem(Consumer<ItemStack> consumer, List<ItemStack>... lists) {
-		for(List<ItemStack> list : lists) {
-			for(ItemStack stack : list) {
-				consumer.accept(stack);
-			}
-		}
-	}*/
-	/*
-	@SubscribeEvent
-	public void onEntityFall(LivingFallEvent evt) {
-		handleFallingEntity(evt.getEntityLiving());
-	}
-	
-	@SubscribeEvent
-	public void onFlyableFall(PlayerFlyableFallEvent evt) {
-		handleFallingEntity(evt.getEntityPlayer());
-	}
-	
-	public void handleFallingEntity(EntityLivingBase entity) {
-		if (entity==null) return;
-		World world = entity.getEntityWorld();
-		BlockPos pos = entity.getPosition();
-		IBlockState blockAtEntity = world.getBlockState(pos);
-		if (blockAtEntity==null || blockAtEntity.getBlock()==null) return;
-		
-		if (blockAtEntity.getBlock()==TerrainBlocks.FLUID_PAIN) {
-			if (entity instanceof EntityPlayer) {
-				System.out.println("Slowing down entity motion:"+entity.motionY);
-			}
-			
-			if (entity.motionY<-0.1d) entity.motionY += 0.1d;
-			
-			if (entity instanceof EntityPlayer) {
-				System.out.println("After slowdown:"+entity.motionY);
-			}
-		}
-	}*/
-	//@EventHandler
-	//public void init(FMLInitializationEvent event) {
-		//BiomeRegistry.NEO_HELL.init();
-	//}
-	
-	//@EventHandler
-	//public void init(FMLInitializationEvent event) {
-		//System.out.println("BEGIN INIT");
 	@SubscribeEvent
 	public void registerRecipes(RegistryEvent.Register<IRecipe> evt) {	
 		IForgeRegistry<IRecipe> r = evt.getRegistry();
-		
+		/*
 		//Craft meat into blocks
 		addMeatCompressionRecipe(r, EnumEdibleMeat.PORK,    false, new ItemStack(Items.PORKCHOP));
 		addMeatCompressionRecipe(r, EnumEdibleMeat.BEEF,    false, new ItemStack(Items.BEEF));
@@ -345,21 +284,21 @@ public class ThermionicsWorld {
 		addMeatUncraftingRecipe(r, EnumEdibleMeat.SALMON,   true,  new ItemStack(Items.COOKED_FISH,     9, 1));
 		addMeatUncraftingRecipe(r, EnumEdibleMeat.MUTTON,   true,  new ItemStack(Items.COOKED_MUTTON,   9));
 		addMeatUncraftingRecipe(r, EnumEdibleMeat.RABBIT,   true,  new ItemStack(Items.COOKED_RABBIT,   9));
+		*/
 		
-		//Smelt raw meat blocks into cooked meat blocks
 		for(EnumEdibleMeat meat : EnumEdibleMeat.values()) {
+			ItemStack uncraftedRaw = meat.getRawItem().copy(); uncraftedRaw.setCount(9);
+			ItemStack uncraftedCooked = meat.getCookedItem().copy(); uncraftedCooked.setCount(9);
+			addMeatCompressionRecipe(r, meat, false, meat.getRawItem().copy());
+			addMeatCompressionRecipe(r, meat, true,  meat.getCookedItem().copy());
+			addMeatUncraftingRecipe(r, meat, false, uncraftedRaw);
+			addMeatUncraftingRecipe(r, meat, true, uncraftedCooked);
+			
 			FurnaceRecipes.instance().addSmeltingRecipe(
 					TWItems.meat(meat, false),
 					TWItems.meat(meat, true),
 					0.0f);
 		}
-		
-		
-		//Hellmeat is very juicy meat. But if you just need to get rid of the juice, you could always... cook it?
-		//NonNullList<ItemStack> rottenFleshBlocks = OreDictionary.getOres("blockRottenFlesh");
-		//if (!rottenFleshBlocks.isEmpty()) {
-		//	FurnaceRecipes.instance().addSmelting(ItemBlock.getItemFromBlock(TerrainBlocks.MEAT_FLESH), rottenFleshBlocks.get(0), 0);
-		//}
 		
 		for(BlockGemrock block : TWBlocks.GROUP_GEMROCK) addBrickRecipes(r, block);
 		
@@ -386,7 +325,7 @@ public class ThermionicsWorld {
 				new ShapedRecipes(group.toString(), 3, 3,
 				NonNullList.withSize(3*3, input),
 				new ItemStack(TWBlocks.MEAT_EDIBLE, 1, BlockMeatEdible.getMetaFromValue(meat, cooked)) );
-		recipe.setRegistryName(new ResourceLocation("thermionics_world", meat.getName()+"_CompressToBlock"));
+		recipe.setRegistryName(new ResourceLocation("thermionics_world", meat.getName()+((cooked)?".cooked":".raw")+"_CompressToBlock"));
 		registry.register(recipe);
 	}
 	
@@ -395,32 +334,32 @@ public class ThermionicsWorld {
 		ShapelessOreRecipe recipe = new ShapelessOreRecipe(group,
 				result,
 				new ItemStack(TWBlocks.MEAT_EDIBLE, 1, BlockMeatEdible.getMetaFromValue(meat, cooked)) );
-		recipe.setRegistryName(new ResourceLocation("thermionics_world", meat.getName()+"_DecompressFromBlock"));
+		recipe.setRegistryName(new ResourceLocation("thermionics_world", meat.getName()+((cooked)?".cooked":".raw")+"_DecompressFromBlock"));
 		registry.register(recipe);
 	}
 	
 	public static void addBrickRecipes(IForgeRegistry<IRecipe> registry, BlockGemrock gem) {
-		ResourceLocation group = new ResourceLocation("thermionics_world", "gemrock.chisel");
+		ResourceLocation group = new ResourceLocation("thermionics_world", "gemrock.chisel."+gem.getUnlocalizedName());
 		ShapedOreRecipe a = new ShapedOreRecipe(group,
 				new ItemStack(gem, 4, 1),
 				"xx", "xx", 'x', new ItemStack(gem,1,0)
 				);
-		a.setRegistryName(new ResourceLocation("thermionics_world", "gemrock.chisel.intoBrick"));
+		a.setRegistryName(new ResourceLocation("thermionics_world", "gemrock.chisel.intoBrick."+gem.getUnlocalizedName()));
 		registry.register(a);
 		
-		registry.register(recipe("gemrock.chisel",
+		registry.register(recipe("gemrock.chisel."+gem.getUnlocalizedName(),
 				new ItemStack(gem, 1, 2),
 				new ItemStack(gem, 1, 1)
 				));
-		registry.register(recipe("gemrock.chisel",
+		registry.register(recipe("gemrock.chisel."+gem.getUnlocalizedName(),
 				new ItemStack(gem, 1, 3),
 				new ItemStack(gem, 1, 2)
 				));
-		registry.register(recipe("gemrock.chisel",
+		registry.register(recipe("gemrock.chisel."+gem.getUnlocalizedName(),
 				new ItemStack(gem, 1, 4),
 				new ItemStack(gem, 1, 3)
 				));
-		registry.register(recipe("gemrock.chisel",
+		registry.register(recipe("gemrock.chisel."+gem.getUnlocalizedName(),
 				new ItemStack(gem, 1, 1),
 				new ItemStack(gem, 1, 4)
 				));
@@ -429,7 +368,7 @@ public class ThermionicsWorld {
 	
 	public static IRecipe recipe(String group, ItemStack result, ItemStack ingredient) {
 		ShapelessOreRecipe recipe = new ShapelessOreRecipe(new ResourceLocation("thermionics_world",group), result, ingredient);
-		recipe.setRegistryName("thermionics_world", ingredient.getItem().getRegistryName().getResourcePath()+"_to_"+result.getUnlocalizedName());
+		recipe.setRegistryName("thermionics_world", ingredient.getItem().getRegistryName().getResourcePath()+"."+ingredient.getMetadata()+"_to_"+result.getUnlocalizedName()+"."+result.getMetadata());
 		return recipe;
 	}
 	

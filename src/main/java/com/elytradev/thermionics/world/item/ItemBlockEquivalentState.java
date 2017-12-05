@@ -25,6 +25,9 @@ package com.elytradev.thermionics.world.item;
 
 import java.util.Iterator;
 import java.util.Set;
+
+import com.elytradev.thermionics.world.block.IItemNamer;
+
 import java.util.Map.Entry;
 
 import net.minecraft.block.Block;
@@ -75,5 +78,23 @@ public class ItemBlockEquivalentState extends ItemBlock {
 		}
 		
 		return result.toString();
+	}
+	
+	@Override
+	public String getUnlocalizedName(ItemStack stack) {
+		if (this.block instanceof IItemNamer) {
+			return ((IItemNamer)this.block).getUnlocalizedName(stack);
+		} else {
+			return this.block.getUnlocalizedName();
+		}
+    }
+	
+	@Override
+	public String getItemStackDisplayName(ItemStack stack) {
+		if (this.block instanceof IItemNamer) {
+			return ((IItemNamer)this.block).getLocalizedName(stack);
+		} else {
+			return super.getItemStackDisplayName(stack);
+		}
 	}
 }

@@ -34,7 +34,6 @@ public class ItemBlockMeatEdible extends ItemBlockEquivalentState {
 
 	public ItemBlockMeatEdible(Block block) {
 		super(block);
-		//this.setRegistryName(block.getRegistryName());
 	}
 
 	@Override

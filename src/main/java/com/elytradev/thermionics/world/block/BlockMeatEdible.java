@@ -35,9 +35,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 
-public class BlockMeatEdible extends BlockMeat {
+public class BlockMeatEdible extends BlockMeat implements IItemNamer {
 	public static final PropertyEnum<EnumEdibleMeat> VARIANT = PropertyEnum.<EnumEdibleMeat>create("variant", EnumEdibleMeat.class);
 	public static final PropertyBool COOKED = PropertyBool.create("cooked");
 	
@@ -92,5 +93,20 @@ public class BlockMeatEdible extends BlockMeat {
 		for(int i=0; i<EnumEdibleMeat.values().length; i++) {
 			list.add(new ItemStack(ItemBlock.getItemFromBlock(this), 1, i | 0x8));
 		}
+	}
+	
+	@Override
+	public String getUnlocalizedName(ItemStack stack) {
+		IBlockState equivalentState = this.getStateFromMeta(stack.getItemDamage());
+		EnumEdibleMeat variant = equivalentState.getValue(BlockMeatEdible.VARIANT);
+		String cookedKey = equivalentState.getValue(BlockMeatEdible.COOKED) ? "cooked" : "raw";
+		
+		return "tile.thermionics_world.meat.edible."+variant.getName()+"."+cookedKey;
+	}
+	
+	@SuppressWarnings("deprecation")
+	@Override
+	public String getLocalizedName(ItemStack stack) {
+		return I18n.translateToLocal(this.getUnlocalizedName(stack));
 	}
 }
