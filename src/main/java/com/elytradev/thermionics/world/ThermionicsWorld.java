@@ -59,6 +59,7 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -94,6 +95,12 @@ public class ThermionicsWorld {
 			SOUNDEVENT_SQUISH_STEP
 			);
 	
+	
+	public static Configuration CONFIG;
+	public static boolean CONFIG_SHOULD_REGISTER_NEOHELL = true;
+	public static int CONFIG_DIMENSION_ID_NEOHELL = -1; //For dim remaps
+	
+	
 	public static CreativeTabs TAB_THERMIONICS_WORLD = new CreativeTabs("thermionics_world") {
 		@Override
 		public ItemStack getTabIconItem() {
@@ -107,24 +114,33 @@ public class ThermionicsWorld {
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		proxy.init();
+		proxy.preInit();
 		
-		//Nuking hell just makes it stronger
-		DimensionManager.unregisterDimension(-1);
-		DimensionType neohellType = DimensionType.register("Neo-Hell", "_neohell", -1, WorldProviderNeoHell.class, false);
-		
-		DimensionManager.registerDimension(-1, neohellType);
-		@SuppressWarnings("unused")
-		WorldProvider provider = DimensionManager.createProviderFor(-1);
+		CONFIG = new Configuration(event.getSuggestedConfigurationFile());
+		CONFIG.setCategoryComment("neohell", "These keys affect how the world is generated, and whether it is generated.");
+		CONFIG_SHOULD_REGISTER_NEOHELL = CONFIG.getBoolean("enabled", "neohell", CONFIG_SHOULD_REGISTER_NEOHELL,
+				"Setting this to false disables neohell entirely, and this mod's blocks will be unobtainable unless tweaked in.");
+		CONFIG_DIMENSION_ID_NEOHELL = CONFIG.getInt("id", "neohell", CONFIG_DIMENSION_ID_NEOHELL, Integer.MIN_VALUE, Integer.MAX_VALUE,
+				"Remaps neohell to a different dimension ID, possibly causing it to replace a different dimension. May be catastrophically bad for existing maps.");
+		CONFIG.save();
+		if (CONFIG_SHOULD_REGISTER_NEOHELL) {
+			if (DimensionManager.isDimensionRegistered(CONFIG_DIMENSION_ID_NEOHELL)) {
+				//Nuking hell just makes it stronger
+				DimensionManager.unregisterDimension(CONFIG_DIMENSION_ID_NEOHELL);
+			}
+			
+			DimensionType neohellType = DimensionType.register("Neo-Hell", "_neohell", CONFIG_DIMENSION_ID_NEOHELL, WorldProviderNeoHell.class, false);
+			DimensionManager.registerDimension(CONFIG_DIMENSION_ID_NEOHELL, neohellType);
+			
+			@SuppressWarnings("unused")
+			WorldProvider provider = DimensionManager.createProviderFor(CONFIG_DIMENSION_ID_NEOHELL);
+		}
 		
 		/* Obsidian is a glossy, vitreous rock, useful because when struck it easily forms conchoidal fractures,
 		 * meaning you can hit it with an ordinary rock, and it shatters, making a super-sharp edge you can use for an
 		 * axe head or a knife blade. It's frequently found
 		 * just lying around volcanic islands. None of this describes what we see in Minecraft when we look at an
 		 * obsidian block or the way we use that block.
-		 * 
-		 * 
-		 * 
 		 */
 		Blocks.OBSIDIAN.setUnlocalizedName("thermionics_world.basalt");
 		Blocks.OBSIDIAN.setHardness(2.5f);
@@ -139,96 +155,6 @@ public class ThermionicsWorld {
 		MinecraftForge.EVENT_BUS.register(TWBlocks.class);
 		MinecraftForge.EVENT_BUS.register(TWItems.class);
 		MinecraftForge.EVENT_BUS.register(BiomeRegistry.class);
-		
-		/*
-		ImmutableList.Builder<ItemStack> gemrockBuilder = ImmutableList.builder();
-		ImmutableList.Builder<BlockGemrock> gemrockBlockBuilder = ImmutableList.builder();
-		for(BlockGemrock block : gemrocks) {
-			gemrockBlockBuilder.add(block);
-			gemrockBuilder.add(new ItemStack(block));
-		}
-		TWItems.GROUP_GEMROCK = gemrockBuilder.build();
-		TWBlocks.GROUP_GEMROCK = gemrockBlockBuilder.build();
-		*/
-		
-		//We're back in weird territory here, with Several Kinds of Meat
-		
-		
-		
-
-		//ItemBlockMeatEdible edibleMeatBlockItem = new ItemBlockMeatEdible(edibleMeat);
-		/*
-		TWItems.GROUP_MEAT_RAW = ImmutableList.of(
-				new ItemStack(Items.PORKCHOP),
-				new ItemStack(Items.BEEF),
-				new ItemStack(Items.CHICKEN),
-				new ItemStack(Items.FISH,1,0),
-				new ItemStack(Items.FISH,1,1),
-				new ItemStack(Items.MUTTON),
-				new ItemStack(Items.RABBIT)
-				);
-		
-		TWItems.GROUP_MEAT_COOKED = ImmutableList.of(
-				new ItemStack(Items.COOKED_PORKCHOP),
-				new ItemStack(Items.COOKED_BEEF),
-				new ItemStack(Items.COOKED_CHICKEN),
-				new ItemStack(Items.COOKED_FISH,1,0),
-				new ItemStack(Items.COOKED_FISH,1,1),
-				new ItemStack(Items.COOKED_MUTTON),
-				new ItemStack(Items.COOKED_RABBIT)
-				);
-		
-		TWItems.GROUP_BLOCK_MEAT_RAW = ImmutableList.of(
-				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.PORK,    false)),
-				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.BEEF,    false)),
-				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.CHICKEN, false)),
-				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.FISH,    false)),
-				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.SALMON,  false)),
-				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.MUTTON,  false)),
-				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.RABBIT,  false))
-				);
-		
-		TWItems.GROUP_BLOCK_MEAT_COOKED = ImmutableList.of(
-				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.PORK,    true)),
-				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.BEEF,    true)),
-				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.CHICKEN, true)),
-				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.FISH,    true)),
-				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.SALMON,  true)),
-				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.MUTTON,  true)),
-				new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.RABBIT,  true))
-				);*/
-		
-		//Category registrations (and some HarvestCraft-style registrations to keep compatibiltiy high)
-		/*
-		TWItems.GROUP_MEAT_RAW.forEach(it->OreDictionary.registerOre("listAllRawMeat", it));
-		forEach(oreDict("listAllRawMeat"),    TWItems.GROUP_MEAT_RAW);    forEach(oreDict("listAllmeatraw"),    TWItems.GROUP_MEAT_RAW);
-		forEach(oreDict("listAllCookedMeat"), TWItems.GROUP_MEAT_COOKED); forEach(oreDict("listAllmeatcooked"), TWItems.GROUP_MEAT_COOKED);
-		forEach(oreDict("listAllMeat"),       TWItems.GROUP_MEAT_RAW, TWItems.GROUP_MEAT_COOKED);
-		
-		forEach(oreDict("listAllBlockRawMeat"),    TWItems.GROUP_BLOCK_MEAT_RAW);
-		forEach(oreDict("listAllBlockCookedMeat"), TWItems.GROUP_BLOCK_MEAT_COOKED);
-		forEach(oreDict("listAllBlockMeat"),       TWItems.GROUP_BLOCK_MEAT_RAW, TWItems.GROUP_BLOCK_MEAT_COOKED);
-		
-		//These are the most specific (and probably the most useful) entries.
-		OreDictionary.registerOre("blockRawPorkchop", new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.PORK,    false)));
-		OreDictionary.registerOre("blockRawBeef",     new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.BEEF,    false)));
-		OreDictionary.registerOre("blockRawChicken",  new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.CHICKEN, false)));
-		OreDictionary.registerOre("blockRawFish",     new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.FISH,    false)));
-		OreDictionary.registerOre("blockRawSalmon",   new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.SALMON,  false)));
-		OreDictionary.registerOre("blockRawMutton",   new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.MUTTON,  false)));
-		OreDictionary.registerOre("blockRawRabbit",   new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.RABBIT,  false)));
-		
-		OreDictionary.registerOre("blockCookedPorkchop", new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.PORK,    true)));
-		OreDictionary.registerOre("blockCookedBeef",     new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.BEEF,    true)));
-		OreDictionary.registerOre("blockCookedChicken",  new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.CHICKEN, true)));
-		OreDictionary.registerOre("blockCookedFish",     new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.FISH,    true)));
-		OreDictionary.registerOre("blockCookedSalmon",   new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.SALMON,  true)));
-		OreDictionary.registerOre("blockCookedMutton",   new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.MUTTON,  true)));
-		OreDictionary.registerOre("blockCookedRabbit",   new ItemStack(edibleMeat, 1, BlockMeatEdible.getMetaFromValue(EnumEdibleMeat.RABBIT,  true)));
-		*/
-		
-		
-		System.out.println("END PREINIT");
 	}
 	
 	@SubscribeEvent
@@ -250,41 +176,6 @@ public class ThermionicsWorld {
 	@SubscribeEvent
 	public void registerRecipes(RegistryEvent.Register<IRecipe> evt) {	
 		IForgeRegistry<IRecipe> r = evt.getRegistry();
-		/*
-		//Craft meat into blocks
-		addMeatCompressionRecipe(r, EnumEdibleMeat.PORK,    false, new ItemStack(Items.PORKCHOP));
-		addMeatCompressionRecipe(r, EnumEdibleMeat.BEEF,    false, new ItemStack(Items.BEEF));
-		addMeatCompressionRecipe(r, EnumEdibleMeat.CHICKEN, false, new ItemStack(Items.CHICKEN));
-		addMeatCompressionRecipe(r, EnumEdibleMeat.FISH,    false, new ItemStack(Items.FISH,1,0));
-		addMeatCompressionRecipe(r, EnumEdibleMeat.SALMON,  false, new ItemStack(Items.FISH,1,1));
-		addMeatCompressionRecipe(r, EnumEdibleMeat.MUTTON,  false, new ItemStack(Items.MUTTON));
-		addMeatCompressionRecipe(r, EnumEdibleMeat.RABBIT,  false, new ItemStack(Items.RABBIT));
-		
-		addMeatCompressionRecipe(r, EnumEdibleMeat.PORK,    true,  new ItemStack(Items.COOKED_PORKCHOP));
-		addMeatCompressionRecipe(r, EnumEdibleMeat.BEEF,    true,  new ItemStack(Items.COOKED_BEEF));
-		addMeatCompressionRecipe(r, EnumEdibleMeat.CHICKEN, true,  new ItemStack(Items.COOKED_CHICKEN));
-		addMeatCompressionRecipe(r, EnumEdibleMeat.FISH,    true,  new ItemStack(Items.COOKED_FISH,1,0));
-		addMeatCompressionRecipe(r, EnumEdibleMeat.SALMON,  true,  new ItemStack(Items.COOKED_FISH,1,1));
-		addMeatCompressionRecipe(r, EnumEdibleMeat.MUTTON,  true,  new ItemStack(Items.COOKED_MUTTON));
-		addMeatCompressionRecipe(r, EnumEdibleMeat.RABBIT,  true,  new ItemStack(Items.COOKED_RABBIT));
-		
-		//Uncraft blocks into meat
-		addMeatUncraftingRecipe(r, EnumEdibleMeat.PORK,     false, new ItemStack(Items.PORKCHOP, 9));
-		addMeatUncraftingRecipe(r, EnumEdibleMeat.BEEF,     false, new ItemStack(Items.BEEF,     9));
-		addMeatUncraftingRecipe(r, EnumEdibleMeat.CHICKEN,  false, new ItemStack(Items.CHICKEN,  9));
-		addMeatUncraftingRecipe(r, EnumEdibleMeat.FISH,     false, new ItemStack(Items.FISH,     9, 0));
-		addMeatUncraftingRecipe(r, EnumEdibleMeat.SALMON,   false, new ItemStack(Items.FISH,     9, 1));
-		addMeatUncraftingRecipe(r, EnumEdibleMeat.MUTTON,   false, new ItemStack(Items.MUTTON,   9));
-		addMeatUncraftingRecipe(r, EnumEdibleMeat.RABBIT,   false, new ItemStack(Items.RABBIT,   9));
-		
-		addMeatUncraftingRecipe(r, EnumEdibleMeat.PORK,     true,  new ItemStack(Items.COOKED_PORKCHOP, 9));
-		addMeatUncraftingRecipe(r, EnumEdibleMeat.BEEF,     true,  new ItemStack(Items.COOKED_BEEF,     9));
-		addMeatUncraftingRecipe(r, EnumEdibleMeat.CHICKEN,  true,  new ItemStack(Items.COOKED_CHICKEN,  9));
-		addMeatUncraftingRecipe(r, EnumEdibleMeat.FISH,     true,  new ItemStack(Items.COOKED_FISH,     9, 0));
-		addMeatUncraftingRecipe(r, EnumEdibleMeat.SALMON,   true,  new ItemStack(Items.COOKED_FISH,     9, 1));
-		addMeatUncraftingRecipe(r, EnumEdibleMeat.MUTTON,   true,  new ItemStack(Items.COOKED_MUTTON,   9));
-		addMeatUncraftingRecipe(r, EnumEdibleMeat.RABBIT,   true,  new ItemStack(Items.COOKED_RABBIT,   9));
-		*/
 		
 		for(EnumEdibleMeat meat : EnumEdibleMeat.values()) {
 			ItemStack uncraftedRaw = meat.getRawItem().copy(); uncraftedRaw.setCount(9);
@@ -372,6 +263,10 @@ public class ThermionicsWorld {
 		return recipe;
 	}
 	
+	/**
+	 * When possible, presents corrected biome information in the F3 overlay for Neo-Hell
+	 * @param event
+	 */
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void renderGameOverlayEvent(RenderGameOverlayEvent.Text event) {

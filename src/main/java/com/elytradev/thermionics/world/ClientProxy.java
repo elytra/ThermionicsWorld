@@ -41,7 +41,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class ClientProxy extends Proxy {
 	
 	@Override
-	public void init() {}
+	public void preInit() {}
 	
 	@SubscribeEvent
 	public void onRegisterModel(ModelRegistryEvent event) {
@@ -51,7 +51,6 @@ public class ClientProxy extends Proxy {
 	}
 	
 	
-	@Override
 	public void registerItemModel(Item item) {
 		ResourceLocation loc = Item.REGISTRY.getNameForObject(item);
 		if (item instanceof ItemBlockEquivalentState) {
