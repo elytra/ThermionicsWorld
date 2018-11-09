@@ -19,17 +19,17 @@ buildscript {
 	dependencies {
 		classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT';
 		classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.0';
-		//classpath 'gradle.plugin.net.minecrell:licenser:0.3';
+		classpath 'gradle.plugin.net.minecrell:licenser:0.3';
 	}
 	
 }
 
-plugins {
-	id "com.github.hierynomus.license" version "0.13.1"
-}
+//plugins {
+//	id "com.github.hierynomus.license" version "0.13.1"
+//}
 
 apply plugin: 'java'
-//apply plugin: 'net.minecrell.licenser'
+apply plugin: 'net.minecrell.licenser'
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'com.github.johnrengelman.shadow'
 
@@ -100,16 +100,7 @@ processResources {
 }
 
 license {
-	//sourceSets = [project.sourceSets.main];
-	
-	//matching("**.java") {
-	//	header = project.file('LICENSE');
-		//style {
-		//	put("java", "JAVADOC");
-		//}
-	//}
-	
-	
+	sourceSets = [project.sourceSets.main];
 	
 	exclude "**/*.json";
 	exclude "**/*.png";
