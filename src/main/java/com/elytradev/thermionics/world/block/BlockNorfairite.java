@@ -57,11 +57,11 @@ public class BlockNorfairite extends BlockColored implements IItemNamer {
 	}
 	
 	@Override
-    public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
-        if (!worldIn.isRemote) {
-            BlockBeacon.updateColorAsync(worldIn, pos);
-        }
-    }
+	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
+		if (!worldIn.isRemote) {
+			BlockBeacon.updateColorAsync(worldIn, pos);
+		}
+	}
 	
 	@SideOnly(Side.CLIENT)
     public BlockRenderLayer getBlockLayer() {

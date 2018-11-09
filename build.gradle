@@ -1,29 +1,37 @@
 buildscript {
-
-
-  repositories {
-    mavenCentral()
-    jcenter()
-    maven {
-      name = "forge"
-      url = "http://files.minecraftforge.net/maven"
-    }
-    maven {
-      name = "sonatype"
-      url = "https://oss.sonatype.org/content/repositories/snapshots/"
-    }
-  }
-  dependencies {
-    classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
-  }
+	
+	repositories {
+		mavenCentral();
+		jcenter();
+		maven {
+			name = "forge"
+			url = "http://files.minecraftforge.net/maven"
+		}
+		maven {
+			name = "sonatype"
+			url = "https://oss.sonatype.org/content/repositories/snapshots/"
+		}
+		maven {
+			url "https://plugins.gradle.org/m2/"
+		}
+	}
+	
+	dependencies {
+		classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT';
+		classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.0';
+		//classpath 'gradle.plugin.net.minecrell:licenser:0.3';
+	}
+	
 }
 
 plugins {
-    id "com.github.hierynomus.license" version "0.13.1"
+	id "com.github.hierynomus.license" version "0.13.1"
 }
 
 apply plugin: 'java'
+//apply plugin: 'net.minecrell.licenser'
 apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'com.github.johnrengelman.shadow'
 
 group = "com.elytradev"
 archivesBaseName = "ThermionicsWorld"
@@ -32,9 +40,9 @@ version = "MC1.12.2_ver1.0"
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+def project_package='com.elytradev.thermionics.world';
+
 minecraft {
-	//version = '1.12.1-14.22.0.2446'
-	//mappings = 'snapshot_20170817'
 	version = '1.12.2-14.23.1.2559'
 	mappings = 'snapshot_20171202'
 
@@ -44,27 +52,65 @@ minecraft {
 	replace '@VERSION@', project.version
 }
 
+repositories {
+	ivy {
+		//endless.blue ivy repo. This repo may be somewhat fragile, consider rehosting files served from here.
+		name 'endless.blue dependency mirror'
+		//ivyPattern "https://endless.blue/files/ivy/[module]-[revision].xml"
+		artifactPattern "https://endless.blue/files/ivy/[module]-[revision].[ext]"
+	}
+}
+
+shadowJar {
+	classifier = "";
+	relocate "blue.endless.libnoise",  project_package + ".repackage.blue.endless.libnoise";
+	//relocate "com.elytradev.concrete", project_package + ".repackage.com.elytradev.concrete";
+	configurations = [project.configurations.shadow];
+}
+
+reobf {
+	shadowJar { mappingType = "SEARGE" }
+}
+
+tasks.build.dependsOn reobfShadowJar
+
+dependencies {
+	shadow group: "blue.endless", name: "LibnoiseJava", version: "0.0.1", classifier: "default";
+	//compile group: "blue.endless", name: "LibnoiseJava", version: "0.0.1", classifier: "sources";
+}
+
 processResources {
-  // this will ensure that this task is redone when the versions change.
-  inputs.property "version", project.version
-  inputs.property "mcversion", project.minecraft.version
+	// this will ensure that this task is redone when the versions change.
+	inputs.property "version", project.version
+	inputs.property "mcversion", project.minecraft.version
+	
+	// replace stuff in mcmod.info, nothing else
+	from(sourceSets.main.resources.srcDirs) {
+		include 'mcmod.info'
+		
+		// replace version and mcversion
+		expand 'version':project.version, 'mcversion':project.minecraft.version
+	}
 
-  // replace stuff in mcmod.info, nothing else
-  from(sourceSets.main.resources.srcDirs) {
-    include 'mcmod.info'
-
-    // replace version and mcversion
-    expand 'version':project.version, 'mcversion':project.minecraft.version
-  }
-
-  // copy everything else, thats not the mcmod.info
-  from(sourceSets.main.resources.srcDirs) {
-    exclude 'mcmod.info'
-    exclude '*.xcf' //Always exclude gimp source files.
-  }
+	// copy everything else, thats not the mcmod.info
+	from(sourceSets.main.resources.srcDirs) {
+		exclude 'mcmod.info'
+		exclude '*.xcf' //Always exclude gimp source files.
+	}
 }
 
 license {
+	//sourceSets = [project.sourceSets.main];
+	
+	//matching("**.java") {
+	//	header = project.file('LICENSE');
+		//style {
+		//	put("java", "JAVADOC");
+		//}
+	//}
+	
+	
+	
 	exclude "**/*.json";
 	exclude "**/*.png";
 	exclude "**/*.mcmeta";

@@ -23,9 +23,11 @@
  */
 package com.elytradev.thermionics.world.gen.biome;
 
+import com.elytradev.thermionics.world.block.BlockNorfairite;
 import com.elytradev.thermionics.world.block.TWBlocks;
 
 import net.minecraft.init.Blocks;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.registry.RegistryNamespaced;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
@@ -55,9 +57,9 @@ public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
 				.setTemperature(0.375f)
 				.setRainfall(0.25f)
 			)
-			.withSurfaceMaterial(TWBlocks.GEMROCK_PYRITE)
+			.withSurfaceMaterial(TWBlocks.NORFAIRITE_REEF.getDefaultState().withProperty(BlockNorfairite.COLOR, EnumDyeColor.PURPLE))
 			.withTerrainFillMaterial(TWBlocks.GEMROCK_ROSE_QUARTZ)
-			.withDensitySurfaceMaterial(TWBlocks.GEMROCK_PYRITE)
+			.withDensitySurfaceMaterial(TWBlocks.NORFAIRITE_REEF.getDefaultState().withProperty(BlockNorfairite.COLOR, EnumDyeColor.CYAN))
 			.withDensityCoreMaterial(Blocks.NETHERRACK)
 			.withWorldGenerator(new GeneratorNorfairiteBush())
 			.withTypes(BiomeDictionary.Type.NETHER)
@@ -85,7 +87,7 @@ public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
 			.withSurfaceMaterial(TWBlocks.GEMROCK_HEMATITE)
 			.withTerrainFillMaterial(Blocks.NETHERRACK)
 			.withDensitySurfaceMaterial(TWBlocks.GEMROCK_HEMATITE)
-			.withDensityCoreMaterial(Blocks.NETHERRACK)
+			.withDensityCoreMaterial(TWBlocks.GEMROCK_SODALITE)
 			.withTypes(BiomeDictionary.Type.NETHER)
 			);
 		

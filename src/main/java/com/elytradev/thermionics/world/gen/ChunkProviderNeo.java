@@ -230,51 +230,8 @@ public class ChunkProviderNeo implements IChunkGenerator {
 				abyte[zi*16+xi] = id;
 			}
 		}
-		//for (int i = 0; i < abyte.length; ++i) {
-		//	abyte[i] = (byte)Biome.REGISTRY.getIDForObject(Biomes.HELL);
-		//}
-		
-		
-		
-		
-		//None of the following things changed the fact that relighting takes up like 99% of world load time
-		//chunk.setLightPopulated(true);
-		//chunk.generateSkylightMap();
-		//chunk.resetRelightChecks();
 		
 		return chunk;
-
-
-
-		/* #### old NeoHellGen ####
-		//System.out.println("NeoHellGen: "+x+","+z);
-		this.random.setSeed(x * 341873128712L + z * 132897987541L);
-		Block[] ablock = new Block[16*16*256];
-		byte[] meta = new byte[ablock.length];
-		//BiomeGenBase[] abiomegenbase = this.worldObj.getWorldChunkManager()
-		//		.loadBlockGeneratorData((BiomeGenBase[]) null, x * 16, z * 16, 16, 16);
-
-		this.generateShape(x, z, ablock, meta);
-		//this.replaceBiomeBlocks(x, z, ablock, meta, abiomegenbase);
-		//this.genNetherBridge.func_151539_a(this, this.worldObj, x, z, ablock);
-		Chunk chunk = new Chunk(this.world, x, z);
-
-
-
-		byte[] abyte = chunk.getBiomeArray();
-
-		for (int k = 0; k < abyte.length; ++k) {
-			abyte[k] = (byte) Biome.getIdForBiome(Biomes.HELL);
-		}
-
-		chunk.generateSkylightMap();
-		//chunk.enqueueRelightChecks();
-		//chunk.generateHeightMap();
-		chunk.resetRelightChecks();
-		//chunk.isTerrainPopulated = false;
-
-
-		return chunk;*/
 	}
 
 	@Override

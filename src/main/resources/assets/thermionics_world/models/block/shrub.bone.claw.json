@@ -1,4 +1,5 @@
 {
+"parent": "block/block",
 "textures": {"1726393316": "minecraft:blocks/bone_block_side"},
 "elements": [
 { "from": [6,0,4], "to": [12,0,6], "faces": { "down":  { "uv": [6,12,12,10], "texture": "#1726393316", "cullface": "down" } } },

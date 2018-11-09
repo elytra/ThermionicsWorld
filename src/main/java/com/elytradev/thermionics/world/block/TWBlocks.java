@@ -46,29 +46,29 @@ public class TWBlocks {
 	public static BlockFluidSimple FLUID_PAIN;
 	public static BlockFluidSimple FLUID_SOYLENT;
 
-	public static BlockGemrock     GEMROCK_MAGNESITE;
-	public static BlockGemrock     GEMROCK_GARNET;
-	public static BlockGemrock     GEMROCK_TOURMALINE;
-	public static BlockGemrock     GEMROCK_SAPPHIRE;
-	public static BlockGemrock     GEMROCK_HELIODOR;
-	public static BlockGemrock     GEMROCK_PERIDOT;
-	public static BlockGemrock     GEMROCK_ROSE_QUARTZ;
-	public static BlockGemrock     GEMROCK_HEMATITE;
-	public static BlockGemrock     GEMROCK_OPAL;
-	public static BlockGemrock     GEMROCK_CHRYSOPRASE;
-	public static BlockGemrock     GEMROCK_AMETHYST;
-	public static BlockGemrock     GEMROCK_SODALITE;
-	public static BlockGemrock     GEMROCK_PYRITE;
-	public static BlockGemrock     GEMROCK_EMERALD;
-	public static BlockGemrock     GEMROCK_SPINEL;
-	public static BlockGemrock     GEMROCK_CASSITERITE;
+	public static BlockGemrock        GEMROCK_MAGNESITE;
+	public static BlockGemrock        GEMROCK_GARNET;
+	public static BlockGemrock        GEMROCK_TOURMALINE;
+	public static BlockGemrock        GEMROCK_SAPPHIRE;
+	public static BlockGemrock        GEMROCK_HELIODOR;
+	public static BlockGemrock        GEMROCK_PERIDOT;
+	public static BlockGemrock        GEMROCK_ROSE_QUARTZ;
+	public static BlockGemrock        GEMROCK_HEMATITE;
+	public static BlockGemrock        GEMROCK_OPAL;
+	public static BlockGemrock        GEMROCK_CHRYSOPRASE;
+	public static BlockGemrock        GEMROCK_AMETHYST;
+	public static BlockGemrock        GEMROCK_SODALITE;
+	public static BlockGemrock        GEMROCK_PYRITE;
+	public static BlockGemrock        GEMROCK_EMERALD;
+	public static BlockGemrock        GEMROCK_SPINEL;
+	public static BlockGemrock        GEMROCK_CASSITERITE;
 	
-	public static BlockMeat        MEAT_EDIBLE;
-	public static BlockMeat        MEAT_FLESH;
+	public static BlockMeat           MEAT_EDIBLE;
+	public static BlockMeat           MEAT_FLESH;
 	
-	public static BlockShrubBone   SHRUB_BONE;
-	public static BlockNorfairite  NORFAIRITE_CLEAR;
-	
+	public static BlockShrubBone      SHRUB_BONE;
+	public static BlockNorfairite     NORFAIRITE_CLEAR;
+	public static BlockReefNorfairite NORFAIRITE_REEF;
 	
 	
 	@SubscribeEvent
@@ -142,12 +142,14 @@ public class TWBlocks {
 				GEMROCK_CASSITERITE );
 		
 		MEAT_EDIBLE = block(r, new BlockMeatEdible());
+		MEAT_FLESH  = block(r, new BlockMeatFlesh());
 		
 		//What are you saying? Bones aren't shrubs?!? Nonsense!
 		SHRUB_BONE = block(r, new BlockShrubBone());
 		
 		//Bubble mountain ain't gonna attack itself.
 		NORFAIRITE_CLEAR = block(r, new BlockNorfairite("clear"));
+		NORFAIRITE_REEF  = block(r, new BlockReefNorfairite());
 		
 		//We know enough to make these registrations now!
 		BiomeRegistry.NEO_HELL.init();

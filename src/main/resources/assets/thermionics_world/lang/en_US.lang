@@ -13,6 +13,8 @@ tile.thermionics_world.basalt.name=Basalt
 tile.thermionics_world.basalt.0.name=Basalt
 tile.thermionics_world.dust.name=Dust
 tile.thermionics_world.norfairite.clear.name=%1$s Clear Norfairite
+tile.thermionics_world.norfairite.reef.name=%1$s Reef Norfairite
+tile.thermionics_world.shrub.bone.name=Unearthed Remains
 
 #Various Kinds of Meat
 tile.thermionics_world.meat.edible.pork.raw.name=Raw Pork Block
@@ -33,8 +35,12 @@ tile.thermionics_world.meat.edible.rabbit.cooked.name=Cooked Rabbit Block
 
 #Less-Appetizing Kinds of Meat
 
+tile.thermionics_world.meat.flesh.rotten_flesh.name=Rotten Flesh Block
+tile.thermionics_world.meat.flesh.clownfish.name=Clownfish Block
+tile.thermionics_world.meat.flesh.pufferfish.name=Pufferfish Block
+
+
 tile.thermionics_world.meat.flesh.juicy.name=Juicy Flesh Block
-tile.thermionics_world.meat.flesh.rotten.name=Rotten Flesh Block
 tile.thermionics_world.meat.flesh.left.name=Left Beef Block
 
 #Gemrock Varieties
