@@ -1,6 +1,16 @@
 #CreativeTabs
 itemGroup.thermionics_world=Thermionics World
 
+#Biomes
+biome.thermionics.bridges=Bridges
+biome.thermionics.strata=Bubble Mountain
+biome.thermionics.cold=Cold
+biome.thermionics.barad_dur=Barad-dûr
+biome.thermionics.heartsblood=Heartsblood
+biome.thermionics.sulfur=Sulfur Vents
+biome.thermionics.nocturne=Nocturne
+biome.thermionics.doom=Doom
+
 #Items
 thermionics_world.shard.copper.name=Chalcocyte Shard
 thermionics_world.shard.lead.name=Galena Shard

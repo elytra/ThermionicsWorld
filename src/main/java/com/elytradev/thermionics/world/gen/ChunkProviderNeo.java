@@ -58,6 +58,12 @@ import com.elytradev.thermionics.world.gen.biome.BiomeRegistry;
 import com.elytradev.thermionics.world.gen.biome.NeoBiome;
 import com.google.common.collect.ImmutableList;
 
+import blue.endless.libnoise.generator.Module;
+import blue.endless.libnoise.generator.Perlin;
+import blue.endless.libnoise.generator.RidgedMulti;
+import blue.endless.libnoise.modifier.Blend;
+import blue.endless.libnoise.modifier.Multiply;
+import blue.endless.libnoise.modifier.ScaleBias;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EnumCreatureType;
@@ -100,14 +106,16 @@ public class ChunkProviderNeo implements IChunkGenerator {
 	protected World world;
 	protected long seed;
 	protected Random random;
+	
+	//Old noise primitives
+	//protected ScaledNoiseField noiseTerrainBase;
+	//protected ScaledNoiseField noiseTerrainFine;
+	//protected ScaledNoiseVolume noiseVolumeBase;
+	//protected ScaledNoiseVolume noiseVolumeFine;
+	
+	//New noise primitives
+	protected Module volumeNoise;
 
-	protected ScaledNoiseField noiseTerrainBase;
-	protected ScaledNoiseField noiseTerrainFine;
-	
-	protected ScaledNoiseVolume noiseVolumeBase;
-	protected ScaledNoiseVolume noiseVolumeFine;
-	
-	//protected VoronoiClusterField<NeoBiome> biomeSelector;
 
 	private final NeoHellGenerators.Glowstone lightGemGen = new NeoHellGenerators.Glowstone();
 	private final WorldGenFire fireFeature = new WorldGenFire();
@@ -118,10 +126,7 @@ public class ChunkProviderNeo implements IChunkGenerator {
 	private final WorldGenerator quartzGen = new WorldGenMinable(Blocks.QUARTZ_ORE.getDefaultState(), 14, (it)->it.isFullBlock());
 	private final WorldGenerator magmaGen = new WorldGenMinable(Blocks.MAGMA.getDefaultState(), 33, (it)->it.isFullBlock());
 	private final NeoHellGenerators.LavaTrap lavaTrapGen = new NeoHellGenerators.LavaTrap(TWBlocks.FLUID_PAIN.getDefaultState());
-	
-	//Old ChunkProviderHell stuff
-	//double[] buffer;
-	
+
 	
 	//Benchmarking. Do you even bench, bro?
 	//int timedChunks = 0;
@@ -137,11 +142,22 @@ public class ChunkProviderNeo implements IChunkGenerator {
 		
 		
 
-		this.noiseTerrainBase = new ScaledNoiseField(random.nextLong(), 64f);
-		this.noiseTerrainFine = new ScaledNoiseField(random.nextLong(), 32f);
-		this.noiseVolumeBase = new ScaledNoiseVolume(random.nextLong(), 40f);
-		this.noiseVolumeFine = new ScaledNoiseVolume(random.nextLong(), 20f);
+		//this.noiseTerrainBase = new ScaledNoiseField(random.nextLong(), 64f);
+		//this.noiseTerrainFine = new ScaledNoiseField(random.nextLong(), 32f);
+		//this.noiseVolumeBase = new ScaledNoiseVolume(random.nextLong(), 40f);
+		//this.noiseVolumeFine = new ScaledNoiseVolume(random.nextLong(), 20f);
 		//this.biomeSelector = new VoronoiClusterField<NeoBiome>(random.nextLong(), 16*9);
+		
+		int intSeed = (int)seed ^ ((int)(seed>>32));
+		
+		RidgedMulti mountains = new RidgedMulti().setFrequency(1/256.0).setOctaveCount(6).setSeed(intSeed);
+		Module      plains    = new ScaleBias().setSources(
+		                        new Perlin()     .setFrequency(1/128.0).setOctaveCount(2).setSeed(intSeed+1)
+		                        ).setScale(0.25).setBias(-0.70);
+		Perlin      mask      = new Perlin()     .setFrequency(1/256.0).setOctaveCount(3).setSeed(intSeed+2);
+		Blend       blend     = new Blend().setSources(mountains, plains, mask);
+		
+		volumeNoise = blend;
 
 		PAIN = TWBlocks.FLUID_PAIN.getDefaultState().withProperty(BlockFluidBase.LEVEL, 3);
 		
@@ -153,59 +169,61 @@ public class ChunkProviderNeo implements IChunkGenerator {
 				int blockX = chunkX*16+x;
 				int blockZ = chunkZ*16+z;
 				
-				float terrainHeightBase = 128f;
-				float densityScale = 1.0f;
 				Function<Integer, IBlockState> terrainMaterialFunction = (it)->Blocks.NETHERRACK.getDefaultState();
 				Function<Float, IBlockState> densityMaterialFunction = (it)->Blocks.NETHERRACK.getDefaultState();
 				
 				Biome biomeVanilla = world.getBiome(new BlockPos(blockX, 0, blockZ));
-				if (biomeVanilla instanceof NeoBiome) {
+				 if (biomeVanilla instanceof NeoBiome) {
 					NeoBiome biome = (NeoBiome)biomeVanilla;
 					
-					terrainHeightBase = biome.getBaseHeight();
-					densityScale = biome.getDensity();
 					terrainMaterialFunction = biome::getTerrainMaterial;
 					densityMaterialFunction = biome::getDensityMaterial;
 				}
 				
-				float terrainHeightHigh = terrainHeightBase / 4;
-				float terrainHeightLow = terrainHeightBase - terrainHeightHigh;
-
 				float columnHeight = 16;
-
-				columnHeight += noiseTerrainBase.getFiltered(blockX, blockZ)*terrainHeightLow;
-				columnHeight += noiseTerrainFine.getFiltered(blockX, blockZ)*terrainHeightHigh;
-				//int columnHeightDuplicate = (int)columnHeight;
 				
-				//columnHeight = SEA_LEVEL + 4; //TODO: REMOVE DEBUG HEIGHT
-
+				
+				//We sample from y=-512.0 because that's out-of-bounds and sufficiently decorrelated from the volumetric
+				//nose we sample later
+				columnHeight += (volumeNoise.getValue(blockX, -512.0, blockZ)/2+0.5) * 128;
+				
 				for(int y=0; y<255; y++) {
-					
+					//float density = 1.5f;
+					double density = volumeNoise.getValue(blockX, y, blockZ)/2+0.5;
+					/*
 					float density = noiseVolumeBase.get(blockX, y, blockZ);
-					density*= (densityScale*0.75f);
-					density = density + (noiseVolumeFine.get(blockX, y, blockZ)-0.5f)*(densityScale*0.25f);
+					density*= 0.75f;
+					density = density + (noiseVolumeFine.get(blockX, y, blockZ)-0.5f)*0.25f;
 					if (y>DENSITY_SCALING_START) {
 						float densityProgress = (y - DENSITY_SCALING_START) / (float)DENSITY_SCALING_LENGTH;
 						float scalingFactor = (float)Math.cos(densityProgress*Math.PI/2f);
 						density *= scalingFactor;
 					}
 					if (density>1.0f) density=1.0f;
-
+					*/
 					IBlockState cur = AIR;
 					if (y==0) {
 						cur = BEDROCK;
 					} else if (y<=(int)columnHeight) {
-						if (density>0.1f) {
+						if (density>0.1) {
 							
 							cur = terrainMaterialFunction.apply((int)columnHeight-y);
 						} else { //Extremely low densities carve pits and caves into terrain
 							if (y<SEA_LEVEL) cur=PAIN;
 						}
-						//cur = NETHERRACK;
 					} else {
-						if (density>0.5f) {
-							cur = densityMaterialFunction.apply((density-0.5f)*2);
-							//cur=STONE;
+						//scale density
+						density *= 0.95;
+						if (y>DENSITY_SCALING_START) {
+							float densityProgress = (y - DENSITY_SCALING_START) / (float)DENSITY_SCALING_LENGTH;
+							float scalingFactor = (float)Math.cos(densityProgress*Math.PI/2f);
+							density *= scalingFactor;
+						}
+						if (density>1.0f) density=1.0f;
+						
+						
+						if (density>0.5) {
+							cur = densityMaterialFunction.apply(((float)density-0.5f)*2);
 						} else {
 							if (y<SEA_LEVEL) cur=PAIN;
 						}
@@ -221,8 +239,10 @@ public class ChunkProviderNeo implements IChunkGenerator {
 
 	@Override
 	public Chunk generateChunk(int x, int z) {
+		Benchmark genBench = new Benchmark();
+		genBench.startFrame();
 		
-		this.random.setSeed((long)x * 341873128712L + (long)z * 132897987541L);
+		//this.random.setSeed((long)x * 341873128712L + (long)z * 132897987541L);
 		ChunkPrimer chunkprimer = new ChunkPrimer();
 		generateShape(x,z,chunkprimer);
 		//this.prepareHeights(x, z, chunkprimer);
@@ -254,6 +274,9 @@ public class ChunkProviderNeo implements IChunkGenerator {
 				abyte[zi*16+xi] = id;
 			}
 		}
+		
+		genBench.endFrame();
+		System.out.println("GenBench frame:" +genBench.getTotalTime());
 		
 		return chunk;
 	}
@@ -357,7 +380,8 @@ public class ChunkProviderNeo implements IChunkGenerator {
 
 		BlockFalling.fallInstantly = false;
 		popBench.endFrame();
-		//if (popBench.getTotalTime()>200) popBench.printDebug(); //we're done doing comprehensive profiling, but alert us to issues bigger than 200msec
+		//System.out.println("GenTime: "+popBench.getTotalTime());
+		if (popBench.getTotalTime()>200) popBench.printDebug(); //we're done doing comprehensive profiling, but alert us to issues bigger than 200msec
 		
 	}
 

@@ -71,7 +71,7 @@ public class BiomeProviderNeo extends BiomeProvider {
 		
 		biomeSelector = new VoronoiClusterField<Biome>(info.getSeed(), 16*9);
 		for(NeoBiome biome : BiomeRegistry.NEO_HELL) {
-			biomeSelector.registerCell(biome, biome.getDefaultTemperature(), biome.getRainfall());
+			biomeSelector.registerCell(biome);
 		}
 	}
 	

@@ -53,20 +53,31 @@ import com.elytradev.thermionics.world.block.TWBlocks;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.registry.RegistryNamespaced;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+@SuppressWarnings("deprecation")
 public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
 	public static BiomeRegistry NEO_HELL = new BiomeRegistry();
+	
+	/* Best compromise I can make: Vanilla keeps the en_US biome name in BiomeProperties, instead of a localization
+	 * key. This is because vanilla *only* uses it for F3 debug output. Mods, however, may use it for many more things,
+	 * so regardless of whether we're client- or server-side we want to provide a best-effort localized string. On the
+	 * server that'll wind up being en_US because for some stupid reason the server always runs in en_US, but we'll get
+	 * properly-localized names on the client which will be stuffed into the F3 menu if it's up and untampered-with.
+	 */
 	
 	public void init() {
 		NEO_HELL.register(0,
 			new NeoBiome("bridges", new Biome.BiomeProperties("bridges")
 				.setBaseHeight(128f)
 				.setTemperature(0.25f)
-				.setRainfall(0.25f)
+				.setRainfall(0)
+				.setRainDisabled()
+				//.setRainfall(0.25f)
 			)
 			.withSurfaceMaterial(Blocks.NETHERRACK)
 			.withTerrainFillMaterial(Blocks.NETHERRACK)
@@ -76,10 +87,12 @@ public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
 			);
 		
 		NEO_HELL.register(1,
-			new NeoBiome("strata", new Biome.BiomeProperties("strata")
+			new NeoBiome("strata", new Biome.BiomeProperties(I18n.translateToLocal("biome.thermionics.strata"))
 				.setBaseHeight(128f)
 				.setTemperature(0.375f)
-				.setRainfall(0.25f)
+				.setRainfall(0)
+				.setRainDisabled()
+				//.setRainfall(0.25f)
 			)
 			.withSurfaceMaterial(TWBlocks.NORFAIRITE_REEF.getDefaultState().withProperty(BlockNorfairite.COLOR, EnumDyeColor.PURPLE))
 			.withTerrainFillMaterial(TWBlocks.GEMROCK_ROSE_QUARTZ)
@@ -90,10 +103,12 @@ public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
 			);
 		
 		NEO_HELL.register(2,
-			new NeoBiome("cold", new Biome.BiomeProperties("cold")
+			new NeoBiome("cold", new Biome.BiomeProperties(I18n.translateToLocal("biome.thermionics.cold"))
 				.setBaseHeight(128f)
 				.setTemperature(0.625f)
-				.setRainfall(0.25f)
+				.setRainfall(0)
+				.setRainDisabled()
+				//.setRainfall(0.25f)
 			)
 			.withSurfaceMaterial(TWBlocks.GEMROCK_MAGNESITE)
 			.withTerrainFillMaterial(TWBlocks.GEMROCK_SAPPHIRE)
@@ -103,10 +118,12 @@ public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
 			);
 		
 		NEO_HELL.register(3,
-			new NeoBiome("barad_dur", new Biome.BiomeProperties("barad_dur")
+			new NeoBiome("barad_dur", new Biome.BiomeProperties(I18n.translateToLocal("biome.thermionics.barad_dur"))
 				.setBaseHeight(128f)
 				.setTemperature(0.75f)
-				.setRainfall(0.25f)
+				.setRainfall(0)
+				.setRainDisabled()
+				//.setRainfall(0.25f)
 			)
 			.withSurfaceMaterial(TWBlocks.GEMROCK_HEMATITE)
 			.withTerrainFillMaterial(Blocks.NETHERRACK)
@@ -116,10 +133,12 @@ public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
 			);
 		
 		NEO_HELL.register(4,
-			new NeoBiome("heartsblood", new Biome.BiomeProperties("heartsblood")
+			new NeoBiome("heartsblood", new Biome.BiomeProperties(I18n.translateToLocal("biome.thermionics.heartsblood"))
 				.setBaseHeight(128f)
 				.setTemperature(0.25f)
-				.setRainfall(0.5f)
+				.setRainfall(0)
+				.setRainDisabled()
+				//.setRainfall(0.5f)
 			)
 			.withSurfaceMaterial(TWBlocks.GEMROCK_GARNET)
 			.withTerrainFillMaterial(TWBlocks.GEMROCK_TOURMALINE)
@@ -131,10 +150,12 @@ public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
 			);
 
 		NEO_HELL.register(5,
-			new NeoBiome("sulfur", new Biome.BiomeProperties("sulfur")
+			new NeoBiome("sulfur", new Biome.BiomeProperties(I18n.translateToLocal("biome.thermionics.sulfur"))
 				.setBaseHeight(128f)
 				.setTemperature(0.375f)
-				.setRainfall(0.5f)
+				.setRainfall(0)
+				.setRainDisabled()
+				//.setRainfall(0.5f)
 			)
 			.withSurfaceMaterial(TWBlocks.GEMROCK_HELIODOR)
 			.withTerrainFillMaterial(TWBlocks.GEMROCK_PERIDOT)
@@ -145,10 +166,12 @@ public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
 			);
 		
 		NEO_HELL.register(6,
-			new NeoBiome("nocturne", new Biome.BiomeProperties("nocturne")
+			new NeoBiome("nocturne", new Biome.BiomeProperties(I18n.translateToLocal("biome.thermionics.nocturne"))
 				.setBaseHeight(128f)
 				.setTemperature(0.625f)
-				.setRainfall(0.5f)
+				.setRainfall(0)
+				.setRainDisabled()
+				//.setRainfall(0.5f)
 			)
 			.withSurfaceMaterial(TWBlocks.GEMROCK_CASSITERITE)
 			.withTerrainFillMaterial(TWBlocks.GEMROCK_CHRYSOPRASE)
@@ -159,10 +182,12 @@ public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
 			);
 		
 		NEO_HELL.register(7,
-			new NeoBiome("doom", new Biome.BiomeProperties("doom")
+			new NeoBiome("doom", new Biome.BiomeProperties(I18n.translateToLocal("biome.thermionics.doom"))
 				.setBaseHeight(128f)
 				.setTemperature(0.75f)
-				.setRainfall(0.5f)
+				.setRainfall(0)
+				.setRainDisabled()
+				//.setRainfall(0.5f)
 			)
 			.withSurfaceMaterial(TWBlocks.GEMROCK_SPINEL)
 			.withTerrainFillMaterial(TWBlocks.GEMROCK_PYRITE)
@@ -185,5 +210,9 @@ public class BiomeRegistry extends RegistryNamespaced<String, NeoBiome> {
 				BiomeDictionary.addTypes(it, type);
 			}
 		});
+	}
+	
+	public int size() {
+		return underlyingIntegerMap.size();
 	}
 }

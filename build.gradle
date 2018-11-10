@@ -53,11 +53,8 @@ minecraft {
 }
 
 repositories {
-	ivy {
-		//endless.blue ivy repo. This repo may be somewhat fragile, consider rehosting files served from here.
-		name 'endless.blue dependency mirror'
-		//ivyPattern "https://endless.blue/files/ivy/[module]-[revision].xml"
-		artifactPattern "https://endless.blue/files/ivy/[module]-[revision].[ext]"
+	maven {
+		url = 'https://repo.elytradev.com'
 	}
 }
 
@@ -75,8 +72,8 @@ reobf {
 tasks.build.dependsOn reobfShadowJar
 
 dependencies {
-	shadow group: "blue.endless", name: "LibnoiseJava", version: "0.0.1", classifier: "default";
-	//compile group: "blue.endless", name: "LibnoiseJava", version: "0.0.1", classifier: "sources";
+	compile group: "blue.endless.libnoise", name: "LibnoiseJava", version: "0.0.1-12";
+	shadow group: "blue.endless.libnoise", name: "LibnoiseJava", version: "0.0.1-12";
 }
 
 processResources {

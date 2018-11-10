@@ -76,7 +76,7 @@ public class WorldProviderNeoHell extends WorldProviderHell {
 	
 	
 	@Override
-	public DimensionType getDimensionType() { 
+	public DimensionType getDimensionType() {
 		return DimensionType.getById(-1);
 	}
 	
@@ -128,8 +128,8 @@ public class WorldProviderNeoHell extends WorldProviderHell {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean doesXZShowFog(int x, int z) {
-		//return false;
-		return true;
+		return false;
+		//return true;
 	}
 
 	@Override

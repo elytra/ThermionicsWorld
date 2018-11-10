@@ -56,7 +56,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.WorldGenerator;
@@ -66,10 +65,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class NeoBiome extends Biome {
 	public static final IBlockState BEDROCK = Blocks.BEDROCK.getDefaultState();
-	
-	//private final String name;
-	//private final int id;
-	
 	private String name;
 	
 	float terrainHeight = 128f;
