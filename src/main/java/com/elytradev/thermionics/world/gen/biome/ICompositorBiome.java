@@ -22,8 +22,19 @@
  * SOFTWARE.
  */
 
-package com.elytradev.thermionics.world;
+package com.elytradev.thermionics.world.gen.biome;
 
-public class Proxy {
-	public void preInit() {}
+import net.minecraft.world.World;
+
+/**
+ * Distinguishing non-Minecraft features of a biome in order for it to work inside the compositor
+ */
+public interface ICompositorBiome {
+	public String getName();
+	public int getColor();
+	public double getDensityScale();
+	public IBiomeChunkGenerator createChunkGenerator(World world);
+	
+	public int getA();
+	public int getB();
 }

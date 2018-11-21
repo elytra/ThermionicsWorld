@@ -22,32 +22,8 @@
  * SOFTWARE.
  */
 
-/**
- * MIT License
- *
- * Copyright (c) 2017 Isaac Ellingson (Falkreon) and contributors
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
 package com.elytradev.thermionics.world;
 
-import java.util.ArrayList;
 import java.util.function.Consumer;
 
 import com.elytradev.thermionics.world.block.BlockGemrock;
@@ -56,14 +32,12 @@ import com.elytradev.thermionics.world.block.BlockMeatEdible;
 import com.elytradev.thermionics.world.block.EnumEdibleMeat;
 import com.elytradev.thermionics.world.block.TWBlocks;
 import com.elytradev.thermionics.world.gen.WorldProviderNeoHell;
-import com.elytradev.thermionics.world.gen.biome.BiomeRegistry;
-import com.elytradev.thermionics.world.gen.biome.NeoBiome;
+import com.elytradev.thermionics.world.gen.biome.BiomeFamily;
 import com.elytradev.thermionics.world.item.TWItems;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockColored;
 import net.minecraft.block.SoundType;
-import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -76,11 +50,8 @@ import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldProvider;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
@@ -93,8 +64,6 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
@@ -178,7 +147,7 @@ public class ThermionicsWorld {
 		MinecraftForge.EVENT_BUS.register(proxy);
 		MinecraftForge.EVENT_BUS.register(TWBlocks.class);
 		MinecraftForge.EVENT_BUS.register(TWItems.class);
-		MinecraftForge.EVENT_BUS.register(BiomeRegistry.class);
+		MinecraftForge.EVENT_BUS.register(BiomeFamily.class);
 	}
 	
 	@SubscribeEvent
@@ -285,36 +254,6 @@ public class ThermionicsWorld {
 		ShapelessOreRecipe recipe = new ShapelessOreRecipe(new ResourceLocation("thermionics_world",group), result, ingredient);
 		recipe.setRegistryName("thermionics_world", ingredient.getItem().getRegistryName().getResourcePath()+"."+ingredient.getMetadata()+"_to_"+result.getUnlocalizedName()+"."+result.getMetadata());
 		return recipe;
-	}
-	
-	/**
-	 * When possible, presents corrected biome information in the F3 overlay for Neo-Hell
-	 * @param event
-	 */
-	@SideOnly(Side.CLIENT)
-	@SubscribeEvent
-	public void renderGameOverlayEvent(RenderGameOverlayEvent.Text event) {
-		if (!Minecraft.getMinecraft().gameSettings.showDebugInfo) return;
-		
-		if (Minecraft.getMinecraft().world.provider.getDimension()!=-1) return;
-		
-		
-		ArrayList<String> left = event.getLeft();
-		final int LINE_BIOME = 11;
-		if (left.size()<=LINE_BIOME || !left.get(LINE_BIOME).startsWith("Biome:")) return; //Someone's already tampered
-
-		
-		String biomeName = "MEMES(NULL)";
-		BlockPos pos = Minecraft.getMinecraft().player.getPosition();
-		Chunk chunk = Minecraft.getMinecraft().world.getChunkFromBlockCoords(pos);
-		byte[] biomeArray = chunk.getBiomeArray();
-		int x = pos.getX() & 15;
-		int z = pos.getZ() & 15;
-		int biomeId = biomeArray[z*16+x];
-		NeoBiome biome = BiomeRegistry.NEO_HELL.getObjectById(biomeId);
-		if (biome!=null) biomeName = biome.getBiomeName();
-		
-		left.set(LINE_BIOME, "Biome: "+biomeId+" ("+biomeName+")");
 	}
 	
 	@SubscribeEvent

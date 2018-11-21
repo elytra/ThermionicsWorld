@@ -43,9 +43,12 @@ targetCompatibility = 1.8
 def project_package='com.elytradev.thermionics.world';
 
 minecraft {
-	version = '1.12.2-14.23.1.2559'
-	mappings = 'snapshot_20171202'
-
+	//version = '1.12.2-14.23.1.2559'
+	//mappings = 'snapshot_20171202'
+	
+	version = "1.12.2-14.23.3.2661";
+	mappings = "snapshot_20180413";
+	
 	runDir = "minecraft"
 
 	replaceIn 'src/main/java/com/elytradev/thermionics/world/ThermionicsWorld.java'
@@ -72,8 +75,8 @@ reobf {
 tasks.build.dependsOn reobfShadowJar
 
 dependencies {
-	compile group: "blue.endless.libnoise", name: "LibnoiseJava", version: "0.0.1-12";
-	shadow group: "blue.endless.libnoise", name: "LibnoiseJava", version: "0.0.1-12";
+	compile group: "blue.endless.libnoise", name: "LibnoiseJava", version: "0.0.1-15";
+	shadow group: "blue.endless.libnoise", name: "LibnoiseJava", version: "0.0.1-15";
 }
 
 processResources {

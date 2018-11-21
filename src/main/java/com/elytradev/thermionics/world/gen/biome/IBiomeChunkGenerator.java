@@ -22,8 +22,14 @@
  * SOFTWARE.
  */
 
-package com.elytradev.thermionics.world;
+package com.elytradev.thermionics.world.gen.biome;
 
-public class Proxy {
-	public void preInit() {}
+/**
+ * Potentially seed-specific or world-specific parts of A compositor-biome's chunk generation. Can be used outside
+ * Minecraft.
+ */
+public interface IBiomeChunkGenerator {
+	/** Get the height value, as an offset from sea level in meters. Positive numbers are up. */
+	public double getHeightValue(int x, int z);
+	public double getDensityValue(double x, double y, double z);
 }

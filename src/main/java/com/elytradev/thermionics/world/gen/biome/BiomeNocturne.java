@@ -22,8 +22,15 @@
  * SOFTWARE.
  */
 
-package com.elytradev.thermionics.world;
+package com.elytradev.thermionics.world.gen.biome;
 
-public class Proxy {
-	public void preInit() {}
+import net.minecraft.util.text.translation.I18n;
+
+@SuppressWarnings("deprecation")
+public class BiomeNocturne extends NeoBiome {
+
+	public BiomeNocturne() {
+		super("nocturne", new BiomeProperties(I18n.translateToLocal("biome.thermionics.nocturne")));
+	}
+
 }

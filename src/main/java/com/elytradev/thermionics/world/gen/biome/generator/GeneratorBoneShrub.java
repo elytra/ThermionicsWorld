@@ -45,7 +45,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.elytradev.thermionics.world.gen.biome;
+package com.elytradev.thermionics.world.gen.biome.generator;
 
 import java.util.Random;
 

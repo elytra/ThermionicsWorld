@@ -22,40 +22,37 @@
  * SOFTWARE.
  */
 
-package com.elytradev.thermionics.world.item;
+package com.elytradev.thermionics.world.gen.biome;
 
-import net.minecraft.block.Block;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
+import net.minecraft.entity.monster.EntityEnderman;
+import net.minecraft.entity.monster.EntityGhast;
+import net.minecraft.entity.monster.EntityMagmaCube;
+import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.util.text.translation.I18n;
+import net.minecraft.world.biome.Biome;
 
 @SuppressWarnings("deprecation")
-public class ItemBlockGemrock extends ItemBlock {
+public class HellCompositorBiome extends CompositorBiome {
 
-	public ItemBlockGemrock(Block block) {
-		super(block);
-		this.setUnlocalizedName(block.getUnlocalizedName());
-		this.setRegistryName(block.getRegistryName());
-		this.hasSubtypes = true;
-	}
-
-	@Override
-	public String getItemStackDisplayName(ItemStack stack) {
-		String localizedRockName = I18n.translateToLocal(block.getUnlocalizedName()+".name");
-		return I18n.translateToLocalFormatted("thermionics_world.brickvariety."+stack.getItemDamage(), localizedRockName);
-	}
-
-	@Override
-	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-		for(int i=0; i<5; i++) {
-			items.add(new ItemStack(this,1,i)); //TODO: Add more varieties as textures are filled in
-		}
-	}
-
-	@Override
-	public int getMetadata(int damage) {
-		return damage;
+	public HellCompositorBiome(String id) {
+		super(id,
+				new BiomeProperties(I18n.translateToLocal("biome.thermionics."+id))
+					.setBaseHeight(128)
+					.setHeightVariation(128)
+					.setRainDisabled()
+					.setTemperature(1.0f)
+					.setWaterColor(0xFF_966ff)
+					.setRainfall(0)
+				)
+		;
+		
+		this.spawnableMonsterList.clear();
+		this.spawnableCreatureList.clear();
+		this.spawnableWaterCreatureList.clear();
+		this.spawnableCaveCreatureList.clear();
+		this.spawnableMonsterList.add(new Biome.SpawnListEntry(EntityGhast.class, 50, 4, 4));
+		this.spawnableMonsterList.add(new Biome.SpawnListEntry(EntityPigZombie.class, 100, 4, 4));
+		this.spawnableMonsterList.add(new Biome.SpawnListEntry(EntityMagmaCube.class, 2, 4, 4));
+		this.spawnableMonsterList.add(new Biome.SpawnListEntry(EntityEnderman.class, 1, 4, 4));
 	}
 }

@@ -22,30 +22,6 @@
  * SOFTWARE.
  */
 
-/**
- * MIT License
- *
- * Copyright (c) 2017 Isaac Ellingson (Falkreon) and contributors
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
-
 package com.elytradev.thermionics.world.gen;
 
 import java.util.List;
@@ -54,11 +30,15 @@ import java.util.function.Function;
 
 import com.elytradev.thermionics.world.Benchmark;
 import com.elytradev.thermionics.world.block.TWBlocks;
-import com.elytradev.thermionics.world.gen.biome.BiomeRegistry;
+import com.elytradev.thermionics.world.gen.biome.ICompositorBiome;
+import com.elytradev.thermionics.world.gen.biome.BiomeMap;
+import com.elytradev.thermionics.world.gen.biome.BiomeModule;
+import com.elytradev.thermionics.world.gen.biome.BiomeFamily;
+import com.elytradev.thermionics.world.gen.biome.CompositorBiome;
 import com.elytradev.thermionics.world.gen.biome.NeoBiome;
 import com.google.common.collect.ImmutableList;
 
-import blue.endless.libnoise.generator.Module;
+import blue.endless.libnoise.Module;
 import blue.endless.libnoise.generator.Perlin;
 import blue.endless.libnoise.generator.RidgedMulti;
 import blue.endless.libnoise.modifier.Blend;
@@ -73,6 +53,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeProvider;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.gen.IChunkGenerator;
@@ -83,7 +64,7 @@ import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraft.world.gen.structure.MapGenNetherBridge;
 import net.minecraftforge.fluids.BlockFluidBase;
 
-public class ChunkProviderNeo implements IChunkGenerator {
+public class ChunkProviderCompositor implements IChunkGenerator {
 	public static final int HEIGHT = 256;
 	public static final int SEA_LEVEL = 48;
 	public static final int DENSITY_SCALING_START = 200;
@@ -114,8 +95,9 @@ public class ChunkProviderNeo implements IChunkGenerator {
 	//protected ScaledNoiseVolume noiseVolumeFine;
 	
 	//New noise primitives
-	protected Module volumeNoise;
-
+	protected BiomeModule biomeModule;
+	//protected Module volumeNoise;
+	
 
 	private final NeoHellGenerators.Glowstone lightGemGen = new NeoHellGenerators.Glowstone();
 	private final WorldGenFire fireFeature = new WorldGenFire();
@@ -135,12 +117,20 @@ public class ChunkProviderNeo implements IChunkGenerator {
 	//long totalTimePopulate = 0L;
 	//Benchmark popBench = new Benchmark();
 
-	public ChunkProviderNeo(World world, long seed) {
+	public ChunkProviderCompositor(World world, long seed, BiomeProviderNeo biomeProvider) {
 		this.world = world;
 		this.seed = seed;
 		this.random = new Random(seed);
 		
+		//int intSeed = (int)seed; intSeed ^= (int)(seed >> 32);
 		
+		//Perlin biomeA = new Perlin().setSeed(intSeed+1).setFrequency(1/379.0).setOctaveCount(7);
+		//Perlin biomeB = new Perlin().setSeed(intSeed+2).setFrequency(1/367.0).setOctaveCount(6);
+		//this.biomeModule = new BiomeModule(biomeA, biomeB);
+		
+		
+		
+		//this.biomeModule.setBiomeMap(map);
 
 		//this.noiseTerrainBase = new ScaledNoiseField(random.nextLong(), 64f);
 		//this.noiseTerrainFine = new ScaledNoiseField(random.nextLong(), 32f);
@@ -148,7 +138,7 @@ public class ChunkProviderNeo implements IChunkGenerator {
 		//this.noiseVolumeFine = new ScaledNoiseVolume(random.nextLong(), 20f);
 		//this.biomeSelector = new VoronoiClusterField<NeoBiome>(random.nextLong(), 16*9);
 		
-		int intSeed = (int)seed ^ ((int)(seed>>32));
+		/*
 		
 		RidgedMulti mountains = new RidgedMulti().setFrequency(1/256.0).setOctaveCount(6).setSeed(intSeed);
 		Module      plains    = new ScaleBias().setSources(
@@ -158,9 +148,11 @@ public class ChunkProviderNeo implements IChunkGenerator {
 		Blend       blend     = new Blend().setSources(mountains, plains, mask);
 		
 		volumeNoise = blend;
-
+		*/
 		PAIN = TWBlocks.FLUID_PAIN.getDefaultState().withProperty(BlockFluidBase.LEVEL, 3);
 		
+		biomeModule = biomeProvider.getBiomeModule();
+		biomeModule.setWorld(world);
 	}
 
 	protected void generateShape(int chunkX, int chunkZ, ChunkPrimer primer) {
@@ -169,27 +161,26 @@ public class ChunkProviderNeo implements IChunkGenerator {
 				int blockX = chunkX*16+x;
 				int blockZ = chunkZ*16+z;
 				
-				Function<Integer, IBlockState> terrainMaterialFunction = (it)->Blocks.NETHERRACK.getDefaultState();
-				Function<Float, IBlockState> densityMaterialFunction = (it)->Blocks.NETHERRACK.getDefaultState();
+				//Function<Integer, IBlockState> terrainMaterialFunction = (it)->Blocks.NETHERRACK.getDefaultState();
+				//Function<Float, IBlockState> densityMaterialFunction = (it)->Blocks.NETHERRACK.getDefaultState();
+				ICompositorBiome columnBiome = biomeModule.biomeAtTurbulent(blockX, blockZ);
 				
-				Biome biomeVanilla = world.getBiome(new BlockPos(blockX, 0, blockZ));
-				 if (biomeVanilla instanceof NeoBiome) {
-					NeoBiome biome = (NeoBiome)biomeVanilla;
-					
-					terrainMaterialFunction = biome::getTerrainMaterial;
-					densityMaterialFunction = biome::getDensityMaterial;
-				}
+				double columnHeightScale = biomeModule.getHeightValue(blockX, blockZ);
 				
-				float columnHeight = 16;
+				//if (columnHeightScale<0) columnHeightScale *= 0.5;
 				
+				int columnHeight = SEA_LEVEL + (int)columnHeightScale;
+				if (columnHeight<8) columnHeight = 8;
 				
 				//We sample from y=-512.0 because that's out-of-bounds and sufficiently decorrelated from the volumetric
 				//nose we sample later
-				columnHeight += (volumeNoise.getValue(blockX, -512.0, blockZ)/2+0.5) * 128;
+				//columnHeight += (volumeNoise.getValue(blockX, -512.0, blockZ)/2+0.5) * 128;
 				
 				for(int y=0; y<255; y++) {
 					//float density = 1.5f;
-					double density = volumeNoise.getValue(blockX, y, blockZ)/2+0.5;
+					
+					//double density = volumeNoise.getValue(blockX, y, blockZ)/2+0.5;
+					double density = biomeModule.getHeightValue(blockX, blockZ);
 					/*
 					float density = noiseVolumeBase.get(blockX, y, blockZ);
 					density*= 0.75f;
@@ -205,14 +196,24 @@ public class ChunkProviderNeo implements IChunkGenerator {
 					if (y==0) {
 						cur = BEDROCK;
 					} else if (y<=(int)columnHeight) {
-						if (density>0.1) {
+						//if (density>0.1) {
+							int depth = columnHeight - y;
 							
-							cur = terrainMaterialFunction.apply((int)columnHeight-y);
-						} else { //Extremely low densities carve pits and caves into terrain
-							if (y<SEA_LEVEL) cur=PAIN;
-						}
+							if (columnBiome instanceof CompositorBiome) {
+								cur = (depth<=4) ? ((CompositorBiome)columnBiome).topBlock : ((CompositorBiome)columnBiome).fillerBlock;
+							}
+							//cur = terrainMaterialFunction.apply((int)columnHeight-y);
+						/*} else { //Extremely low densities carve pits and caves into terrain
+							if (y<SEA_LEVEL) {
+								cur = PAIN;
+							} else {
+								cur = AIR;
+							}
+							
+						}*/
 					} else {
 						//scale density
+						/*
 						density *= 0.95;
 						if (y>DENSITY_SCALING_START) {
 							float densityProgress = (y - DENSITY_SCALING_START) / (float)DENSITY_SCALING_LENGTH;
@@ -223,10 +224,15 @@ public class ChunkProviderNeo implements IChunkGenerator {
 						
 						
 						if (density>0.5) {
-							cur = densityMaterialFunction.apply(((float)density-0.5f)*2);
-						} else {
+							if (columnBiome instanceof CompositorBiome) {
+								cur = ((CompositorBiome)columnBiome).topBlock; //TODO: BRING BACK NOUGAT
+							}
+							
+							
+							//cur = densityMaterialFunction.apply(((float)density-0.5f)*2);
+						} else {*/
 							if (y<SEA_LEVEL) cur=PAIN;
-						}
+						//}
 
 					}
 
@@ -267,8 +273,9 @@ public class ChunkProviderNeo implements IChunkGenerator {
 				
 				Biome vanillaBiome = world.getBiome(new BlockPos(baseX+xi, 0, baseZ+zi));
 				byte id = (byte)Biome.getIdForBiome(Biomes.HELL);
-				if (vanillaBiome instanceof NeoBiome) {
-					id = (byte)BiomeRegistry.NEO_HELL.getIDForObject((NeoBiome)vanillaBiome);
+				if (vanillaBiome instanceof ICompositorBiome) {
+					id = BiomeFamily.NEO_HELL.getId((ICompositorBiome)vanillaBiome);
+					//id = (byte)BiomeFamily.NEO_HELL.getIDForObject((NeoBiome)vanillaBiome);
 					//id = (byte)((NeoBiome)vanillaBiome).getId();
 				}
 				abyte[zi*16+xi] = id;
@@ -276,8 +283,9 @@ public class ChunkProviderNeo implements IChunkGenerator {
 		}
 		
 		genBench.endFrame();
-		System.out.println("GenBench frame:" +genBench.getTotalTime());
-		
+		//System.out.println("GenBench frame:" +genBench.getTotalTime());
+		chunk.setTerrainPopulated(true);
+		chunk.setLightPopulated(true);
 		return chunk;
 	}
 
