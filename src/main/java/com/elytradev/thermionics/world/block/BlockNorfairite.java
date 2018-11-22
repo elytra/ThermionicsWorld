@@ -24,8 +24,6 @@
 
 package com.elytradev.thermionics.world.block;
 
-import java.awt.Color;
-
 import com.elytradev.thermionics.world.ThermionicsWorld;
 
 import net.minecraft.block.BlockBeacon;
@@ -42,6 +40,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+@SuppressWarnings("deprecation")
 public class BlockNorfairite extends BlockColored implements IItemNamer {
 	public BlockNorfairite(String variety) {
 		super(Material.GLASS);
@@ -75,30 +74,33 @@ public class BlockNorfairite extends BlockColored implements IItemNamer {
 		return true;
 	}
 	
-	private Color[] equivalents = {
-		Color.WHITE,
-		Color.ORANGE,
-		Color.MAGENTA,
-		new Color(0x6B8AC9), //Light Blue
-		Color.YELLOW,
-		new Color(0x41AE38), //Lime
-		new Color(0xD08499), //Pink
-		new Color(0x404040), //Gray
-		new Color(0x9AA1A1), //LightGray, which is now apparently called "silver"
-		new Color(0x2E6E89), //Cyan
-		new Color(0x7E3DB5), //Purple
-		new Color(0x7E3DB5), //Purple
-		new Color(0x7E3DB5), //Purple
-		new Color(0x7E3DB5), //Purple
-		new Color(0x7E3DB5), //Purple
-		Color.RED,
-		
-			
+	//Correct as of "World of Color"
+	private int[] equivalents = {
+		0xE9ECEC, //White
+		0xF07613, //Orange
+		0xBD44B3, //Magenta
+		0x3AAFD9, //Light Blue
+		0xF8C627, //Yellow
+		0x70B919, //Lime
+		0xED8DAC, //Pink
+		0x3E4447, //Gray
+		0x8E8E86, //Silver (LightGray)
+		0x158991, //Cyan
+		0x792AAC, //Purple
+		0x35399D, //Blue
+		0x724728, //Brown
+		0x546D1B, //Green
+		0xA12722, //Red
+		0x141519, //Black
 	};
+	
 	@Override
 	public float[] getBeaconColorMultiplier(IBlockState state, World world, BlockPos pos, BlockPos beaconPos) {
-		Color equivalent = equivalents[this.getMetaFromState(state)];
-		return new float[]{equivalent.getRed()/256f, equivalent.getGreen()/256f, equivalent.getBlue()/256f};
+		int equivalent = equivalents[this.getMetaFromState(state)];
+		int red   = (equivalent >> 16) & 0xFF;
+		int green = (equivalent >>  8) & 0xFF;
+		int blue  = (equivalent >>  0) & 0xFF;
+		return new float[]{red/256f, green/256f, blue/256f};
 	}
 	
 	@Override
@@ -116,7 +118,6 @@ public class BlockNorfairite extends BlockColored implements IItemNamer {
 		return this.getUnlocalizedName();
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	public String getLocalizedName(ItemStack stack) {
 		EnumDyeColor color = this.getStateFromMeta(stack.getItemDamage()).getValue(BlockColored.COLOR);
