@@ -70,8 +70,6 @@ public class BiomeBridges extends HellCompositorBiome {
 			public double getHeightValue(int x, int z) {
 				double im = (imageData.getValue(x,0,z)*0.25) + 0.2;
 				return im * 16 - 8;
-				
-				//return (imageData.getValue(x,0,z)*0.25) + 0.2;
 			}
 			
 			@Override

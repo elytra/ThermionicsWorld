@@ -92,6 +92,32 @@ public class BiomeModule {
 		return Interpolate.linear(s, n, fb);
 	}
 	
+	public double getDensityValue(int x, int y, int z) {
+		double a = biomeA(x, 0, z);
+		double b = biomeB(x, 0, z);
+		
+		double scaledA = a * (getBiomeMap().cellsWide) - 0.5;
+		double scaledB = b * (getBiomeMap().cellsHigh) - 0.5;
+		
+		int a1 = (int)scaledA;
+		int a2 = a1 + 1; if (a2>=getBiomeMap().cellsWide) a2 = getBiomeMap().cellsWide - 1;
+		int b1 = (int)scaledB;
+		int b2 = b1 + 1; if (b2>=getBiomeMap().cellsHigh) b2 = getBiomeMap().cellsHigh - 1;
+		
+		double fa = scaledA - a1;
+		double fb = scaledB - b1;
+		
+		double sw = getOrCreateGenerator(getBiomeMap().getValueInt(a1,b1)).getDensityValue(x, y, z);
+		double se = getOrCreateGenerator(getBiomeMap().getValueInt(a2,b1)).getDensityValue(x, y, z);
+		double nw = getOrCreateGenerator(getBiomeMap().getValueInt(a1,b2)).getDensityValue(x, y, z);
+		double ne = getOrCreateGenerator(getBiomeMap().getValueInt(a2,b2)).getDensityValue(x, y, z);
+		
+		double s = Interpolate.linear(sw, se, fa);
+		double n = Interpolate.linear(nw, ne, fa);
+		
+		return Interpolate.linear(s, n, fb);
+	}
+	
 	private IBiomeChunkGenerator getOrCreateGenerator(ICompositorBiome biome) {
 		if (!spawnedGenerators.containsKey(biome)) {
 			IBiomeChunkGenerator gen = biome.createChunkGenerator(this.world);

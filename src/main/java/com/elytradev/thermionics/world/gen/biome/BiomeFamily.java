@@ -119,13 +119,15 @@ public class BiomeFamily {
 		cold.b = 0;
 		NEO_HELL.register(2, cold);*/
 		
+		NEO_HELL.register(3, new BiomeBaradDur());
+		/*
 		HellCompositorBiome baradDur = new HellCompositorBiome("barad_dur");
 		baradDur.topBlock = TWBlocks.GEMROCK_HEMATITE.getDefaultState();
 		baradDur.fillerBlock = TWBlocks.GEMROCK_SODALITE.getDefaultState();
 		baradDur.a = 1;
 		baradDur.b = 1;
 		NEO_HELL.register(3, baradDur);
-		
+		*/
 		HellCompositorBiome heartsblood = new HellCompositorBiome("heartsblood");
 		heartsblood.topBlock = TWBlocks.GEMROCK_GARNET.getDefaultState();
 		heartsblood.fillerBlock = TWBlocks.GEMROCK_TOURMALINE.getDefaultState();
@@ -140,13 +142,15 @@ public class BiomeFamily {
 		sulfur.b = 1;
 		NEO_HELL.register(5, sulfur);
 		
+		NEO_HELL.register(6, new BiomeNocturne());
+		/*
 		HellCompositorBiome nocturne = new HellCompositorBiome("nocturne");
 		nocturne.topBlock = TWBlocks.GEMROCK_CASSITERITE.getDefaultState();
 		nocturne.fillerBlock = TWBlocks.GEMROCK_CHRYSOPRASE.getDefaultState();
 		nocturne.a = 2;
 		nocturne.b = 2;
 		NEO_HELL.register(6, nocturne);
-		
+		*/
 		HellCompositorBiome doom = new HellCompositorBiome("doom");
 		doom.topBlock = TWBlocks.GEMROCK_SPINEL.getDefaultState();
 		doom.fillerBlock = TWBlocks.GEMROCK_PYRITE.getDefaultState();
@@ -166,35 +170,8 @@ public class BiomeFamily {
 		*/
 
 		/*
-		NEO_HELL.register(2,
-			new NeoBiome("cold", new Biome.BiomeProperties(I18n.translateToLocal("biome.thermionics.cold"))
-				.setBaseHeight(128f)
-				.setTemperature(0.625f)
-				.setRainfall(0)
-				.setRainDisabled()
-				//.setRainfall(0.25f)
-			)
-			.withSurfaceMaterial(TWBlocks.GEMROCK_MAGNESITE)
-			.withTerrainFillMaterial(TWBlocks.GEMROCK_SAPPHIRE)
-			.withDensitySurfaceMaterial(TWBlocks.GEMROCK_OPAL)
-			.withDensityCoreMaterial(Blocks.PACKED_ICE)
-			.withTypes(BiomeDictionary.Type.NETHER, BiomeDictionary.Type.COLD)
-			);
+
 		
-		NEO_HELL.register(3,
-			new NeoBiome("barad_dur", new Biome.BiomeProperties(I18n.translateToLocal("biome.thermionics.barad_dur"))
-				.setBaseHeight(128f)
-				.setTemperature(0.75f)
-				.setRainfall(0)
-				.setRainDisabled()
-				//.setRainfall(0.25f)
-			)
-			.withSurfaceMaterial(TWBlocks.GEMROCK_HEMATITE)
-			.withTerrainFillMaterial(Blocks.NETHERRACK)
-			.withDensitySurfaceMaterial(TWBlocks.GEMROCK_HEMATITE)
-			.withDensityCoreMaterial(TWBlocks.GEMROCK_SODALITE)
-			.withTypes(BiomeDictionary.Type.NETHER)
-			);
 		
 		NEO_HELL.register(4,
 			new NeoBiome("heartsblood", new Biome.BiomeProperties(I18n.translateToLocal("biome.thermionics.heartsblood"))

@@ -26,24 +26,15 @@ package com.elytradev.thermionics.world.gen;
 
 import java.util.List;
 import java.util.Random;
-import java.util.function.Function;
 
 import com.elytradev.thermionics.world.Benchmark;
 import com.elytradev.thermionics.world.block.TWBlocks;
 import com.elytradev.thermionics.world.gen.biome.ICompositorBiome;
-import com.elytradev.thermionics.world.gen.biome.BiomeMap;
 import com.elytradev.thermionics.world.gen.biome.BiomeModule;
 import com.elytradev.thermionics.world.gen.biome.BiomeFamily;
 import com.elytradev.thermionics.world.gen.biome.CompositorBiome;
-import com.elytradev.thermionics.world.gen.biome.NeoBiome;
 import com.google.common.collect.ImmutableList;
 
-import blue.endless.libnoise.Module;
-import blue.endless.libnoise.generator.Perlin;
-import blue.endless.libnoise.generator.RidgedMulti;
-import blue.endless.libnoise.modifier.Blend;
-import blue.endless.libnoise.modifier.Multiply;
-import blue.endless.libnoise.modifier.ScaleBias;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EnumCreatureType;
@@ -53,7 +44,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeProvider;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.gen.IChunkGenerator;
@@ -176,11 +166,13 @@ public class ChunkProviderCompositor implements IChunkGenerator {
 				//nose we sample later
 				//columnHeight += (volumeNoise.getValue(blockX, -512.0, blockZ)/2+0.5) * 128;
 				
+				//double densityScale = biomeModule.getDensityScale(blockX, blockZ);
+				
 				for(int y=0; y<255; y++) {
 					//float density = 1.5f;
 					
 					//double density = volumeNoise.getValue(blockX, y, blockZ)/2+0.5;
-					double density = biomeModule.getHeightValue(blockX, blockZ);
+					double density = biomeModule.getDensityValue(blockX, y, blockZ);
 					/*
 					float density = noiseVolumeBase.get(blockX, y, blockZ);
 					density*= 0.75f;
@@ -213,8 +205,6 @@ public class ChunkProviderCompositor implements IChunkGenerator {
 						}*/
 					} else {
 						//scale density
-						/*
-						density *= 0.95;
 						if (y>DENSITY_SCALING_START) {
 							float densityProgress = (y - DENSITY_SCALING_START) / (float)DENSITY_SCALING_LENGTH;
 							float scalingFactor = (float)Math.cos(densityProgress*Math.PI/2f);
@@ -230,9 +220,9 @@ public class ChunkProviderCompositor implements IChunkGenerator {
 							
 							
 							//cur = densityMaterialFunction.apply(((float)density-0.5f)*2);
-						} else {*/
+						} else {
 							if (y<SEA_LEVEL) cur=PAIN;
-						//}
+						}
 
 					}
 

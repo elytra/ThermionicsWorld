@@ -24,35 +24,37 @@
 
 package com.elytradev.thermionics.world.gen.biome;
 
-import com.elytradev.thermionics.world.block.TWBlocks;
+import java.awt.image.BufferedImage;
 
-import blue.endless.libnoise.generator.RidgedMulti;
+import com.elytradev.thermionics.world.block.TWBlocks;
+import com.elytradev.thermionics.world.gen.ImageModule;
+
+import blue.endless.libnoise.generator.Perlin;
 import net.minecraft.world.World;
 
-public class BiomeNocturne extends HellCompositorBiome {
+public class BiomeBaradDur extends HellCompositorBiome {
 
-	public BiomeNocturne() {
-		super("nocturne");
+	public BiomeBaradDur() {
+		super("barad_dur");
 		
-		a = 2;
-		b = 2;
+		a = 1;
+		b = 1;
 		
 		/* Original properties:
 		 * base height: 128f
-		 * temperature: 0.625f
+		 * temperature: 0.75f
 		 * rainfall: 0f
 		 * rain-disabled: true
 		 * 
-		 * surfaceMaterial: GEMROCK_CASSITERITE
-		 * terrainFillMaterial: GEMROCK_CHRYSOPRASE
-		 * densitySurfaceMaterial: GEMROCK_CASSITERITE
-		 * densityCoreMaterial: GEMROCK_CASSITERITE
-		 * types: NETHER, DEAD, SPOOKY
-		 * additional: magma spikes
+		 * surfaceMaterial: GEMROCK_HEMATITE
+		 * terrainFillMaterial: NETHERRACK
+		 * densitySurfaceMaterial: GEMROCK_HEMATITE
+		 * densityCoreMaterial: GEMROCK_SODALITE
+		 * types: NETHER
 		 */
 		
-		this.topBlock = TWBlocks.GEMROCK_CASSITERITE.getDefaultState();
-		this.fillerBlock = TWBlocks.GEMROCK_CHRYSOPRASE.getDefaultState();
+		this.topBlock = TWBlocks.GEMROCK_HEMATITE.getDefaultState();
+		this.fillerBlock = TWBlocks.GEMROCK_HEMATITE.getDefaultState();
 	}
 	
 	@Override
@@ -60,21 +62,30 @@ public class BiomeNocturne extends HellCompositorBiome {
 		final int intSeed = (int)world.getWorldInfo().getSeed() ^ (int)(world.getWorldInfo().getSeed() >> 32);
 		
 		return new IBiomeChunkGenerator() {
-			private RidgedMulti multi = new RidgedMulti().setFrequency(1/64f).setOctaveCount(3).setSeed(intSeed + 3);
+			BufferedImage columns = BiomeFamily.unpackTerrainImage("columns");
+			ImageModule imageData = new ImageModule()
+					.setImage(columns)
+					.setPixelsPerUnit(1/2.0);
+			Perlin density = new Perlin()
+					.setFrequency(1/128.0)
+					.setOctaveCount(5)
+					.setSeed(intSeed + 4);
 			
 			@Override
 			public double getHeightValue(int x, int z) {
-				double val = multi.getValue(x, -512, z) / 2.0 + 0.5;
+				double val = imageData.getValue(x, 0, z);
+				if (val<0) val=0; //Shouldn't happen
+				if (val>1) val=1;
 				
-				if (val<0) val = 0;
-				if (val>1) val = 1;
-				return val * 64.0 - 16.0;
+				return (int)(val * 16);
 			}
 
 			@Override
 			public double getDensityValue(double x, double y, double z) {
-				// TODO Auto-generated method stub
-				return 0;
+				//TODO: Attenuate noise near the ground?
+				double d = density.getValue(x, y, z) * 1.0;
+				
+				return d;
 			}
 			
 		};
