@@ -44,7 +44,7 @@ public class BlockReefNorfairite extends BlockNorfairite {
 	
 	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getBlockLayer() {
-		return BlockRenderLayer.TRANSLUCENT;
+		return BlockRenderLayer.SOLID;
 	}
 	
 	@Override
