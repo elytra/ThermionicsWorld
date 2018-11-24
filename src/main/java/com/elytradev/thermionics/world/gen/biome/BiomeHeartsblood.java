@@ -24,20 +24,27 @@
 
 package com.elytradev.thermionics.world.gen.biome;
 
-import java.awt.image.BufferedImage;
+import java.util.Random;
 
-import com.elytradev.thermionics.world.gen.ImageModule;
+import com.elytradev.thermionics.world.block.TWBlocks;
+import com.elytradev.thermionics.world.gen.biome.generator.GeneratorBoneShrub;
+import com.elytradev.thermionics.world.gen.biome.generator.GeneratorBoneTree;
 
+import blue.endless.libnoise.generator.Perlin;
+import blue.endless.libnoise.generator.RidgedMulti;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.feature.WorldGenerator;
 
-public class BiomeBridges extends HellCompositorBiome {
+public class BiomeHeartsblood extends HellCompositorBiome {
+	protected GeneratorBoneShrub shrubs = new GeneratorBoneShrub();
+	protected GeneratorBoneTree trees = new GeneratorBoneTree();
 	
-	public BiomeBridges() {
-		super("bridges");
+	public BiomeHeartsblood() {
+		super("heartsblood");
 		
-		a = 0;
+		a = 2;
 		b = 0;
 		
 		/* Original properties:
@@ -46,39 +53,50 @@ public class BiomeBridges extends HellCompositorBiome {
 		 * rainfall: 0f
 		 * rain-disabled: true
 		 * 
-		 * surfaceMaterial: NETHERRACK
-		 * terrainFillMaterial: NETHERRACK
-		 * densitySurfaceMaterial: NETHERRACK
-		 * densityCoreMaterial: SOUL_SAND
-		 * types: NETHER
+		 * surfaceMaterial: GEMROCK_GARNET
+		 * terrainFillMaterial: GEMROCK_TOURMALINE
+		 * densitySurfaceMaterial: GEMROCK_GARNET
+		 * densityCoreMaterial: GEMROCK_EMERALD
+		 * types: NETHER, HOT, WET
+		 * additional: BoneTree, BoneShrub
 		 */
 		
-		this.topBlock = Blocks.NETHERRACK.getDefaultState();
-		this.fillerBlock = Blocks.SOUL_SAND.getDefaultState();
-		this.densitySurfaceBlock = Blocks.NETHERRACK.getDefaultState();
-		this.densityFillerBlock = Blocks.SOUL_SAND.getDefaultState();
-		
+		topBlock = TWBlocks.GEMROCK_GARNET.getDefaultState();
+		fillerBlock = TWBlocks.GEMROCK_TOURMALINE.getDefaultState();
+		densitySurfaceBlock = TWBlocks.GEMROCK_PYRITE.getDefaultState();
+		densityFillerBlock = TWBlocks.GEMROCK_EMERALD.getDefaultState();
 	}
 	
 	@Override
 	public IBiomeChunkGenerator createChunkGenerator(World world) {
+		final int intSeed = (int)world.getWorldInfo().getSeed() ^ (int)(world.getWorldInfo().getSeed() >> 32);
+		
 		return new IBiomeChunkGenerator() {
-			BufferedImage rough = BiomeFamily.unpackTerrainImage("rough");
-			ImageModule imageData = new ImageModule()
-					.setImage(rough)
-					.setPixelsPerUnit(1/24.0);
-					//.setAmplitudeScale(1/32.0);
+			Perlin height = new Perlin(intSeed + 3)
+					.setFrequency(1/64.0)
+					.setOctaveCount(2);
+			
+			RidgedMulti volumeNoise = new RidgedMulti(intSeed + 4)
+					.setFrequency(1/60.0)
+					//.setLacunarity(1.5)
+					.setOctaveCount(2);
 			
 			@Override
 			public double getHeightValue(int x, int z) {
-				double im = (imageData.getValue(x,0,z)*0.25) + 0.2;
-				return im * 16 - 8;
+				double h = height.getValue(x, -512, z);
+				
+				return h * 3;
 			}
-			
+
 			@Override
 			public double getDensityValue(double x, double y, double z) {
-				//return imageData.getValue(x, 0, z);
-				return 0;
+				int maxHeight = 150;
+				if (y>maxHeight) return 0;
+				double heightScale = (maxHeight - y) / (double)(maxHeight-48);
+				
+				double d = (volumeNoise.getValue(x, y, z)+0.2) * heightScale;
+				
+				return d;
 			}
 			
 			@Override
@@ -99,5 +117,11 @@ public class BiomeBridges extends HellCompositorBiome {
 				}
 			}
 		};
+	}
+	
+	@Override
+	public void decorate(World world, Random rand, BlockPos pos) {
+		splash(world, rand, pos, trees, 3);
+		splash(world, rand, pos, shrubs, 3);
 	}
 }

@@ -28,6 +28,8 @@ import com.elytradev.thermionics.world.block.BlockNorfairite;
 import com.elytradev.thermionics.world.block.TWBlocks;
 
 import blue.endless.libnoise.generator.RidgedMulti;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.world.World;
 
@@ -54,6 +56,8 @@ public class BiomeBubbleMountain extends HellCompositorBiome {
 		
 		this.topBlock = TWBlocks.NORFAIRITE_REEF.getDefaultState().withProperty(BlockNorfairite.COLOR, EnumDyeColor.PURPLE);
 		this.fillerBlock = TWBlocks.GEMROCK_ROSE_QUARTZ.getDefaultState();
+		this.densitySurfaceBlock = TWBlocks.NORFAIRITE_REEF.getDefaultState().withProperty(BlockNorfairite.COLOR, EnumDyeColor.CYAN);
+		this.densityFillerBlock = Blocks.NETHERRACK.getDefaultState();
 	}
 	
 	@Override
@@ -75,9 +79,27 @@ public class BiomeBubbleMountain extends HellCompositorBiome {
 			
 			@Override
 			public double getDensityValue(double x, double y, double z) {
-				return multi.getValue(x, y, z);
+				//return multi.getValue(x, y, z);
+				return 0.3; //Amenable to volumes, but doesn't force them.
 			}
 			
+			@Override
+			public IBlockState getHeightBlockState(int x, int z, int depth) {
+				if (depth<4) {
+					return topBlock;
+				} else {
+					return fillerBlock;
+				}
+			}
+
+			@Override
+			public IBlockState getDensityBlockState(int x, int y, int z, double density) {
+				if (density<0.6) {
+					return densitySurfaceBlock;
+				} else {
+					return densityFillerBlock;
+				}
+			}
 		};
 	}
 }

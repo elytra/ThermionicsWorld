@@ -30,10 +30,11 @@ import com.elytradev.thermionics.world.block.TWBlocks;
 import com.elytradev.thermionics.world.gen.ImageModule;
 
 import blue.endless.libnoise.generator.Perlin;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.world.World;
 
 public class BiomeBaradDur extends HellCompositorBiome {
-
+	
 	public BiomeBaradDur() {
 		super("barad_dur");
 		
@@ -55,6 +56,8 @@ public class BiomeBaradDur extends HellCompositorBiome {
 		
 		this.topBlock = TWBlocks.GEMROCK_HEMATITE.getDefaultState();
 		this.fillerBlock = TWBlocks.GEMROCK_HEMATITE.getDefaultState();
+		this.densitySurfaceBlock = TWBlocks.GEMROCK_HEMATITE.getDefaultState();
+		this.densityFillerBlock = TWBlocks.GEMROCK_SODALITE.getDefaultState();
 	}
 	
 	@Override
@@ -79,7 +82,7 @@ public class BiomeBaradDur extends HellCompositorBiome {
 				
 				return (int)(val * 16);
 			}
-
+			
 			@Override
 			public double getDensityValue(double x, double y, double z) {
 				//TODO: Attenuate noise near the ground?
@@ -88,6 +91,23 @@ public class BiomeBaradDur extends HellCompositorBiome {
 				return d;
 			}
 			
+			@Override
+			public IBlockState getHeightBlockState(int x, int z, int depth) {
+				if (depth<4) {
+					return topBlock;
+				} else {
+					return fillerBlock;
+				}
+			}
+			
+			@Override
+			public IBlockState getDensityBlockState(int x, int y, int z, double density) {
+				if (density<0.6) {
+					return densitySurfaceBlock;
+				} else {
+					return densityFillerBlock;
+				}
+			}
 		};
 	}
 }

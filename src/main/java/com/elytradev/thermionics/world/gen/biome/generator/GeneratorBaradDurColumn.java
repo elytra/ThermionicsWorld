@@ -22,26 +22,8 @@
  * SOFTWARE.
  */
 
-package com.elytradev.thermionics.world.gen.biome;
+package com.elytradev.thermionics.world.gen.biome.generator;
 
-import net.minecraft.block.state.IBlockState;
+public class GeneratorBaradDurColumn {
 
-/**
- * Potentially seed-specific or world-specific parts of A compositor-biome's chunk generation. Can be used outside
- * Minecraft.
- */
-public interface IBiomeChunkGenerator {
-	/** Get the height value, as an offset from sea level in meters. Positive numbers are up. */
-	public double getHeightValue(int x, int z);
-	/** Get the density value of this volume. Anything above 0.5 will usually end up as a solid block. */
-	public double getDensityValue(double x, double y, double z);
-	
-	/**
-	 * Assuming the block indicated is a solid block and part of the "height" section of the terrain of this biome,
-	 * which block is it?
-	 */
-	public IBlockState getHeightBlockState(int x, int z, int depth);
-	
-	/** Assuming the block indicated is a solid block of this biome, which block is it? */
-	public IBlockState getDensityBlockState(int x, int y, int z, double density);
 }

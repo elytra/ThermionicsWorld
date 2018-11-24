@@ -33,6 +33,7 @@ import com.elytradev.thermionics.world.gen.biome.ICompositorBiome;
 import com.elytradev.thermionics.world.gen.biome.BiomeModule;
 import com.elytradev.thermionics.world.gen.biome.BiomeFamily;
 import com.elytradev.thermionics.world.gen.biome.CompositorBiome;
+import com.elytradev.thermionics.world.gen.biome.IBiomeChunkGenerator;
 import com.google.common.collect.ImmutableList;
 
 import net.minecraft.block.BlockFalling;
@@ -154,6 +155,7 @@ public class ChunkProviderCompositor implements IChunkGenerator {
 				//Function<Integer, IBlockState> terrainMaterialFunction = (it)->Blocks.NETHERRACK.getDefaultState();
 				//Function<Float, IBlockState> densityMaterialFunction = (it)->Blocks.NETHERRACK.getDefaultState();
 				ICompositorBiome columnBiome = biomeModule.biomeAtTurbulent(blockX, blockZ);
+				IBiomeChunkGenerator generator = biomeModule.getOrCreateGenerator(columnBiome);
 				
 				double columnHeightScale = biomeModule.getHeightValue(blockX, blockZ);
 				
@@ -190,10 +192,10 @@ public class ChunkProviderCompositor implements IChunkGenerator {
 					} else if (y<=(int)columnHeight) {
 						//if (density>0.1) {
 							int depth = columnHeight - y;
-							
-							if (columnBiome instanceof CompositorBiome) {
-								cur = (depth<=4) ? ((CompositorBiome)columnBiome).topBlock : ((CompositorBiome)columnBiome).fillerBlock;
-							}
+							cur = generator.getHeightBlockState(blockX, blockZ, depth);
+							//if (columnBiome instanceof CompositorBiome) {
+							//	cur = (depth<=4) ? ((CompositorBiome)columnBiome).topBlock : ((CompositorBiome)columnBiome).fillerBlock;
+							//}
 							//cur = terrainMaterialFunction.apply((int)columnHeight-y);
 						/*} else { //Extremely low densities carve pits and caves into terrain
 							if (y<SEA_LEVEL) {
@@ -214,9 +216,13 @@ public class ChunkProviderCompositor implements IChunkGenerator {
 						
 						
 						if (density>0.5) {
+							cur = generator.getDensityBlockState(blockX, y, blockZ, density); // engage nougat
+							
+							/*
 							if (columnBiome instanceof CompositorBiome) {
+								
 								cur = ((CompositorBiome)columnBiome).topBlock; //TODO: BRING BACK NOUGAT
-							}
+							}*/
 							
 							
 							//cur = densityMaterialFunction.apply(((float)density-0.5f)*2);
@@ -274,8 +280,8 @@ public class ChunkProviderCompositor implements IChunkGenerator {
 		
 		genBench.endFrame();
 		//System.out.println("GenBench frame:" +genBench.getTotalTime());
-		chunk.setTerrainPopulated(true);
-		chunk.setLightPopulated(true);
+		//chunk.setTerrainPopulated(true);
+		//chunk.setLightPopulated(true);
 		return chunk;
 	}
 
@@ -421,8 +427,7 @@ public class ChunkProviderCompositor implements IChunkGenerator {
 	}
 
 	@Override
-	public BlockPos getNearestStructurePos(World worldIn, String structureName, BlockPos position,
-			boolean findUnexplored) {
+	public BlockPos getNearestStructurePos(World worldIn, String structureName, BlockPos position, boolean findUnexplored) {
 		// TODO Auto-generated method stub
 		return null;
 	}

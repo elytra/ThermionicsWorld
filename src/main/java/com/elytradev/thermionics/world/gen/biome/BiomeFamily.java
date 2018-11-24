@@ -128,20 +128,26 @@ public class BiomeFamily {
 		baradDur.b = 1;
 		NEO_HELL.register(3, baradDur);
 		*/
+		
+		NEO_HELL.register(4, new BiomeHeartsblood());
+		/*
 		HellCompositorBiome heartsblood = new HellCompositorBiome("heartsblood");
 		heartsblood.topBlock = TWBlocks.GEMROCK_GARNET.getDefaultState();
 		heartsblood.fillerBlock = TWBlocks.GEMROCK_TOURMALINE.getDefaultState();
 		heartsblood.a = 2;
 		heartsblood.b = 0;
 		NEO_HELL.register(4, heartsblood);
+		*/
 		
+		NEO_HELL.register(5, new BiomeSulfur());
+		/*
 		HellCompositorBiome sulfur = new HellCompositorBiome("sulfur");
 		sulfur.topBlock = TWBlocks.GEMROCK_HELIODOR.getDefaultState();
 		sulfur.fillerBlock = TWBlocks.GEMROCK_PERIDOT.getDefaultState();
 		sulfur.a = 2;
 		sulfur.b = 1;
 		NEO_HELL.register(5, sulfur);
-		
+		*/
 		NEO_HELL.register(6, new BiomeNocturne());
 		/*
 		HellCompositorBiome nocturne = new HellCompositorBiome("nocturne");
@@ -170,57 +176,6 @@ public class BiomeFamily {
 		*/
 
 		/*
-
-		
-		
-		NEO_HELL.register(4,
-			new NeoBiome("heartsblood", new Biome.BiomeProperties(I18n.translateToLocal("biome.thermionics.heartsblood"))
-				.setBaseHeight(128f)
-				.setTemperature(0.25f)
-				.setRainfall(0)
-				.setRainDisabled()
-				//.setRainfall(0.5f)
-			)
-			.withSurfaceMaterial(TWBlocks.GEMROCK_GARNET)
-			.withTerrainFillMaterial(TWBlocks.GEMROCK_TOURMALINE)
-			.withDensitySurfaceMaterial(TWBlocks.GEMROCK_GARNET)
-			.withDensityCoreMaterial(TWBlocks.GEMROCK_EMERALD)
-			.withWorldGenerator(new GeneratorBoneTree())
-			.withWorldGenerator(new GeneratorBoneShrub())
-			.withTypes(BiomeDictionary.Type.NETHER, BiomeDictionary.Type.HOT, BiomeDictionary.Type.WET)
-			);
-
-		NEO_HELL.register(5,
-			new NeoBiome("sulfur", new Biome.BiomeProperties(I18n.translateToLocal("biome.thermionics.sulfur"))
-				.setBaseHeight(128f)
-				.setTemperature(0.375f)
-				.setRainfall(0)
-				.setRainDisabled()
-				//.setRainfall(0.5f)
-			)
-			.withSurfaceMaterial(TWBlocks.GEMROCK_HELIODOR)
-			.withTerrainFillMaterial(TWBlocks.GEMROCK_PERIDOT)
-			.withDensitySurfaceMaterial(TWBlocks.GEMROCK_HELIODOR)
-			.withDensityCoreMaterial(TWBlocks.GEMROCK_PERIDOT)
-			.withWorldGenerator(new GeneratorSulfurVent())
-			.withTypes(BiomeDictionary.Type.NETHER)
-			);
-		
-		NEO_HELL.register(6,
-			new NeoBiome("nocturne", new Biome.BiomeProperties(I18n.translateToLocal("biome.thermionics.nocturne"))
-				.setBaseHeight(128f)
-				.setTemperature(0.625f)
-				.setRainfall(0)
-				.setRainDisabled()
-				//.setRainfall(0.5f)
-			)
-			.withSurfaceMaterial(TWBlocks.GEMROCK_CASSITERITE)
-			.withTerrainFillMaterial(TWBlocks.GEMROCK_CHRYSOPRASE)
-			.withDensitySurfaceMaterial(TWBlocks.GEMROCK_CASSITERITE)
-			.withDensityCoreMaterial(TWBlocks.GEMROCK_CASSITERITE)
-			.withWorldGenerator(new GeneratorMagmaSpike())
-			.withTypes(BiomeDictionary.Type.NETHER, BiomeDictionary.Type.DEAD, BiomeDictionary.Type.SPOOKY)
-			);
 		
 		NEO_HELL.register(7,
 			new NeoBiome("doom", new Biome.BiomeProperties(I18n.translateToLocal("biome.thermionics.doom"))

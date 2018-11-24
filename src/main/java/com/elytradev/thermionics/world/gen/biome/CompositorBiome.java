@@ -26,10 +26,13 @@ package com.elytradev.thermionics.world.gen.biome;
 
 import java.util.Random;
 
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -42,6 +45,11 @@ public class CompositorBiome extends Biome implements ICompositorBiome {
 	protected int skyColor = 0xFF_FF2687;
 	protected int a = 0;
 	protected int b = 0;
+	
+	//topBlock and fillerBlock are already defined by Biome
+	protected IBlockState densityTopBlock = Blocks.GRASS.getDefaultState();
+	protected IBlockState densitySurfaceBlock = Blocks.STONE.getDefaultState();
+	protected IBlockState densityFillerBlock = Blocks.STONE.getDefaultState();
 	
 	public CompositorBiome(String id) {
 		super(new BiomeProperties(I18n.translateToLocal("biome.thermionics."+id)));
@@ -70,7 +78,16 @@ public class CompositorBiome extends Biome implements ICompositorBiome {
 		return this;
 	}
 	
-	
+	protected void splash(World worldIn, Random rand, BlockPos pos, WorldGenerator gen, int times) {
+		for(int i=0; i<times; i++) {
+			BlockPos relative = new BlockPos(
+					pos.getX() + rand.nextInt(8) + 8,
+					rand.nextInt(128) + 64,
+					pos.getZ() + rand.nextInt(8) + 8
+					);
+			gen.generate(worldIn, rand, relative);
+		}
+	}
 	
 	//EXTENDS net.minecraft.world.biome.Biome {
 		@Override
@@ -123,6 +140,24 @@ public class CompositorBiome extends Biome implements ICompositorBiome {
 				@Override
 				public double getDensityValue(double x, double y, double z) {
 					return 0;
+				}
+				
+				@Override
+				public IBlockState getHeightBlockState(int x, int z, int depth) {
+					if (depth<4) {
+						return topBlock;
+					} else {
+						return fillerBlock;
+					}
+				}
+				
+				@Override
+				public IBlockState getDensityBlockState(int x, int y, int z, double density) {
+					if (density<0.6) {
+						return densitySurfaceBlock;
+					} else {
+						return densityFillerBlock;
+					}
 				}
 				
 			};

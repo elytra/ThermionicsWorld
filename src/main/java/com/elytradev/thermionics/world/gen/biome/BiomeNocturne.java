@@ -27,6 +27,7 @@ package com.elytradev.thermionics.world.gen.biome;
 import com.elytradev.thermionics.world.block.TWBlocks;
 
 import blue.endless.libnoise.generator.RidgedMulti;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.world.World;
 
 public class BiomeNocturne extends HellCompositorBiome {
@@ -53,6 +54,8 @@ public class BiomeNocturne extends HellCompositorBiome {
 		
 		this.topBlock = TWBlocks.GEMROCK_CASSITERITE.getDefaultState();
 		this.fillerBlock = TWBlocks.GEMROCK_CHRYSOPRASE.getDefaultState();
+		this.densitySurfaceBlock = TWBlocks.GEMROCK_CASSITERITE.getDefaultState();
+		this.densityFillerBlock = TWBlocks.GEMROCK_CHRYSOPRASE.getDefaultState();
 	}
 	
 	@Override
@@ -77,6 +80,23 @@ public class BiomeNocturne extends HellCompositorBiome {
 				return 0;
 			}
 			
+			@Override
+			public IBlockState getHeightBlockState(int x, int z, int depth) {
+				if (depth<4) {
+					return topBlock;
+				} else {
+					return fillerBlock;
+				}
+			}
+
+			@Override
+			public IBlockState getDensityBlockState(int x, int y, int z, double density) {
+				if (density<0.6) {
+					return densitySurfaceBlock;
+				} else {
+					return densityFillerBlock;
+				}
+			}
 		};
 	}
 }

@@ -118,7 +118,12 @@ public class BiomeModule {
 		return Interpolate.linear(s, n, fb);
 	}
 	
-	private IBiomeChunkGenerator getOrCreateGenerator(ICompositorBiome biome) {
+	public IBiomeChunkGenerator getGenerator(int x, int z) {
+		ICompositorBiome biome = biomeAtTurbulent(x,z);
+		return getOrCreateGenerator(biome);
+	}
+	
+	public IBiomeChunkGenerator getOrCreateGenerator(ICompositorBiome biome) {
 		if (!spawnedGenerators.containsKey(biome)) {
 			IBiomeChunkGenerator gen = biome.createChunkGenerator(this.world);
 			spawnedGenerators.put(biome, gen);

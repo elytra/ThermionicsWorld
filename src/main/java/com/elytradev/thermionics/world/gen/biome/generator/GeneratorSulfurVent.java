@@ -29,36 +29,49 @@ import java.util.Random;
 
 import com.elytradev.thermionics.world.block.TWBlocks;
 import com.elytradev.thermionics.world.gen.ChunkProviderCompositor;
+import com.elytradev.thermionics.world.gen.ImageModule;
 import com.elytradev.thermionics.world.gen.NeoHellGenerators;
+import com.elytradev.thermionics.world.gen.biome.BiomeFamily;
 
+import blue.endless.libnoise.Interpolate;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
 
 public class GeneratorSulfurVent extends WorldGenerator {
-
+	private IBlockState pain = null;
+	private ImageModule module = null;
+	
 	@Override
 	public boolean generate(World worldIn, Random rand, BlockPos position) {
+		if (pain==null) pain = TWBlocks.FLUID_PAIN.getDefaultState();
+		if (module==null) module = new ImageModule().setImage(BiomeFamily.unpackTerrainImage("vents"));
+		/*
 		BlockPos cur = NeoHellGenerators.findSurface(worldIn, position);
 		if (cur==null) return false;
 		cur = cur.up(4); //punch through a certain amount of incline, too.
 		
 		ArrayList<BlockPos> buffer = new ArrayList<BlockPos>();
 		//int depth = 20 + rand.nextInt(20);
+		double radius = 3f + rand.nextDouble()*4;
 		for(int i=0; i<30; i++) {
-			float radius = 3f + rand.nextFloat()*4;
+			//float radius = 3f + rand.nextFloat()*4;
+			double progress = i/30.0;
+			double scaledRadius = radius * (1-Interpolate.sCurve3(progress));
+			//radius *= 0.8f;
 			
-			NeoHellGenerators.cylinderAround(cur, radius, buffer);
+			NeoHellGenerators.cylinderAround(cur, (float)scaledRadius, buffer);
 			cur = cur.down();
 		}
 		
 		for(BlockPos pos : buffer) {
 			if (pos.getY()<ChunkProviderCompositor.SEA_LEVEL) {
-				worldIn.setBlockState(pos, TWBlocks.FLUID_PAIN.getDefaultState());
+				worldIn.setBlockState(pos, pain);
 			} else {
 				worldIn.setBlockToAir(pos); //TODO: randomy spawn sulfurgas pockets
 			}
-		}
+		}*/
 		
 		return true;
 	}
