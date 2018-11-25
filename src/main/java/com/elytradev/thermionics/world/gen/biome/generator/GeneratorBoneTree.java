@@ -40,6 +40,8 @@ public class GeneratorBoneTree extends WorldGenerator {
 	
 	@Override
 	public boolean generate(World world, Random rand, BlockPos position) {
+		if (!NeoHellGenerators.check(world, position)) return false;
+		
 		BlockPos pos = NeoHellGenerators.findSurface(world, position);
 		if (pos==null) {
 			//System.out.println("Failed to generate at "+position);
@@ -56,8 +58,7 @@ public class GeneratorBoneTree extends WorldGenerator {
 		BlockPos section = pos;
 		
 		for(int y=0; y<height; y++) {
-			
-			world.setBlockState(section, trunkState);
+			world.setBlockState(section, trunkState); //in-column is guaranteed safe
 			
 			if (y>3 && y%2==0) {
 				axis = rand.nextBoolean() ? EnumAxis.X : EnumAxis.Z;
@@ -66,14 +67,16 @@ public class GeneratorBoneTree extends WorldGenerator {
 				
 				for(int i=0; i<width; i++) {
 					arm = arm.add(axis.xofs, axis.yofs, axis.zofs);
-					world.setBlockState(arm, axis==EnumAxis.X ?
+					NeoHellGenerators.safeSet(world, arm, axis==EnumAxis.X ?
+					//world.setBlockState(arm, axis==EnumAxis.X ?
 							trunkState.withProperty(BlockRotatedPillar.AXIS, EnumFacing.Axis.X) :
 							trunkState.withProperty(BlockRotatedPillar.AXIS, EnumFacing.Axis.Z));
 				}
 				arm = section;
 				for(int i=0; i<width; i++) {
 					arm = arm.add(-axis.xofs, -axis.yofs, -axis.zofs);
-					world.setBlockState(arm, axis==EnumAxis.X ?
+					NeoHellGenerators.safeSet(world, arm, axis==EnumAxis.X ?
+					//world.setBlockState(arm, axis==EnumAxis.X ?
 							trunkState.withProperty(BlockRotatedPillar.AXIS, EnumFacing.Axis.X) :
 							trunkState.withProperty(BlockRotatedPillar.AXIS, EnumFacing.Axis.Z));
 				}

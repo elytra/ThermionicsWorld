@@ -301,7 +301,7 @@ public class ChunkProviderCompositor implements IChunkGenerator {
 		BlockPos blockpos = new BlockPos(blockX, 0, blockZ);
 		Biome biome = this.world.getBiome(blockpos.add(16, 0, 16));
 		ChunkPos chunkpos = new ChunkPos(x, z);
-
+		
 		this.genNetherBridge.generateStructure(this.world, this.random, chunkpos);
 
 		popBench.endSection("bridge");
@@ -385,7 +385,7 @@ public class ChunkProviderCompositor implements IChunkGenerator {
 		BlockFalling.fallInstantly = false;
 		popBench.endFrame();
 		//System.out.println("GenTime: "+popBench.getTotalTime());
-		if (popBench.getTotalTime()>200) popBench.printDebug(); //we're done doing comprehensive profiling, but alert us to issues bigger than 200msec
+		//if (popBench.getTotalTime()>200) popBench.printDebug(); //we're done doing comprehensive profiling, but alert us to issues bigger than 200msec
 		
 	}
 

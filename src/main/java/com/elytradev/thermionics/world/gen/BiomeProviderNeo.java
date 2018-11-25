@@ -58,8 +58,9 @@ public class BiomeProviderNeo extends BiomeProvider {
 		
 		int intSeed = (int)info.getSeed(); intSeed ^= (int)(info.getSeed() >> 32);
 		
-		Perlin biomeA = new Perlin().setSeed(intSeed+1).setFrequency(1/379.0).setOctaveCount(7);
-		Perlin biomeB = new Perlin().setSeed(intSeed+2).setFrequency(1/367.0).setOctaveCount(6);
+		//Former frequency values: 379, 367 - too small
+		Perlin biomeA = new Perlin().setSeed(intSeed+1).setFrequency(1/643.0).setOctaveCount(7);
+		Perlin biomeB = new Perlin().setSeed(intSeed+2).setFrequency(1/647.0).setOctaveCount(6);
 		biomeModule = new BiomeModule(biomeA, biomeB);
 		biomeModule.setBiomeMap(biomeMap);
 	}

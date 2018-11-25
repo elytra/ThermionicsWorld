@@ -44,11 +44,12 @@ public class GeneratorNorfairiteBush extends WorldGenerator {
 		BlockPos cur = NeoHellGenerators.findSurface(worldIn, position);
 		if (cur==null) return false;
 		
-		IBlockState norfairite = TWBlocks.NORFAIRITE_CLEAR.getDefaultState().withProperty(BlockColored.COLOR, EnumDyeColor.GREEN);
+		IBlockState norfairite = TWBlocks.NORFAIRITE_CLEAR.getDefaultState().withProperty(BlockColored.COLOR, EnumDyeColor.CYAN);
 		
 		ArrayList<BlockPos> bushArea = new ArrayList<BlockPos>();
 		NeoHellGenerators.sphereAround(cur.up(), 1.5f + rand.nextFloat(), bushArea);
 		for(BlockPos leaf : bushArea) {
+			if (!NeoHellGenerators.check(worldIn, leaf)) continue;
 			IBlockState state = worldIn.getBlockState(leaf);
 			if (state.getBlock().canBeReplacedByLeaves(state, worldIn, leaf)) {
 				worldIn.setBlockState(leaf, norfairite);

@@ -44,6 +44,8 @@ public class NeoHellGenerators {
 		
 		@Override
 		public boolean generate(World worldIn, Random rand, BlockPos position) {
+			if (!check(worldIn, position)) return false;
+			
 			if (!worldIn.isAirBlock(position)) return false;
 			if (worldIn.isAirBlock(position.up())) return false;
 
@@ -51,7 +53,9 @@ public class NeoHellGenerators {
 
 			for (int i = 0; i < 1500; ++i) {
 				BlockPos scatter = position.add(rand.nextInt(8) - rand.nextInt(8), -rand.nextInt(12), rand.nextInt(8) - rand.nextInt(8));
-
+				
+				if (!check(worldIn, scatter)) continue;
+				
 				if (worldIn.isAirBlock(scatter)) {
 					int adjacent = 0;
 
@@ -88,6 +92,8 @@ public class NeoHellGenerators {
 
 		@Override
 		public boolean generate(World worldIn, Random rand, BlockPos position) {
+			if (!worldIn.isAreaLoaded(position, 1)) return false;
+			
 			if (!isValidSpot(worldIn, position.up())) return false;
 
 			int solidNeighbors = 0;
@@ -121,6 +127,8 @@ public class NeoHellGenerators {
 
 		@Override
 		public boolean generate(World worldIn, Random rand, BlockPos position) {
+			if (!worldIn.isAreaLoaded(position, 1)) return false;
+			
 			if (!isValidSpot(worldIn, position.up())) return false;
 			if (!isValidSpot(worldIn, position.down())) return false;
 			if (!isValidSpot(worldIn, position.north())) return false;
@@ -128,6 +136,7 @@ public class NeoHellGenerators {
 			if (!isValidSpot(worldIn, position.east())) return false;
 			if (!isValidSpot(worldIn, position.west())) return false;
 			
+			//safeSet(worldIn, position, block);
 			worldIn.setBlockState(position, block, 2);
 			return true;
 		}
@@ -193,7 +202,7 @@ public class NeoHellGenerators {
 	                                if (d12 * d12 + d13 * d13 + d14 * d14 < 1.0D)
 	                                {
 	                                    BlockPos blockpos = new BlockPos(l1, i2, j2);
-
+	                                    if (!check(worldIn, blockpos)) continue;
 	                                    IBlockState state = worldIn.getBlockState(blockpos);
 	                                    
 	                                    if (state.getBlock().isReplaceableOreGen(state, worldIn, blockpos, it->true)) {
@@ -213,26 +222,27 @@ public class NeoHellGenerators {
 	
 	public static class OreSimple extends WorldGenerator {
 		private IBlockState[] varieties;
-		private int blockCount;
+		//private int blockCount;
 		
 		public OreSimple(int blockCount, IBlockState... varieties) {
-			this.blockCount = blockCount;
+			//this.blockCount = blockCount;
 			this.varieties = varieties;
 		}
 		
 		@Override
 		public boolean generate(World worldIn, Random rand, BlockPos position) {
 			//Create locations around the position
-			for(int i=0; i<blockCount; i++) {
+			//for(int i=0; i<blockCount; i++) {
 				
-			}
+			//}
 			
 			
 			
 			if (worldIn.isAirBlock(position)) return false;
 			
 			IBlockState selected = varieties[rand.nextInt(varieties.length)];
-			worldIn.setBlockState(position, selected, 2);
+			safeSet(worldIn, position, selected);
+			//worldIn.setBlockState(position, selected, 2);
 			
 			return true;
 		}
@@ -306,5 +316,17 @@ public class NeoHellGenerators {
 				}
 			}
 		}
+	}
+	
+	public static boolean check(World world, BlockPos pos) {
+		return world.getChunkProvider().isChunkGeneratedAt(pos.getX() >> 4, pos.getZ() >> 4);
+		//return world.isAreaLoaded(pos, 0);
+	}
+	
+	public static boolean safeSet(World world, BlockPos pos, IBlockState state) {
+		if (!check(world, pos)) return false;
+		//if (!world.isAreaLoaded(pos, 0)) return false;
+		world.setBlockState(pos, state, 2);
+		return true;
 	}
 }

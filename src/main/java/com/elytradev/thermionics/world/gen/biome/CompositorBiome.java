@@ -81,9 +81,9 @@ public class CompositorBiome extends Biome implements ICompositorBiome {
 	protected void splash(World worldIn, Random rand, BlockPos pos, WorldGenerator gen, int times) {
 		for(int i=0; i<times; i++) {
 			BlockPos relative = new BlockPos(
-					pos.getX() + rand.nextInt(8) + 8,
+					pos.getX() + rand.nextInt(16) + 8,
 					rand.nextInt(128) + 64,
-					pos.getZ() + rand.nextInt(8) + 8
+					pos.getZ() + rand.nextInt(16) + 8
 					);
 			gen.generate(worldIn, rand, relative);
 		}
