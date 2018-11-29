@@ -157,12 +157,14 @@ public class BiomeFamily {
 		nocturne.b = 2;
 		NEO_HELL.register(6, nocturne);
 		*/
+		NEO_HELL.register(7, new BiomeRuinedCities());
+		/*
 		HellCompositorBiome doom = new HellCompositorBiome("doom");
 		doom.topBlock = TWBlocks.GEMROCK_SPINEL.getDefaultState();
 		doom.fillerBlock = TWBlocks.GEMROCK_PYRITE.getDefaultState();
 		doom.a = 1;
 		doom.b = 2;
-		NEO_HELL.register(7, doom);
+		NEO_HELL.register(7, doom);*/
 		
 		/*
 		map.setBiome(0, 0, CompositorBiomes.NEO_HELL.getObject("bridges"));
@@ -174,23 +176,6 @@ public class BiomeFamily {
 		map.setBiome(2, 2, CompositorBiomes.NEO_HELL.getObject("nocturne"));
 		map.setBiome(1, 2, CompositorBiomes.NEO_HELL.getObject("doom"));
 		*/
-
-		/*
-		
-		NEO_HELL.register(7,
-			new NeoBiome("doom", new Biome.BiomeProperties(I18n.translateToLocal("biome.thermionics.doom"))
-				.setBaseHeight(128f)
-				.setTemperature(0.75f)
-				.setRainfall(0)
-				.setRainDisabled()
-				//.setRainfall(0.5f)
-			)
-			.withSurfaceMaterial(TWBlocks.GEMROCK_SPINEL)
-			.withTerrainFillMaterial(TWBlocks.GEMROCK_PYRITE)
-			.withDensitySurfaceMaterial(TWBlocks.GEMROCK_SPINEL)
-			.withDensityCoreMaterial(TWBlocks.GEMROCK_CASSITERITE)
-			.withTypes(BiomeDictionary.Type.NETHER, BiomeDictionary.Type.DRY)
-			);*/
 	}
 	
 	public void register(int id, ICompositorBiome biome) {

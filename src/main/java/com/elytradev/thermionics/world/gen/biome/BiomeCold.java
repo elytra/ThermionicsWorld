@@ -62,7 +62,7 @@ public class BiomeCold extends HellCompositorBiome {
 		final int intSeed = (int)world.getWorldInfo().getSeed() ^ (int)(world.getWorldInfo().getSeed() >> 32);
 		
 		return new IBiomeChunkGenerator() {
-			private Perlin rolling = new Perlin().setFrequency(1/100.0).setOctaveCount(3).setSeed(intSeed + 3);
+			private Perlin rolling = new Perlin().setFrequency(1/100.0).setOctaveCount(2).setSeed(intSeed + 3);
 			
 			@Override
 			public double getHeightValue(int x, int z) {

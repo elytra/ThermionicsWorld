@@ -30,6 +30,7 @@ import com.elytradev.thermionics.world.block.BlockNorfairite;
 import com.elytradev.thermionics.world.block.TWBlocks;
 import com.elytradev.thermionics.world.gen.biome.generator.GeneratorNorfairiteBush;
 
+import blue.endless.libnoise.generator.Perlin;
 import blue.endless.libnoise.generator.RidgedMulti;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -71,7 +72,21 @@ public class BiomeBubbleMountain extends HellCompositorBiome {
 		
 		return new IBiomeChunkGenerator() {
 			private RidgedMulti multi = new RidgedMulti().setFrequency(1/128f).setOctaveCount(5).setSeed(intSeed + 3);
+			private Perlin striations = new Perlin().setFrequency(1/64.0).setOctaveCount(5).setSeed(intSeed + 5);
+			private IBlockState[] striationSurfaces = new IBlockState[] {
+					TWBlocks.NORFAIRITE_REEF.getDefaultState().withProperty(BlockNorfairite.COLOR, EnumDyeColor.CYAN),
+					TWBlocks.NORFAIRITE_REEF.getDefaultState().withProperty(BlockNorfairite.COLOR, EnumDyeColor.CYAN),
+					TWBlocks.NORFAIRITE_REEF.getDefaultState().withProperty(BlockNorfairite.COLOR, EnumDyeColor.PURPLE),
+					TWBlocks.NORFAIRITE_REEF.getDefaultState().withProperty(BlockNorfairite.COLOR, EnumDyeColor.LIGHT_BLUE),
+					TWBlocks.NORFAIRITE_REEF.getDefaultState().withProperty(BlockNorfairite.COLOR, EnumDyeColor.LIGHT_BLUE),
+					TWBlocks.NORFAIRITE_REEF.getDefaultState().withProperty(BlockNorfairite.COLOR, EnumDyeColor.ORANGE),
+			};
 			
+			private IBlockState[] striationFillers = new IBlockState[] {
+					TWBlocks.GEMROCK_ROSE_QUARTZ.getDefaultState(),
+					TWBlocks.GEMROCK_CHRYSOPRASE.getDefaultState(),
+					Blocks.NETHERRACK.getDefaultState()
+			};
 			
 			@Override
 			public double getHeightValue(int x, int z) {
@@ -91,12 +106,26 @@ public class BiomeBubbleMountain extends HellCompositorBiome {
 			@Override
 			public IBlockState getHeightBlockState(int x, int z, int depth) {
 				if (depth<4) {
-					return topBlock;
+					double d = striations.getValue(x, depth, 0) / 2.0 + 0.5;
+					if (d<0.0) d=0.0;
+					if (d>1.0) d=1.0;
+					int ofs = (int)(d * 256.0);
+					ofs = (ofs + Math.abs(z)/2 + Math.abs(x)/2) % striationSurfaces.length; //Math.abs will give some really funky results near zero-crossings though
+					return striationSurfaces[ofs];
+					
+					//return topBlock;
 				} else {
-					return fillerBlock;
+					double d = striations.getValue(x, depth, 0) / 2 + 0.5;
+					if (d<0) d=0;
+					if (d>1) d=1;
+					int ofs = (int)(d * 8);
+					ofs = (ofs + Math.abs(z)) % striationFillers.length;
+					return striationFillers[ofs];
+					
+					//return fillerBlock;
 				}
 			}
-
+			
 			@Override
 			public IBlockState getDensityBlockState(int x, int y, int z, double density) {
 				if (density<0.6) {
