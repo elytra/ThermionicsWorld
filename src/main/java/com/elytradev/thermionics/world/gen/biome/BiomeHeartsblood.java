@@ -35,7 +35,6 @@ import blue.endless.libnoise.generator.RidgedMulti;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.WorldGenerator;
 
 public class BiomeHeartsblood extends HellCompositorBiome {
 	protected GeneratorBoneShrub shrubs = new GeneratorBoneShrub();
