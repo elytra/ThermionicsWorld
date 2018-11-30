@@ -25,7 +25,14 @@ tile.thermionics_world.dust.name=Dust
 tile.thermionics_world.norfairite.clear.name=%1$s Clear Norfairite
 tile.thermionics_world.norfairite.reef.name=%1$s Reef Norfairite
 tile.thermionics_world.shrub.bone.name=Unearthed Remains
-tile.thermionics_world.gasSulfur.name=Sulfur Cloud
+tile.thermionics_world.gassulfur.name=Sulfur Cloud
+tile.thermionics_world.portal.overworld.name=Overworld Touchstone
+tile.thermionics_world.portal.neohell.name=Neo-Hell Touchstone
+tile.thermionics_world.portal.sedna.name=Sedna Touchstone
+
+#Portal Warnings
+tooltip.thermionics_world.portal.neohell=Right-clicking this block in-world will teleport you to Neo-Hell. Don't forget to bring an Overworld Touchstone with you, or you will be stranded!
+tooltip.thermionics_world.portal.overworld=Right-clicking this block in-world will return you to the overworld.
 
 #Various Kinds of Meat
 tile.thermionics_world.meat.edible.pork.raw.name=Raw Pork Block

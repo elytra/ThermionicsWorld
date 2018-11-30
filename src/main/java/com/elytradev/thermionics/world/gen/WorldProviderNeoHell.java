@@ -142,4 +142,9 @@ public class WorldProviderNeoHell extends WorldProviderHell {
 	public boolean shouldClientCheckLighting() {
 		return false;
 	}
+	
+	@Override
+	public boolean isNether() {
+		return true;
+	}
 }

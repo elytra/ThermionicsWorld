@@ -182,6 +182,34 @@ public class ThermionicsWorld {
 					TWItems.meat(meat, false),
 					TWItems.meat(meat, true),
 					0.0f);
+			
+			Ingredient obsidian = Ingredient.fromStacks(new ItemStack(Blocks.OBSIDIAN));
+			Ingredient flintSteel = Ingredient.fromStacks(new ItemStack(Items.FLINT_AND_STEEL));
+			ShapedRecipes hellPortalRecipe = new ShapedRecipes("thermionics_world:portal.neohell", 3, 3,
+					NonNullList.from(null,
+							obsidian, obsidian, obsidian,
+							obsidian, flintSteel, obsidian,
+							obsidian, obsidian, obsidian
+							),
+					
+					new ItemStack(TWBlocks.TELEPORT_NEOHELL)
+					);
+			hellPortalRecipe.setRegistryName(new ResourceLocation("thermionics_world", "portal.neohell.recipe"));
+			r.register(hellPortalRecipe);
+			
+			Ingredient clay = Ingredient.fromStacks(new ItemStack(Items.CLAY_BALL));
+			Ingredient gravel = Ingredient.fromStacks(new ItemStack(Blocks.GRAVEL));
+			ShapedRecipes overworldPortalRecipe = new ShapedRecipes("thermionics_world:portal.overworld", 3, 3,
+					NonNullList.from(null,
+							clay, clay, clay,
+							clay, gravel, clay,
+							clay, clay, clay
+							),
+					
+					new ItemStack(TWBlocks.TELEPORT_OVERWORLD)
+					);
+			overworldPortalRecipe.setRegistryName(new ResourceLocation("thermionics_world", "portal.overworld.recipe"));
+			r.register(overworldPortalRecipe);
 		}
 		
 		for(BlockGemrock block : TWBlocks.GROUP_GEMROCK) addBrickRecipes(r, block);
@@ -253,6 +281,12 @@ public class ThermionicsWorld {
 	public static IRecipe recipe(String group, ItemStack result, ItemStack ingredient) {
 		ShapelessOreRecipe recipe = new ShapelessOreRecipe(new ResourceLocation("thermionics_world",group), result, ingredient);
 		recipe.setRegistryName("thermionics_world", ingredient.getItem().getRegistryName().getResourcePath()+"."+ingredient.getMetadata()+"_to_"+result.getUnlocalizedName()+"."+result.getMetadata());
+		return recipe;
+	}
+	
+	public static IRecipe recipe(String group, ItemStack result, ItemStack... ingredients) {
+		ShapelessOreRecipe recipe = new ShapelessOreRecipe(new ResourceLocation("thermionics_world",group), result, (Object[])ingredients);
+		recipe.setRegistryName("thermionics_world", result.getUnlocalizedName()+"."+result.getMetadata());
 		return recipe;
 	}
 	

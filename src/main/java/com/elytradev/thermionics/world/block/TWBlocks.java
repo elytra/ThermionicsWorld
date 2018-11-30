@@ -26,11 +26,13 @@ package com.elytradev.thermionics.world.block;
 
 import java.util.List;
 
+import com.elytradev.thermionics.world.ThermionicsWorld;
 import com.elytradev.thermionics.world.gen.biome.BiomeFamily;
 import com.elytradev.thermionics.world.item.TWItems;
 import com.google.common.collect.ImmutableList;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.util.ResourceLocation;
@@ -73,6 +75,9 @@ public class TWBlocks {
 	
 	public static BlockSulfurCloud    SULFUR;
 	
+	public static BlockTeleporter     TELEPORT_OVERWORLD;
+	public static BlockTeleporter     TELEPORT_NEOHELL;
+	//public static BlockTeleporter     TELEPORT_SEDNA;
 	
 	@SubscribeEvent
 	public static void registerBlocks(RegistryEvent.Register<Block> event) {
@@ -155,6 +160,11 @@ public class TWBlocks {
 		NORFAIRITE_REEF  = block(r, new BlockReefNorfairite());
 		
 		SULFUR = block(r, new BlockSulfurCloud());
+		
+		//If remapped, sometimes dimensions can be hard to get to.
+		TELEPORT_OVERWORLD = block(r, new BlockTeleporter("overworld", 0, MapColor.LIGHT_BLUE));
+		TELEPORT_NEOHELL   = block(r, new BlockTeleporter("neohell", ThermionicsWorld.CONFIG_DIMENSION_ID_NEOHELL, MapColor.RED));
+		//TELEPORT_SEDNA     = new BlockTeleporter("sedna", ThermionicsWorld.CONFIG_DIMENSION_ID_SEDNA, MapColor.PURPLE);
 		
 		
 		//We know enough to make these registrations now!
