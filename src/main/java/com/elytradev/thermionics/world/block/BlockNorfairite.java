@@ -64,9 +64,9 @@ public class BlockNorfairite extends BlockColored implements IItemNamer {
 	}
 	
 	@SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer() {
-        return BlockRenderLayer.TRANSLUCENT;
-    }
+	public BlockRenderLayer getBlockLayer() {
+		return BlockRenderLayer.TRANSLUCENT;
+	}
 	
 	@Override
 	public boolean recolorBlock(World world, BlockPos pos, EnumFacing side, EnumDyeColor color) {

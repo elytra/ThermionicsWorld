@@ -28,16 +28,19 @@ import java.util.Random;
 
 import com.elytradev.thermionics.world.block.TWBlocks;
 import com.elytradev.thermionics.world.gen.ImageModule;
-import com.elytradev.thermionics.world.gen.biome.generator.GeneratorSulfurVent;
 
 import blue.endless.libnoise.generator.Perlin;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 
 public class BiomeSulfur extends HellCompositorBiome {
-	protected GeneratorSulfurVent vents = new GeneratorSulfurVent();
+	private final int SULFUR_PER_COLUMN = 8;
+	
+	//protected GeneratorSulfurVent vents = new GeneratorSulfurVent();
+	ImageModule vents = new ImageModule().setImage(BiomeFamily.unpackTerrainImage("vents")).setPixelsPerUnit(1/2.0);
 	
 	public BiomeSulfur() {
 		super("sulfur");
@@ -76,7 +79,7 @@ public class BiomeSulfur extends HellCompositorBiome {
 			//Perlin density = new Perlin(intSeed + 4)
 			//		.setFrequency(1/128.0)
 			//		.setOctaveCount(6);
-			ImageModule vents = new ImageModule().setImage(BiomeFamily.unpackTerrainImage("vents")).setPixelsPerUnit(1/2.0);
+			//ImageModule vents = new ImageModule().setImage(BiomeFamily.unpackTerrainImage("vents")).setPixelsPerUnit(1/2.0);
 			
 			@Override
 			public double getHeightValue(int x, int z) {
@@ -126,7 +129,30 @@ public class BiomeSulfur extends HellCompositorBiome {
 	
 	@Override
 	public void decorate(World worldIn, Random rand, BlockPos pos) {
-		//splash(worldIn, rand, pos, vents, 4);
+		final IBlockState AIR = Blocks.AIR.getDefaultState();
+		final IBlockState SULFUR = TWBlocks.SULFUR.getDefaultState();
+		
+		Chunk chunk = worldIn.getChunkFromBlockCoords(pos);
+		for(int z=0; z<16; z++) {
+			for(int x=0; x<16; x++) {
+				double v = vents.getValue(x+pos.getX(), 0, z+pos.getZ());
+				
+				if (v>=0.2) continue; //We're not in a vent
+				
+				
+				for(int i=0; i<SULFUR_PER_COLUMN; i++) {
+					int y = rand.nextInt(128);
+					
+					IBlockState existing = chunk.getBlockState(x, y, z);
+					if (existing==null || existing==AIR) {
+						chunk.setBlockState(new BlockPos(x, y, z), SULFUR);
+					}
+				}
+				
+				
+			}
+		}
+		
 	}
 	
 }

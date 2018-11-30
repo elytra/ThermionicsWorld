@@ -71,6 +71,8 @@ public class TWBlocks {
 	public static BlockNorfairite     NORFAIRITE_CLEAR;
 	public static BlockReefNorfairite NORFAIRITE_REEF;
 	
+	public static BlockSulfurCloud    SULFUR;
+	
 	
 	@SubscribeEvent
 	public static void registerBlocks(RegistryEvent.Register<Block> event) {
@@ -151,6 +153,9 @@ public class TWBlocks {
 		//Bubble mountain ain't gonna attack itself.
 		NORFAIRITE_CLEAR = block(r, new BlockNorfairite("clear"));
 		NORFAIRITE_REEF  = block(r, new BlockReefNorfairite());
+		
+		SULFUR = block(r, new BlockSulfurCloud());
+		
 		
 		//We know enough to make these registrations now!
 		BiomeFamily.init();

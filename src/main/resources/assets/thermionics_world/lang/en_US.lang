@@ -25,6 +25,7 @@ tile.thermionics_world.dust.name=Dust
 tile.thermionics_world.norfairite.clear.name=%1$s Clear Norfairite
 tile.thermionics_world.norfairite.reef.name=%1$s Reef Norfairite
 tile.thermionics_world.shrub.bone.name=Unearthed Remains
+tile.thermionics_world.gasSulfur.name=Sulfur Cloud
 
 #Various Kinds of Meat
 tile.thermionics_world.meat.edible.pork.raw.name=Raw Pork Block
