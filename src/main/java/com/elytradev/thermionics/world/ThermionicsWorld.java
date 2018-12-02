@@ -187,9 +187,9 @@ public class ThermionicsWorld {
 			Ingredient flintSteel = Ingredient.fromStacks(new ItemStack(Items.FLINT_AND_STEEL));
 			ShapedRecipes hellPortalRecipe = new ShapedRecipes("thermionics_world:portal.neohell", 3, 3,
 					NonNullList.from(null,
-							obsidian, obsidian, obsidian,
+							obsidian, obsidian,   obsidian,
 							obsidian, flintSteel, obsidian,
-							obsidian, obsidian, obsidian
+							obsidian, obsidian,   obsidian
 							),
 					
 					new ItemStack(TWBlocks.TELEPORT_NEOHELL)
@@ -201,15 +201,27 @@ public class ThermionicsWorld {
 			Ingredient gravel = Ingredient.fromStacks(new ItemStack(Blocks.GRAVEL));
 			ShapedRecipes overworldPortalRecipe = new ShapedRecipes("thermionics_world:portal.overworld", 3, 3,
 					NonNullList.from(null,
-							clay, clay, clay,
+							clay, clay,   clay,
 							clay, gravel, clay,
-							clay, clay, clay
+							clay, clay,   clay
 							),
 					
 					new ItemStack(TWBlocks.TELEPORT_OVERWORLD)
 					);
 			overworldPortalRecipe.setRegistryName(new ResourceLocation("thermionics_world", "portal.overworld.recipe"));
 			r.register(overworldPortalRecipe);
+			
+			Ingredient norfairite = Ingredient.fromStacks(new ItemStack(TWBlocks.NORFAIRITE_CLEAR, 1, OreDictionary.WILDCARD_VALUE));
+			ShapedRecipes aerogelRecipe = new ShapedRecipes("thermionics_world:aerogel", 3, 3,
+					NonNullList.from(null,
+							Ingredient.EMPTY, norfairite,       Ingredient.EMPTY,
+							norfairite,       Ingredient.EMPTY, norfairite,
+							Ingredient.EMPTY, norfairite,       Ingredient.EMPTY
+							),
+					new ItemStack(TWBlocks.AEROGEL)
+					);
+			aerogelRecipe.setRegistryName(new ResourceLocation("thermionics_world", "aerogel"));
+			r.register(aerogelRecipe);
 		}
 		
 		for(BlockGemrock block : TWBlocks.GROUP_GEMROCK) addBrickRecipes(r, block);

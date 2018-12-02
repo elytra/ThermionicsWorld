@@ -24,6 +24,7 @@ tile.thermionics_world.basalt.0.name=Basalt
 tile.thermionics_world.dust.name=Dust
 tile.thermionics_world.norfairite.clear.name=%1$s Clear Norfairite
 tile.thermionics_world.norfairite.reef.name=%1$s Reef Norfairite
+tile.thermionics_world.aerogel.name=Aerogel
 tile.thermionics_world.shrub.bone.name=Unearthed Remains
 tile.thermionics_world.gassulfur.name=Sulfur Cloud
 tile.thermionics_world.portal.overworld.name=Overworld Touchstone

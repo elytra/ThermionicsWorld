@@ -72,6 +72,7 @@ public class TWBlocks {
 	public static BlockShrubBone      SHRUB_BONE;
 	public static BlockNorfairite     NORFAIRITE_CLEAR;
 	public static BlockReefNorfairite NORFAIRITE_REEF;
+	public static BlockAerogel        AEROGEL;
 	
 	public static BlockSulfurCloud    SULFUR;
 	
@@ -158,6 +159,7 @@ public class TWBlocks {
 		//Bubble mountain ain't gonna attack itself.
 		NORFAIRITE_CLEAR = block(r, new BlockNorfairite("clear"));
 		NORFAIRITE_REEF  = block(r, new BlockReefNorfairite());
+		AEROGEL          = block(r, new BlockAerogel());
 		
 		SULFUR = block(r, new BlockSulfurCloud());
 		
