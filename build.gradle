@@ -35,7 +35,7 @@ apply plugin: 'com.github.johnrengelman.shadow'
 
 group = "com.elytradev"
 archivesBaseName = "ThermionicsWorld"
-version = "MC1.12.2_ver1.0"
+version = "MC1.12.2_ver1.0.2"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -75,8 +75,8 @@ reobf {
 tasks.build.dependsOn reobfShadowJar
 
 dependencies {
-	compile group: "blue.endless.libnoise", name: "LibnoiseJava", version: "0.0.1-15";
-	shadow group: "blue.endless.libnoise", name: "LibnoiseJava", version: "0.0.1-15";
+	compile group: "blue.endless.libnoise", name: "LibnoiseJava", version: "0.0.1-17";
+	shadow group: "blue.endless.libnoise", name: "LibnoiseJava", version: "0.0.1-17";
 }
 
 processResources {
