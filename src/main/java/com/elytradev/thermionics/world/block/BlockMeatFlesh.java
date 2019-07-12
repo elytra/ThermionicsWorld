@@ -82,7 +82,7 @@ public class BlockMeatFlesh extends BlockMeat implements IItemNamer {
 	
 	@Override
 	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
-		if (tab!=this.getCreativeTabToDisplayOn()) return;
+		if (tab!=CreativeTabs.SEARCH && tab!=this.getCreativeTabToDisplayOn()) return;
 		
 		for(int i=0; i<EnumFlesh.values().length; i++) {
 			list.add(new ItemStack(ItemBlock.getItemFromBlock(this), 1, i));

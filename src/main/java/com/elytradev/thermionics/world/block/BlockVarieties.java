@@ -55,37 +55,37 @@ public class BlockVarieties extends Block {
 		
 		this.setDefaultState(blockState.getBaseState());
 	}
-	
+
 	@Override
 	public BlockStateContainer createBlockState() {
 		return new BlockStateContainer(this, VARIANT);
 	}
-	
-	@Override
-    public IBlockState getStateFromMeta(int meta) {
-        return this.getDefaultState().withProperty(VARIANT, meta);
-    }
 
-    @Override
-    public int getMetaFromState(IBlockState state) {
-        return state.getValue(VARIANT);
-    }
-    
-    @Override
-    public int damageDropped(IBlockState state) {
-        return state.getValue(VARIANT);
-    }
-    
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
-    	if (tab!=this.getCreativeTabToDisplayOn()) return;
-    	
-        for (int i=0; i<16; i++) {
-            list.add(new ItemStack(ItemBlock.getItemFromBlock(this), 1, i));
-        }
-    }
-    
+	@Override
+	public IBlockState getStateFromMeta(int meta) {
+		return this.getDefaultState().withProperty(VARIANT, meta);
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state) {
+		return state.getValue(VARIANT);
+	}
+
+	@Override
+	public int damageDropped(IBlockState state) {
+		return state.getValue(VARIANT);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
+		if (tab!=CreativeTabs.SEARCH && tab!=this.getCreativeTabToDisplayOn()) return;
+
+		for (int i=0; i<16; i++) {
+			list.add(new ItemStack(ItemBlock.getItemFromBlock(this), 1, i));
+		}
+	}
+
 	public String getBaseVariant() {
 		return baseVariant;
 	}

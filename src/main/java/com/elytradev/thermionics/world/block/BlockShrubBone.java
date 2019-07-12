@@ -101,6 +101,8 @@ public class BlockShrubBone extends Block {
 	
 	@Override
 	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
+		if (tab!=CreativeTabs.SEARCH && tab!=this.getCreativeTabToDisplayOn()) return;
+		
 		HashSet<Integer> validMetas = new HashSet<Integer>();
 		for(IBlockState state : blockState.getValidStates()) {
 			validMetas.add(getMetaFromState(state));

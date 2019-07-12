@@ -85,7 +85,7 @@ public class BlockMeatEdible extends BlockMeat implements IItemNamer {
 	
 	@Override
 	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
-		if (tab!=this.getCreativeTabToDisplayOn()) return;
+		if (tab!=CreativeTabs.SEARCH && tab!=this.getCreativeTabToDisplayOn()) return;
 		
 		//raw first
 		for(int i=0; i<EnumEdibleMeat.values().length; i++) {

@@ -83,7 +83,7 @@ public class BlockGemrock extends Block {
     @Override
     @SideOnly(Side.CLIENT)
     public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
-    	if (tab!=this.getCreativeTabToDisplayOn()) return;
+    	if (tab!=CreativeTabs.SEARCH && tab!=this.getCreativeTabToDisplayOn()) return;
     	
         for (int i=0; i<16; i++) {
             list.add(new ItemStack(ItemBlock.getItemFromBlock(this), 1, i));
